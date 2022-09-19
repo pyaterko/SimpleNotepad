@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion Config.compile_sdk
+    defaultConfig {
+        applicationId Config.application_id
+        minSdkVersion Config.min_sdk
+        targetSdkVersion Config.target_sdk
+        versionCode Releases.version_code
+        versionName Releases.version_name
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility Config.java_version
+        targetCompatibility Config.java_version
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation Design.appcompat
+    implementation Design.material
+    implementation Kotlin.core
+    implementation Kotlin.stdlib
+    implementation Kotlin.coroutines_android
+    implementation Kotlin.coroutines_core
+    implementation Fragment.fragmentktx
+    implementation Faker.javafaker
+    implementation Dagger.dagger
+    kapt Dagger.dagger_compiler
+    implementation Glide.glide
+    kapt Glide.glide_compiler
+
+}
