@@ -32,5 +32,7 @@ dependencies {
     implementation Design.appcompat
     implementation Kotlin.core
     implementation Kotlin.stdlib
+    implementation Kotlin.coroutines_android
+    implementation Kotlin.coroutines_core
 
 }

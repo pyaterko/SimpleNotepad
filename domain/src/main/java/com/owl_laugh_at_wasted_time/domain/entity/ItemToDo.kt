@@ -7,7 +7,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-data class ItemNote(
+data class ItemToDo(
+
     var id: Int = UNDEFINED_ID,
     var title: String = "",
     var text: String = "",
@@ -16,4 +17,6 @@ data class ItemNote(
         DATE_TIME_FORMAT,
         Locale.getDefault()
     ).format(Date()),
+    var priority: PriorityToDo = PriorityToDo.NOT,
+    var data: String = ""
 )

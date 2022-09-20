@@ -17,18 +17,12 @@ object Releases {
 object Modules {
     const val app = ":app"
     const val domain = ":domain"
+    const val data = ":data"
 }
 
 object Versions {
-    //glide
-    const val glide = "4.12.0"
-    const val glideCompiler = "4.12.0"
-
- //Faker
-    const val javafaker = "1.0.2"
 
     //Fragment
-
     const val fragment = "1.5.0"
     const val navigationFragmentKtx = "2.5.0"
 
@@ -53,19 +47,10 @@ object Versions {
 
 }
 
-object Faker {
-    const val javafaker = "com.github.javafaker:javafaker:${Versions.javafaker}"
-}
-
 object Fragment {
     const val fragmentktx = "androidx.fragment:fragment-ktx:${Versions.fragment}"
     const val navigation_fragment_ktx =
         "androidx.navigation:navigation-fragment-ktx:${Versions.navigationFragmentKtx}"
-}
-
-object Glide {
-    const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
-    const val glide_compiler = "com.github.bumptech.glide:compiler:${Versions.glideCompiler}"
 }
 
 object Design {

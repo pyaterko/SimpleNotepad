@@ -1,5 +1,6 @@
+
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
 }
@@ -7,16 +8,10 @@ plugins {
 android {
     compileSdkVersion Config.compile_sdk
     defaultConfig {
-        applicationId Config.application_id
         minSdkVersion Config.min_sdk
         targetSdkVersion Config.target_sdk
-        versionCode Releases.version_code
-        versionName Releases.version_name
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildFeatures {
-        viewBinding true
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -35,17 +30,15 @@ android {
 }
 
 dependencies {
-
     implementation project(Modules.domain)
-    implementation project(Modules.data)
-
     implementation Design.appcompat
-    implementation Design.material
     implementation Kotlin.core
     implementation Kotlin.stdlib
     implementation Kotlin.coroutines_android
     implementation Kotlin.coroutines_core
-    implementation Fragment.fragmentktx
+    implementation Room.runtime
+    implementation Room.room_ktx
+    kapt Room.compiler
     implementation Dagger.dagger
     kapt Dagger.dagger_compiler
 
