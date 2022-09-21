@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 interface ItemToDoDao {
 
     @Query("SELECT * FROM todo_table")
-    suspend fun getAllData(): Flow<List<ItemToDoDbModel>>
+    suspend fun getAllData():List<ItemToDoDbModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addItemNote(noteDBModel: ItemToDoDbModel)

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_sortBy"
+            android:title="@string/set">
+            <menu>
+                <item
+                    android:id="@+id/open_file"
+                    android:title="@string/open_file"
+                 />
+                <item
+                android:id="@+id/open_list"
+                android:title="@string/open_list"/>
+            </menu>
+        </item>
+    </group>
+
+    <item
+        android:id="@+id/notes"
+        android:title="@string/notes"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/todo"
+        android:title="@string/to_do"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/search"
+        android:orderInCategory="5"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom" />
+
+</menu>

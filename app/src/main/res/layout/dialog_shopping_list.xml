@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingHorizontal="@dimen/size_xx_medium"
+    android:paddingVertical="@dimen/size_small">
+
+    <com.google.android.material.textfield.TextInputEditText
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/dialogShoppingListInputEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:background="@drawable/backgraund_selected"
+        android:imeOptions="actionDone"
+        android:paddingHorizontal="@dimen/zero"
+        android:selectAllOnFocus="true"
+        tools:text="@string/app_name"/>
+
+
+</LinearLayout>

@@ -16,3 +16,4 @@ rootProject.name = "Simple Notepad"
 include ':app'
 include ':domain'
 include ':data'
+include ':viewmodel'

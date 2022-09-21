@@ -14,10 +14,11 @@ class InNoteRepository @Inject constructor(
     private val mapper: ItemNoteListMapper
 ) : NoteRepository {
 
-    override  suspend fun getLiveDate() = runBlocking {
-        val x = itemNoteListDao.getAllData()
-        x.map { list -> mapper.mapListDbModelToListEntity(list) }
+    override fun getLiveDate() = runBlocking {
+        val list = itemNoteListDao.getAllData()
+        list.map { mapper.mapListDbModelToListEntity(it) }
     }
+
 
     override suspend fun add(item: ItemNote) {
         itemNoteListDao.addItemNote(mapper.mapEntityToDbModel(item))

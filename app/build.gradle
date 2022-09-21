@@ -38,6 +38,7 @@ dependencies {
 
     implementation project(Modules.domain)
     implementation project(Modules.data)
+    implementation project(Modules.viewmodel)
 
     implementation Design.appcompat
     implementation Design.material
