@@ -12,10 +12,10 @@ class ShoppingListViewModel @Inject constructor(
      val shoppingList = repository.getAllData()
 
     suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
-        repository.deleteShoppingListItem(shoppingListItem.id)
+        repository.delete(shoppingListItem.id)
     }
 
     suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
-        repository.addShoppingListItem(shoppingListItem)
+        repository.add(shoppingListItem)
     }
 }

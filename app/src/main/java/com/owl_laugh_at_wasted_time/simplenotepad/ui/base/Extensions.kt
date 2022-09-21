@@ -100,19 +100,6 @@ fun ItemColor.getColorString() = when (this) {
     ItemColor.BLUE -> "BLUE"
 }
 
-fun String.getItemNoteColor() = when (this) {
-    "WHITE" -> ItemColor.WHITE
-    "VIOLET" -> ItemColor.VIOLET
-    "YELLOW" -> ItemColor.YELLOW
-    "RED" -> ItemColor.RED
-    "PINK" -> ItemColor.PINK
-    "GREEN" -> ItemColor.GREEN
-    "BLUE" -> ItemColor.BLUE
-    else -> {
-        ItemColor.WHITE
-    }
-}
-
 fun PriorityToDo.getColorDrawable(context: Context) =
     ContextCompat.getDrawable(context, getColorRes())
 

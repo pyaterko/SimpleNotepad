@@ -16,10 +16,6 @@
     <string name="please_fill_out_all_fields">Пожалуйста, заполните обязательные поля.</string>
     <string name="back">назад</string>
     <string name="default_error">Что-то пошло не так</string>
-    <string name="shopping_list">П\nО\nК\nУ\nП\nК\nИ</string>
-    <string name="launchDictionary">С\nЛ\nО\nВ\nА\nР\nЬ</string>
-    <string name="launchGame">И\nГ\nР\nА</string>
-    <string name="launchExit">В\nЫ\nХ\nО\nД</string>
 
     <string name="action_yes">ДА</string>
     <string name="action_no">НЕТ</string>
@@ -39,8 +35,8 @@
     <string name="error_priorety">измените приоритет мероприятия на ВЫСОКИЙ</string>
     <string name="edit_note">редактор</string>
     <string name="delete_note">удалить заметку</string>
-    <string name="try_again">Попробуйте еще раз</string>
-    <string name="game_over">ИГРА ЗАКОНЧЕНА</string>
+    <string name="add_note">создать новую</string>
+    <string name="remote_from_file">восстановить из файла</string>
     <string name="start_over">НАЧАТЬ СНАЧАЛА</string>
     <string name="sort_by">Сортировать по</string>
     <string name="view">Вид</string>

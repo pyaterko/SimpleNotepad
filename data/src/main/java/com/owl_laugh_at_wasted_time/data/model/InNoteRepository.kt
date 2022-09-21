@@ -21,15 +21,15 @@ class InNoteRepository @Inject constructor(
 
 
     override suspend fun add(item: ItemNote) {
-        itemNoteListDao.addItemNote(mapper.mapEntityToDbModel(item))
+        itemNoteListDao.add(mapper.mapEntityToDbModel(item))
     }
 
     override suspend fun delete(itemId: Int) {
-        itemNoteListDao.deleteItemNote(itemId)
+        itemNoteListDao.delete(itemId)
     }
 
     override suspend fun getById(itemId: Int): ItemNote {
-        val noteDBModel = itemNoteListDao.getItemNoteById(itemId)
+        val noteDBModel = itemNoteListDao.getItemById(itemId)
         return mapper.mapDbModelToEntity(noteDBModel)
     }
 

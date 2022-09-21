@@ -17,12 +17,12 @@ interface ItemNoteDao {
     fun getAllData():Flow<List<ItemNoteDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addItemNote(noteDBModel: ItemNoteDbModel)
+    suspend fun add(noteDBModel: ItemNoteDbModel)
 
     @Query("DELETE FROM notes_table WHERE id=:itemId")
-    suspend fun deleteItemNote(itemId: Int)
+    suspend fun delete(itemId: Int)
 
     @Query("SELECT * FROM notes_table WHERE id=:itemId LIMIT 1")
-    suspend fun getItemNoteById(itemId: Int): ItemNoteDbModel
+    suspend fun getItemById(itemId: Int): ItemNoteDbModel
 
 }

@@ -14,8 +14,8 @@ interface ShoppingListDao {
      fun getAllData(): Flow<List<ShoppingListItemDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addShoppingListItem(shoppingListItem: ShoppingListItemDbModel)
+    suspend fun add(shoppingListItem: ShoppingListItemDbModel)
 
     @Query("DELETE FROM shopping_list_table WHERE id=:shoppingListItemId")
-    suspend fun deleteShoppingListItem(shoppingListItemId: Int)
+    suspend fun delete(shoppingListItemId: Int)
 }

@@ -1,6 +1,8 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.di
 
+import com.owl_laugh_at_wasted_time.data.model.InNoteRepository
 import com.owl_laugh_at_wasted_time.data.model.InShoppingListRepository
+import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
 import com.owl_laugh_at_wasted_time.domain.repository.ShoppingListRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,7 @@ interface RepositoryModule {
 
 
 
+    @Singleton
+    @Binds
+    fun bindNoteRepository(impl: InNoteRepository): NoteRepository
 }

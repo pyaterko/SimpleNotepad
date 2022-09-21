@@ -33,7 +33,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="zero">0dp</dimen>
     <dimen name="height_hinder">200dp</dimen>
-    <dimen name="size_color_pictyres_layout">150dp</dimen>
+    <dimen name="size_color_pictyres_layout">120dp</dimen>
 
 
 </resources>

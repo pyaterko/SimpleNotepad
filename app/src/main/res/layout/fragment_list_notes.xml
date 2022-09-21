@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_notes_rec_view_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.notes.NotesListFragment">
+
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchNote"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_xx_large"
+        android:layout_marginHorizontal="@dimen/size_xxx_large"
+        android:layout_marginVertical="@dimen/size_max_small"
+        android:background="@drawable/backgraund_selected"/>
+
+    <ImageView
+        android:id="@+id/no_data_imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="no data"
+        android:src="@drawable/ic_no_data"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewListNotes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       android:layout_marginTop="@dimen/size_xxx_large"
+        tools:listitem="@layout/item_note"
+        tools:visibility="visible"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonFabNotesList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/teal_700"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/size_xx_medium"
+        android:layout_marginBottom="@dimen/size_xx_medium"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:layout_behavior=".ui.base.behaviors.FabBehavior"
+        app:tint="#FFFFFF" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+<!--<LinearLayout-->
+<!--android:id="@+id/colorPicturesLayout"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="@dimen/size_color_pictyres_layout"-->
+<!--android:layout_gravity="bottom"-->
+<!--android:background="@android:color/transparent"-->
+<!--android:orientation="vertical">-->
+<!--<com.owl_laugh_at_wasted_time.simplenotepad.ui.castomview.ColorPickerView-->
+<!--    android:id="@+id/colorPictures"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_gravity="center_horizontal" />-->
+<!--</LinearLayout>-->
+
+<!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--android:id="@+id/indicator_color"-->
+<!--android:layout_width="@dimen/size_large"-->
+<!--android:layout_height="@dimen/size_large"-->
+<!--android:layout_gravity="end"-->
+<!--app:borderWidth="0dp"-->
+<!--android:layout_marginTop="@dimen/size_medium"-->
+<!--android:layout_marginEnd="@dimen/size_medium" />-->
