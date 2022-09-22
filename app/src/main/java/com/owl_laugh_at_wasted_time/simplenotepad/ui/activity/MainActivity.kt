@@ -13,6 +13,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ScreenNavigation
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.shopping.ShoppingListFragment
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.todo.ToDoListFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main),ScreenNavigation {
 
@@ -25,6 +26,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main),ScreenNavigation 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        setContentView(binding.root)
+        if (savedInstanceState==null){
+            launchFragment(ToDoListFragment.newInstance())
+        }
+
         binding.selectTabs.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {}
@@ -32,7 +37,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main),ScreenNavigation 
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> {
-                        Toast.makeText(this@MainActivity, "0", Toast.LENGTH_LONG).show()
+                        launchFragment(ToDoListFragment.newInstance())
                     }
                     1 -> {
                         launchFragment(NotesListFragment.newInstance())

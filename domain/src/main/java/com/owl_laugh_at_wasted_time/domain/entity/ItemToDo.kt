@@ -6,9 +6,7 @@ import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 data class ItemToDo(
-
     var id: Int = UNDEFINED_ID,
     var title: String = "",
     var text: String = "",

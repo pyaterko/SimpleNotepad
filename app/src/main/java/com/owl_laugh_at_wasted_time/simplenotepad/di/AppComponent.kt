@@ -6,6 +6,8 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.CreateNotesFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.shopping.ShoppingListFragment
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.todo.CreateToDoFragment
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.todo.ToDoListFragment
 import com.owl_laugh_at_wasted_time.viewmodel.di.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
@@ -36,5 +38,7 @@ interface AppComponent {
     fun inject(fragment: ShoppingListFragment)
     fun inject(fragment: NotesListFragment)
     fun inject(fragment: CreateNotesFragment)
+    fun inject(fragment: ToDoListFragment)
+    fun inject(fragment: CreateToDoFragment)
 
 }

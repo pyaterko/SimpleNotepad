@@ -23,7 +23,7 @@ class NotesDiffCallBack(
         oldList[oldItemPosition].id == newList[newItemPosition].id
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-        oldList[oldItemPosition] == newList[newItemPosition]
+        oldList == newList
 
 }
 
@@ -33,7 +33,7 @@ class NotesListRVAdapter : RecyclerView.Adapter<NotesListRVAdapter.NoteViewHolde
     var onItemClickListener: ((ItemNote) -> Unit)? = null
     var onImageViewMoreVertListener: ((View) -> Unit)? = null
 
-    var notes: List<ItemNote> = mutableListOf()
+    var notes: List<ItemNote> = emptyList()
         set(value) {
             val result = DiffUtil.calculateDiff(NotesDiffCallBack(field, value))
             field = value

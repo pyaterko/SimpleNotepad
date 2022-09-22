@@ -31,9 +31,7 @@ class NotesListViewModel @Inject constructor(
 
 
     suspend fun addItemNote(item: ItemNote) {
-        viewModelScope.launch {
             repositoryNote.add(item)
-        }
     }
 
     suspend fun deleteNote(itemNote: ItemNote) {

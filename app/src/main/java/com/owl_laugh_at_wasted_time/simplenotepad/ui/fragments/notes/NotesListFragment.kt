@@ -36,7 +36,6 @@ import java.io.File
 class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
 
     private lateinit var listNotes: List<ItemNote>
-    private lateinit var search: SearchView
     private val binding by viewBinding(FragmentListNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
     private val adapter: NotesListRVAdapter by lazy { NotesListRVAdapter() }
@@ -49,7 +48,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setFabOnClickListener()
-        binding.recyclerViewListNotes.isVisible = true
         binding.recyclerViewListNotes.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.recyclerViewListNotes.adapter = adapter
@@ -58,9 +56,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
             adapter.notes = it
             listNotes = it.toList()
         }
-
         setupSwipe(binding.recyclerViewListNotes)
-
         adapter.onImageViewMoreVertListener = {
             showNoteMenu(it)
         }
@@ -79,7 +75,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     private fun setSearch() {
         binding.searchNote.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                search.onActionViewCollapsed()
+                binding.searchNote.onActionViewCollapsed()
                 return true
             }
 
@@ -266,17 +262,13 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     companion object {
         private const val TEXT_WILD = "text/*"
         private const val OPEN_DOCUMENT = 1
-
-        const val UNDEFINED_NAME = ""
-        private const val FILE_NAME = "FILE_NAME"
         private const val DELETE_PM = 1
         private const val SAVE_FILE = 2
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
 
-        fun newInstance(name: String = UNDEFINED_NAME): NotesListFragment {
+        fun newInstance(): NotesListFragment {
             return NotesListFragment().apply {
                 arguments = Bundle().apply {
-                    putString(FILE_NAME, name)
                 }
             }
         }
