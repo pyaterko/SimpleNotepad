@@ -17,8 +17,8 @@
             android:id="@+id/select_tabs"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:layout_weight="7"
             android:layout_margin="4dp"
+            android:layout_weight="7"
             app:tabIndicator="@drawable/shape_tab_layout"
             app:tabIndicatorColor="@color/sapphire"
             app:tabIndicatorGravity="stretch"
@@ -50,16 +50,17 @@
             android:id="@+id/settings"
             android:layout_width="15dp"
             android:layout_height="25dp"
-           android:layout_weight="1"
             android:layout_margin="@dimen/size_small"
-            android:background="@drawable/ic_baseline_more_vert_24"/>
+            android:layout_weight="1"
+            android:background="@drawable/ic_baseline_more_vert_24"
+            android:visibility="gone" />
 
 
     </LinearLayout>
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/container"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

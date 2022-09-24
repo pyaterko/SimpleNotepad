@@ -58,7 +58,8 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
         setupSwipe(binding.recyclerViewListNotes)
         adapter.onImageViewMoreVertListener = {
-            showNoteMenu(it)
+            val note=it.tag as ItemNote
+            showNoteMenu(it,note.id)
         }
 
         adapter.onItemClickListener={
@@ -145,10 +146,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         )
     }
 
-    private fun showNoteMenu(view: View) {
+    private fun showNoteMenu(view: View,id:Int) {
         val popupMenu = PopupMenu(view.context, view)
         val note = view.tag as ItemNote
-        popupMenu.menu.add(0, DELETE_PM, Menu.NONE, view.context.getString(R.string.delete_note))
+        popupMenu.menu.add(0, DELETE_PM, Menu.NONE, view.context.getString(R.string.edit_note))
         popupMenu.menu.add(
             0,
             SAVE_FILE,
@@ -158,7 +159,8 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 DELETE_PM -> {
-                    showDeleteAlertDialog(view = view)
+
+                    navigator().launchFragment(CreateNotesFragment.newInstance(id))
                 }
                 SAVE_FILE -> {
                     if (notPermision()) {
