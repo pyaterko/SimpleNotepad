@@ -8,6 +8,7 @@ import android.widget.EditText
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -16,9 +17,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 
-
 class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
-
 
     private var note = ItemNote()
     private val binding by viewBinding(FragmentCreateNotesBinding::bind)
@@ -29,7 +28,6 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
         super.onAttach(context)
         component.inject(this)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,13 +51,10 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
             closePalette()
         }
 
-
-
         binding.indicatorColor.setOnClickListener {
             openPalette()
         }
     }
-
 
     private fun setFabOnClickListener() {
         binding.fabCreateNote.setOnClickListener {
@@ -94,8 +89,4 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
         binding.indicatorColor.setBackgroundTintList(ColorStateList.valueOf(color))
     }
 
-
-    companion object {
-      private const val UNDEFINED_ID = 0
-    }
 }

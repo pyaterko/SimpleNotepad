@@ -20,7 +20,6 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
     private var size: Float = 0f
     private val args: ReadFragmentArgs by navArgs()
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         text = args.text
@@ -33,7 +32,7 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentReadBinding.bind(view)
-        binding.textRead.setText("$title $text")
+        binding.textRead.setText("$title\n$text")
 
         counter = pixelsToSp(binding.textRead.textSize)
 

@@ -13,6 +13,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -68,34 +69,14 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 NotesListFragmentDirections.actionNotesListFragmentToReadFragment(
                     true, it.title, it.text
                 )
-            findNavController().navigate(
-                directions,
-                navOptions {
-                    anim {
-                        enter = R.anim.enter
-                        exit = R.anim.exit
-                        popEnter = R.anim.pop_enter
-                        popExit = R.anim.pop_exit
-                    }
-                }
-            )
+            launchFragment(directions)
         }
 
         adapter.onNoteLongClickListener = {
             binding.searchNote.onActionViewCollapsed()
             val directions =
                 NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(it.id)
-            findNavController().navigate(
-                directions,
-                navOptions {
-                    anim {
-                        enter = R.anim.enter
-                        exit = R.anim.exit
-                        popEnter = R.anim.pop_enter
-                        popExit = R.anim.pop_exit
-                    }
-                }
-            )
+            launchFragment(directions)
         }
         setSearch()
 
@@ -189,17 +170,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 EDITOR -> {
                     val directions =
                         NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(id)
-                    findNavController().navigate(
-                        directions,
-                        navOptions {
-                            anim {
-                                enter = R.anim.enter
-                                exit = R.anim.exit
-                                popEnter = R.anim.pop_enter
-                                popExit = R.anim.pop_exit
-                            }
-                        }
-                    )
+                    launchFragment(directions)
                 }
                 SAVE_FILE -> {
                     if (notPermision()) {
@@ -250,17 +221,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 EDITOR -> {
                     val directions =
                         NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment()
-                    findNavController().navigate(
-                        directions,
-                        navOptions {
-                            anim {
-                                enter = R.anim.enter
-                                exit = R.anim.exit
-                                popEnter = R.anim.pop_enter
-                                popExit = R.anim.pop_exit
-                            }
-                        }
-                    )
+                    launchFragment(directions)
                 }
                 SAVE_FILE -> {
                     openFile()
@@ -269,6 +230,20 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
             return@setOnMenuItemClickListener true
         }
         popupMenu.show()
+    }
+
+    private fun launchFragment(directions: NavDirections) {
+        findNavController().navigate(
+            directions,
+            navOptions {
+                anim {
+                    enter = R.anim.enter
+                    exit = R.anim.exit
+                    popEnter = R.anim.pop_enter
+                    popExit = R.anim.pop_exit
+                }
+            }
+        )
     }
 
     private fun requestPermision() {

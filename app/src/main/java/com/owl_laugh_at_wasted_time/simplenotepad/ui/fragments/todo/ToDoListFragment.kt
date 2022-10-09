@@ -11,6 +11,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -67,17 +68,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         adapter.onItemClickListener = {
             val directions =
                 ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(it.id)
-            findNavController().navigate(
-                directions,
-                navOptions {
-                    anim {
-                        enter = R.anim.enter
-                        exit = R.anim.exit
-                        popEnter = R.anim.pop_enter
-                        popExit = R.anim.pop_exit
-                    }
-                }
-            )
+            launchFragment(directions)
         }
         setSearch()
     }
@@ -160,8 +151,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         startActivity(intent)
 
     }
-
-
+    
     private fun setSearch() {
         binding.searchToDo.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -181,19 +171,23 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         binding.buttonFabToDoList.setOnClickListener {
             val directions =
                 ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment()
-            findNavController().navigate(
-                directions,
-                navOptions {
-                    anim {
-                        enter = R.anim.enter
-                        exit = R.anim.exit
-                        popEnter = R.anim.pop_enter
-                        popExit = R.anim.pop_exit
-                    }
-                }
-            )
+            launchFragment(directions)
 
         }
+    }
+
+    private fun launchFragment(directions: NavDirections) {
+        findNavController().navigate(
+            directions,
+            navOptions {
+                anim {
+                    enter = R.anim.enter
+                    exit = R.anim.exit
+                    popEnter = R.anim.pop_enter
+                    popExit = R.anim.pop_exit
+                }
+            }
+        )
     }
 
     private fun setupSwipe(recyclerView: RecyclerView?) {
@@ -218,7 +212,6 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         val itemTouchHelper = ItemTouchHelper(callBack)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
-
 
     private fun showDeleteAlertDialog(
         viewHolder: RecyclerView.ViewHolder? = null,

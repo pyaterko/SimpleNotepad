@@ -1,6 +1,5 @@
 package com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain
 
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.CycleInterpolator
 import android.view.animation.TranslateAnimation
-import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -20,10 +18,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.material.snackbar.Snackbar
 import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_IN
 import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_OUT
-import com.owl_laugh_at_wasted_time.domain.TIME_STRING_TEMPLATE
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.domain.entity.PriorityToDo
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -40,7 +36,6 @@ fun Fragment.launchAndRepeatOnStart(block: suspend () -> Unit) {
     }
 }
 
-
 fun Context.dip(value: Int) = resources.displayMetrics.density * value
 
 fun View.dip(value: Int) = context.dip(value)
@@ -52,10 +47,6 @@ fun View.shakeAndVibrate() {
     shake.interpolator = CycleInterpolator(5F)
     startAnimation(shake)
     vibe?.vibrate(100)
-}
-
-fun View.showSnakeBar(text: String, length: Int = Snackbar.LENGTH_SHORT) {
-    Snackbar.make(this, text, length).show()
 }
 
 fun toDateString(value: String): String? =
@@ -101,9 +92,6 @@ fun PriorityToDo.getColorRes() = when (this) {
         R.drawable.item_menu
     }
 }
-
-fun PriorityToDo.getColorResColor(context: Context) =
-    ContextCompat.getColor(context, getColor())
 
 fun PriorityToDo.getColor() = when (this) {
     PriorityToDo.HIGH -> R.color.color_red
@@ -174,37 +162,6 @@ fun listener(context: Context, lyambda: () -> Unit): AdapterView.OnItemSelectedL
                 )
             }
         }
-    }
-}
-
-fun releaseDateToString(date: String): String? {
-    return try {
-        var result: String = ""
-        toDateString(date)?.let { date ->
-            date.split(" ").forEach {
-                result += it.replaceFirstChar(Char::titlecase) + " "
-            }
-        }
-        result
-    } catch (err: Exception) {
-        null
-    }
-}
-
-fun durationToString(duration: Int): String {
-    val hours: Int = duration / 60
-    val minutes: Int = duration % 60
-    return String.format(TIME_STRING_TEMPLATE, hours, minutes)
-}
-
-fun hideKeyboard(activity: Activity) {
-    val inputMethodManager =
-        activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    val currentFocusedView = activity.currentFocus
-    currentFocusedView?.let {
-        inputMethodManager.hideSoftInputFromWindow(
-            currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
-        )
     }
 }
 
@@ -285,7 +242,6 @@ fun showActionAlertDialog(
         it.setBackgroundDrawableResource(R.drawable.btn_bg)
     }
     dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-
 
 }
 

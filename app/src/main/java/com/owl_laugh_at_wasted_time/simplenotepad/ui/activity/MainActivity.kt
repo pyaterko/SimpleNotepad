@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-         navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
         binding.selectTabs.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
@@ -44,9 +44,7 @@ class MainActivity : AppCompatActivity() {
                     2 -> {
                         launchFragment(R.id.shoppingListFragment)
                     }
-
                 }
-
             }
         })
     }

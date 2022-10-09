@@ -26,7 +26,6 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    var isMain = true
 
     val component by lazy {
         (activity as MainActivity).component
@@ -40,20 +39,9 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         }
     }
 
-
     fun <T> Flow<T>.collectWhileStarted(block: (T) -> Unit) {
         launchAndRepeatOnStart {
             collect { block.invoke(it) }
-        }
-    }
-
-    fun Flow<Throwable>.connectErrorData() {
-        lifecycleScope.launch {
-            sample(1000L).collect {
-                if (lifecycle.currentState >= Lifecycle.State.STARTED) {
-                    Toast.makeText(context, "default_error", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 

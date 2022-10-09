@@ -11,6 +11,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -23,7 +24,6 @@ import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
 
 class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
-
     private var itemToDo = ItemToDo()
     private var showAnErrorInTheSelection = false
     private val binding by viewBinding(FragmentCreateTodoBinding::bind)
@@ -34,7 +34,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         super.onAttach(context)
         component.inject(this)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,7 +92,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         }
         binding.todoTitle.addTextChangedListener(textWatcher)
     }
-
 
     private fun isShowAnErrorInTheSelection(title: Boolean, priorety: Boolean) {
         if (showAnErrorInTheSelection) {
@@ -154,7 +152,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 launchScope {
                     viewModel.addItemNote(itemToDo)
                 }
-                //  navigator().launchFragment(ToDoListFragment.newInstance())
                 findNavController().navigateUp()
             } else {
                 showAnErrorInTheSelection = true
@@ -166,7 +163,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         }
 
     }
-
 
     private fun setData(title: EditText, text: EditText) {
         title.setText(itemToDo.title)
@@ -188,9 +184,5 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     private fun setColorInIndicator(color: Int) {
         binding.indicatorColor.setBackgroundTintList(ColorStateList.valueOf(color))
-    }
-
-    companion object {
-        const val UNDEFINED_ID = 0
     }
 }
