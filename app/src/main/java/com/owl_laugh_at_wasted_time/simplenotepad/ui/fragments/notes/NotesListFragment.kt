@@ -160,7 +160,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     private fun showNoteMenu(view: View, id: Int) {
         val popupMenu = PopupMenu(view.context, view)
         val note = view.tag as ItemNote
-        popupMenu.menu.add(0, DELETE_PM, Menu.NONE, view.context.getString(R.string.edit_note))
+        popupMenu.menu.add(0, EDITOR, Menu.NONE, view.context.getString(R.string.edit_note))
         popupMenu.menu.add(
             0,
             SAVE_FILE,
@@ -169,7 +169,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         )
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
-                DELETE_PM -> {
+                EDITOR -> {
                     findNavController().navigate(
                         R.id.action_notesListFragment_to_createNotesFragment,
                         bundleOf(CreateNotesFragment.NOTES_ID to id)
@@ -210,7 +210,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         val popupMenu = PopupMenu(view.context, view)
         popupMenu.menu.add(
             0,
-            DELETE_PM,
+            EDITOR,
             Menu.NONE, view.context.getString(R.string.add_note)
         )
         popupMenu.menu.add(
@@ -221,7 +221,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         )
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
-                DELETE_PM -> {
+                EDITOR -> {
                     findNavController().navigate(
                         R.id.action_notesListFragment_to_createNotesFragment,
                         bundleOf(CreateNotesFragment.NOTES_ID to CreateNotesFragment.UNDEFINED_ID)
@@ -280,7 +280,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     companion object {
         private const val TEXT_WILD = "text/*"
         private const val OPEN_DOCUMENT = 1
-        private const val DELETE_PM = 1
+        private const val EDITOR = 1
         private const val SAVE_FILE = 2
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
 
