@@ -13,6 +13,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,10 +66,17 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         }
 
         adapter.onItemClickListener = {
-            //  navigator().launchFragment(CreateToDoFragment.newInstance(it.id))
             findNavController().navigate(
                 R.id.action_toDoListFragment_to_createToDoFragment,
-                bundleOf(CreateToDoFragment.TODO_ID to it.id)
+                bundleOf(CreateToDoFragment.TODO_ID to it.id),
+                navOptions {
+                    anim {
+                        enter = R.anim.enter
+                        exit = R.anim.exit
+                        popEnter = R.anim.pop_enter
+                        popExit = R.anim.pop_exit
+                    }
+                }
             )
         }
         setSearch()
@@ -173,7 +181,15 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         binding.buttonFabToDoList.setOnClickListener {
             findNavController().navigate(
                 R.id.action_toDoListFragment_to_createToDoFragment,
-                bundleOf(CreateToDoFragment.TODO_ID to CreateToDoFragment.UNDEFINED_ID)
+                bundleOf(CreateToDoFragment.TODO_ID to CreateToDoFragment.UNDEFINED_ID),
+                navOptions {
+                    anim {
+                        enter = R.anim.enter
+                        exit = R.anim.exit
+                        popEnter = R.anim.pop_enter
+                        popExit = R.anim.pop_exit
+                    }
+                }
             )
 
         }
@@ -233,12 +249,5 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
     companion object {
         private const val REMINDER = 1
         private const val DELETE_TO_DO = 2
-
-        fun newInstance(): ToDoListFragment {
-            return ToDoListFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-        }
     }
 }

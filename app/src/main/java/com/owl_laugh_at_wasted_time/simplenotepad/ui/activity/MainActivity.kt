@@ -36,18 +36,22 @@ class MainActivity : AppCompatActivity() {
                 when (tab.position) {
                     0 -> {
                         navController.popBackStack()
+                        navController.popBackStack()
                         navController.navigate(R.id.toDoListFragment)
                     }
                     1 -> {
+                        navController.popBackStack()
                         navController.popBackStack()
                         navController.navigate(R.id.notesListFragment)
                     }
                     2 -> {
                         navController.popBackStack()
+                        navController.popBackStack()
                         navController.navigate(R.id.shoppingListFragment)
                     }
 
                 }
+
             }
         })
     }

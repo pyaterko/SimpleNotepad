@@ -15,6 +15,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -70,14 +71,30 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                     ReadFragment.CATEGORY to true,
                     ReadFragment.READ_KEY_TITLE to it.title,
                     ReadFragment.READ_KEY_TEXT to it.text
-                )
+                ),
+                navOptions {
+                    anim {
+                        enter = R.anim.enter
+                        exit = R.anim.exit
+                        popEnter = R.anim.pop_enter
+                        popExit = R.anim.pop_exit
+                    }
+                }
             )
         }
 
         adapter.onNoteLongClickListener = {
             findNavController().navigate(
                 R.id.action_notesListFragment_to_createNotesFragment,
-                bundleOf(CreateNotesFragment.NOTES_ID to it.id)
+                bundleOf(CreateNotesFragment.NOTES_ID to it.id),
+                navOptions {
+                    anim {
+                        enter = R.anim.enter
+                        exit = R.anim.exit
+                        popEnter = R.anim.pop_enter
+                        popExit = R.anim.pop_exit
+                    }
+                }
             )
         }
         setSearch()
@@ -172,7 +189,15 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 EDITOR -> {
                     findNavController().navigate(
                         R.id.action_notesListFragment_to_createNotesFragment,
-                        bundleOf(CreateNotesFragment.NOTES_ID to id)
+                        bundleOf(CreateNotesFragment.NOTES_ID to id),
+                        navOptions {
+                            anim {
+                                enter = R.anim.enter
+                                exit = R.anim.exit
+                                popEnter = R.anim.pop_enter
+                                popExit = R.anim.pop_exit
+                            }
+                        }
                     )
                 }
                 SAVE_FILE -> {
@@ -224,7 +249,15 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 EDITOR -> {
                     findNavController().navigate(
                         R.id.action_notesListFragment_to_createNotesFragment,
-                        bundleOf(CreateNotesFragment.NOTES_ID to CreateNotesFragment.UNDEFINED_ID)
+                        bundleOf(CreateNotesFragment.NOTES_ID to CreateNotesFragment.UNDEFINED_ID),
+                        navOptions {
+                            anim {
+                                enter = R.anim.enter
+                                exit = R.anim.exit
+                                popEnter = R.anim.pop_enter
+                                popExit = R.anim.pop_exit
+                            }
+                        }
                     )
                 }
                 SAVE_FILE -> {
