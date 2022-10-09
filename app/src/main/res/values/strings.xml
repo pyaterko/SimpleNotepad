@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Блокнот</string>
-    <string name="todo_list_title">Дела</string>
-    <string name="notes_title">Заметки</string>
-    <string name="shopping_list_title">Покупки</string>
+    <string name="toDoListFragment">Дела</string>
+    <string name="notesListFragment">Заметки</string>
+    <string name="shoppingListFragment">Покупки</string>
 
     <string name="title">Заголовок</string>
     <string name="description">Описание</string>

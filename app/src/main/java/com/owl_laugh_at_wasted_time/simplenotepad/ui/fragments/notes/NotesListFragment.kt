@@ -11,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -20,7 +22,6 @@ import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notepad.NotesListRVAdapter
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorString
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.navigator
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
@@ -58,16 +59,26 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
         setupSwipe(binding.recyclerViewListNotes)
         adapter.onImageViewMoreVertListener = {
-            val note=it.tag as ItemNote
-            showNoteMenu(it,note.id)
+            val note = it.tag as ItemNote
+            showNoteMenu(it, note.id)
         }
 
-        adapter.onItemClickListener={
-            navigator().launchFragment(ReadFragment.newInstance(it.title,it.text,true))
+        adapter.onItemClickListener = {
+            findNavController().navigate(
+                R.id.action_notesListFragment_to_readFragment,
+                bundleOf(
+                    ReadFragment.CATEGORY to true,
+                    ReadFragment.READ_KEY_TITLE to it.title,
+                    ReadFragment.READ_KEY_TEXT to it.text
+                )
+            )
         }
 
         adapter.onNoteLongClickListener = {
-            navigator().launchFragment(CreateNotesFragment.newInstance(it.id))
+            findNavController().navigate(
+                R.id.action_notesListFragment_to_createNotesFragment,
+                bundleOf(CreateNotesFragment.NOTES_ID to it.id)
+            )
         }
         setSearch()
 
@@ -146,7 +157,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         )
     }
 
-    private fun showNoteMenu(view: View,id:Int) {
+    private fun showNoteMenu(view: View, id: Int) {
         val popupMenu = PopupMenu(view.context, view)
         val note = view.tag as ItemNote
         popupMenu.menu.add(0, DELETE_PM, Menu.NONE, view.context.getString(R.string.edit_note))
@@ -159,8 +170,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 DELETE_PM -> {
-
-                    navigator().launchFragment(CreateNotesFragment.newInstance(id))
+                    findNavController().navigate(
+                        R.id.action_notesListFragment_to_createNotesFragment,
+                        bundleOf(CreateNotesFragment.NOTES_ID to id)
+                    )
                 }
                 SAVE_FILE -> {
                     if (notPermision()) {
@@ -209,7 +222,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 DELETE_PM -> {
-                    navigator().launchFragment(CreateNotesFragment.newInstance())
+                    findNavController().navigate(
+                        R.id.action_notesListFragment_to_createNotesFragment,
+                        bundleOf(CreateNotesFragment.NOTES_ID to CreateNotesFragment.UNDEFINED_ID)
+                    )
                 }
                 SAVE_FILE -> {
                     openFile()
@@ -268,11 +284,5 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         private const val SAVE_FILE = 2
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
 
-        fun newInstance(): NotesListFragment {
-            return NotesListFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-        }
     }
 }

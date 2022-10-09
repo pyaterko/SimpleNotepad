@@ -9,8 +9,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +22,8 @@ import com.google.android.material.timepicker.TimeFormat
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.entity.PriorityToDo
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.navigator
 import com.owl_laugh_at_wasted_time.simplenotepad.R
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListTodoBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
@@ -30,11 +31,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ToDoListFragment : BaseFragment(R.layout.fragment_list_notes) {
+class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
 
 
     private lateinit var listToDo: List<ItemToDo>
-    private val binding by viewBinding(FragmentListNotesBinding::bind)
+    private val binding by viewBinding(FragmentListTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
     private val adapter: ToDoListRVAdapter by lazy { ToDoListRVAdapter() }
 
@@ -48,23 +49,27 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_notes) {
         super.onViewCreated(view, savedInstanceState)
 
         setFabOnClickListener()
-        binding.recyclerViewListNotes.layoutManager =
+        binding.recyclerViewListToDo.layoutManager =
             LinearLayoutManager(requireContext())
-        binding.recyclerViewListNotes.adapter = adapter
+        binding.recyclerViewListToDo.adapter = adapter
         viewModel.listNotes.collectWhileStarted {
             binding.noDataImageView.isVisible = it.size == 0
             adapter.list = it
             listToDo = it.toList()
         }
 
-        setupSwipe(binding.recyclerViewListNotes)
+        setupSwipe(binding.recyclerViewListToDo)
 
         adapter.onImageViewMoreVertListener = {
             showToDoMenu(it)
         }
 
         adapter.onItemClickListener = {
-            navigator().launchFragment(CreateToDoFragment.newInstance(it.id))
+            //  navigator().launchFragment(CreateToDoFragment.newInstance(it.id))
+            findNavController().navigate(
+                R.id.action_toDoListFragment_to_createToDoFragment,
+                bundleOf(CreateToDoFragment.TODO_ID to it.id)
+            )
         }
         setSearch()
     }
@@ -150,9 +155,9 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_notes) {
 
 
     private fun setSearch() {
-        binding.searchNote.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchToDo.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                binding.searchNote.onActionViewCollapsed()
+                binding.searchToDo.onActionViewCollapsed()
                 return true
             }
 
@@ -165,8 +170,11 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_notes) {
     }
 
     private fun setFabOnClickListener() {
-        binding.buttonFabNotesList.setOnClickListener {
-            navigator().launchFragment(CreateToDoFragment.newInstance())
+        binding.buttonFabToDoList.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_toDoListFragment_to_createToDoFragment,
+                bundleOf(CreateToDoFragment.TODO_ID to CreateToDoFragment.UNDEFINED_ID)
+            )
 
         }
     }
@@ -217,7 +225,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 }
             },
             actionNB1 = {
-                binding.recyclerViewListNotes.adapter = adapter
+                binding.recyclerViewListToDo.adapter = adapter
             }
         )
     }

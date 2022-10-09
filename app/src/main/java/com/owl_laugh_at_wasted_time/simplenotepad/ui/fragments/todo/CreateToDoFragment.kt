@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -33,21 +34,11 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         component.inject(this)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    navigator().launchFragment(ToDoListFragment.newInstance())
-                }
-            })
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         launchScope {
-            val id = requireArguments().getInt(FILE_NAME)
+            val id = requireArguments().getInt(TODO_ID)
             if (id != CreateNotesFragment.UNDEFINED_ID) {
                 itemToDo = viewModel.getNoteById(id)
             }
@@ -162,7 +153,8 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 launchScope {
                     viewModel.addItemNote(itemToDo)
                 }
-                navigator().launchFragment(ToDoListFragment.newInstance())
+                //  navigator().launchFragment(ToDoListFragment.newInstance())
+                findNavController().navigateUp()
             } else {
                 showAnErrorInTheSelection = true
                 isShowAnErrorInTheSelection(
@@ -199,14 +191,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     companion object {
         const val UNDEFINED_ID = 0
-        private const val FILE_NAME = "FILE_NAME"
-
-        fun newInstance(name: Int = UNDEFINED_ID): CreateToDoFragment {
-            return CreateToDoFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(FILE_NAME, name)
-                }
-            }
-        }
+        const val TODO_ID = "TODO_ID"
     }
 }

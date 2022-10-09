@@ -26,6 +26,8 @@ object Versions {
     //Fragment
     const val fragment = "1.5.0"
     const val navigationFragmentKtx = "2.5.0"
+    const val navigationUiKtx = "2.5.0"
+    const val navigationDynamicFeatures = "2.5.0"
 
     //Design
     const val appcompat = "1.4.2"
@@ -52,6 +54,10 @@ object Fragment {
     const val fragmentktx = "androidx.fragment:fragment-ktx:${Versions.fragment}"
     const val navigation_fragment_ktx =
         "androidx.navigation:navigation-fragment-ktx:${Versions.navigationFragmentKtx}"
+    const val navigation_ui_ktx =
+        "androidx.navigation:navigation-fragment-ktx:${Versions.navigationUiKtx}"
+    const val navigation_dinamic_fragment =
+        "androidx.navigation:navigation-fragment-ktx:${Versions.navigationDynamicFeatures}"
 }
 
 object Design {

@@ -16,7 +16,6 @@ import android.widget.AdapterView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -29,7 +28,6 @@ import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.domain.entity.PriorityToDo
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.DialogShoppingListBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ScreenNavigation
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,13 +40,6 @@ fun Fragment.launchAndRepeatOnStart(block: suspend () -> Unit) {
     }
 }
 
-fun Fragment.navigator(): ScreenNavigation {
-    return requireActivity() as ScreenNavigation
-}
-
-fun DialogFragment.navigator(): ScreenNavigation {
-    return requireActivity() as ScreenNavigation
-}
 
 fun Context.dip(value: Int) = resources.displayMetrics.density * value
 

@@ -5,11 +5,10 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.navigator
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
@@ -29,21 +28,11 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
         component.inject(this)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    navigator().launchFragment(NotesListFragment.newInstance())
-                }
-            })
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         launchScope {
-            val id = requireArguments().getInt(FILE_NAME)
+            val id = requireArguments().getInt(NOTES_ID)
             if (id != UNDEFINED_ID) {
                 note = viewModel.getNoteById(id)
             }
@@ -77,7 +66,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
             launchScope {
                 viewModel.addItemNote(note)
             }
-            navigator().launchFragment(NotesListFragment.newInstance())
+            findNavController().navigateUp()
         }
     }
 
@@ -106,13 +95,6 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
 
     companion object {
         const val UNDEFINED_ID = 0
-        private const val FILE_NAME = "FILE_NAME"
-        fun newInstance(name: Int = UNDEFINED_ID): CreateNotesFragment {
-            return CreateNotesFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(FILE_NAME, name)
-                }
-            }
-        }
+        const val NOTES_ID = "NOTES_ID"
     }
 }

@@ -6,10 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.navigator
+import androidx.navigation.fragment.findNavController
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentReadBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment
 
 
 class ReadFragment : Fragment(R.layout.fragment_read) {
@@ -27,22 +26,6 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
         text = requireArguments().getString(READ_KEY_TEXT).toString()
         title = requireArguments().getString(READ_KEY_TITLE).toString()
         category=requireArguments().getBoolean(CATEGORY)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (category){
-                        navigator().launchFragment(NotesListFragment.newInstance())
-                    }else{
-
-                    }
-
-                }
-            })
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -83,19 +66,9 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
     }
 
     companion object {
-
         const val READ_KEY_TEXT = "text"
         const val CATEGORY="CATEGORY"
         const val READ_KEY_TITLE = "READ_KEY_TITLE"
-        fun newInstance(title: String, text: String,category:Boolean): ReadFragment {
-            return ReadFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(CATEGORY, category)
-                    putString(READ_KEY_TITLE, title)
-                    putString(READ_KEY_TEXT, text)
-                }
-            }
-        }
 
     }
 }
