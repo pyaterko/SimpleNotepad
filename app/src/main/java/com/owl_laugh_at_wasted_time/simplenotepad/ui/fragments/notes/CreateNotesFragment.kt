@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -22,6 +23,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
     private var note = ItemNote()
     private val binding by viewBinding(FragmentCreateNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
+    private val args:CreateNotesFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -32,7 +34,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         launchScope {
-            val id = requireArguments().getInt(NOTES_ID)
+            val id = args.noteId
             if (id != UNDEFINED_ID) {
                 note = viewModel.getNoteById(id)
             }
@@ -94,7 +96,6 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
 
 
     companion object {
-        const val UNDEFINED_ID = 0
-        const val NOTES_ID = "NOTES_ID"
+      private const val UNDEFINED_ID = 0
     }
 }

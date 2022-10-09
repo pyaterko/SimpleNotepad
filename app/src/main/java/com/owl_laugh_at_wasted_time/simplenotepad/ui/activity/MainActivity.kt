@@ -15,6 +15,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 class MainActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
+    private lateinit var navController: NavController
 
     val component by lazy {
         Initializer.component(this)
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController: NavController = navHostFragment.navController
+         navController = navHostFragment.navController
 
         binding.selectTabs.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
@@ -35,19 +36,13 @@ class MainActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> {
-                        navController.popBackStack()
-                        navController.popBackStack()
-                        navController.navigate(R.id.toDoListFragment)
+                        launchFragment(R.id.toDoListFragment)
                     }
                     1 -> {
-                        navController.popBackStack()
-                        navController.popBackStack()
-                        navController.navigate(R.id.notesListFragment)
+                        launchFragment(R.id.notesListFragment)
                     }
                     2 -> {
-                        navController.popBackStack()
-                        navController.popBackStack()
-                        navController.navigate(R.id.shoppingListFragment)
+                        launchFragment(R.id.shoppingListFragment)
                     }
 
                 }
@@ -77,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
+    }
+
+    private fun launchFragment(destination: Int) {
+        navController.popBackStack()
+        navController.popBackStack()
+        navController.navigate(destination)
     }
 
     companion object {

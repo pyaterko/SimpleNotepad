@@ -55,9 +55,9 @@ object Fragment {
     const val navigation_fragment_ktx =
         "androidx.navigation:navigation-fragment-ktx:${Versions.navigationFragmentKtx}"
     const val navigation_ui_ktx =
-        "androidx.navigation:navigation-fragment-ktx:${Versions.navigationUiKtx}"
+        "androidx.navigation:navigation-ui-ktx:${Versions.navigationUiKtx}"
     const val navigation_dinamic_fragment =
-        "androidx.navigation:navigation-fragment-ktx:${Versions.navigationDynamicFeatures}"
+        "androidx.navigation:navigation-dynamic-features-fragment:${Versions.navigationDynamicFeatures}"
 }
 
 object Design {

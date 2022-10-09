@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -66,9 +65,10 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         }
 
         adapter.onItemClickListener = {
+            val directions =
+                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(it.id)
             findNavController().navigate(
-                R.id.action_toDoListFragment_to_createToDoFragment,
-                bundleOf(CreateToDoFragment.TODO_ID to it.id),
+                directions,
                 navOptions {
                     anim {
                         enter = R.anim.enter
@@ -179,9 +179,10 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
 
     private fun setFabOnClickListener() {
         binding.buttonFabToDoList.setOnClickListener {
+            val directions =
+                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment()
             findNavController().navigate(
-                R.id.action_toDoListFragment_to_createToDoFragment,
-                bundleOf(CreateToDoFragment.TODO_ID to CreateToDoFragment.UNDEFINED_ID),
+                directions,
                 navOptions {
                     anim {
                         enter = R.anim.enter

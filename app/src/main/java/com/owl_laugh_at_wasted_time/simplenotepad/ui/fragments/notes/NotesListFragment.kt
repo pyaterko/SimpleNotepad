@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -30,7 +29,6 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ReadTask
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.read.ReadFragment
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 import java.io.File
 
@@ -65,13 +63,13 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
 
         adapter.onItemClickListener = {
+            binding.searchNote.onActionViewCollapsed()
+            val directions =
+                NotesListFragmentDirections.actionNotesListFragmentToReadFragment(
+                    true, it.title, it.text
+                )
             findNavController().navigate(
-                R.id.action_notesListFragment_to_readFragment,
-                bundleOf(
-                    ReadFragment.CATEGORY to true,
-                    ReadFragment.READ_KEY_TITLE to it.title,
-                    ReadFragment.READ_KEY_TEXT to it.text
-                ),
+                directions,
                 navOptions {
                     anim {
                         enter = R.anim.enter
@@ -84,9 +82,11 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
 
         adapter.onNoteLongClickListener = {
+            binding.searchNote.onActionViewCollapsed()
+            val directions =
+                NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(it.id)
             findNavController().navigate(
-                R.id.action_notesListFragment_to_createNotesFragment,
-                bundleOf(CreateNotesFragment.NOTES_ID to it.id),
+                directions,
                 navOptions {
                     anim {
                         enter = R.anim.enter
@@ -187,9 +187,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 EDITOR -> {
+                    val directions =
+                        NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(id)
                     findNavController().navigate(
-                        R.id.action_notesListFragment_to_createNotesFragment,
-                        bundleOf(CreateNotesFragment.NOTES_ID to id),
+                        directions,
                         navOptions {
                             anim {
                                 enter = R.anim.enter
@@ -247,9 +248,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 EDITOR -> {
+                    val directions =
+                        NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment()
                     findNavController().navigate(
-                        R.id.action_notesListFragment_to_createNotesFragment,
-                        bundleOf(CreateNotesFragment.NOTES_ID to CreateNotesFragment.UNDEFINED_ID),
+                        directions,
                         navOptions {
                             anim {
                                 enter = R.anim.enter

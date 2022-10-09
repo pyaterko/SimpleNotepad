@@ -10,6 +10,7 @@ import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -27,7 +28,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     private var showAnErrorInTheSelection = false
     private val binding by viewBinding(FragmentCreateTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
-
+    private val args:CreateToDoFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -38,8 +39,8 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         launchScope {
-            val id = requireArguments().getInt(TODO_ID)
-            if (id != CreateNotesFragment.UNDEFINED_ID) {
+            val id = args.todoId
+            if (id != UNDEFINED_ID) {
                 itemToDo = viewModel.getNoteById(id)
             }
             setData(binding.todoTitle, binding.todoText)
@@ -191,6 +192,5 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     companion object {
         const val UNDEFINED_ID = 0
-        const val TODO_ID = "TODO_ID"
     }
 }

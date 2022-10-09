@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentReadBinding
 
@@ -19,13 +18,14 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
     private var category = true
     private var counter = 0f
     private var size: Float = 0f
+    private val args: ReadFragmentArgs by navArgs()
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        text = requireArguments().getString(READ_KEY_TEXT).toString()
-        title = requireArguments().getString(READ_KEY_TITLE).toString()
-        category=requireArguments().getBoolean(CATEGORY)
+        text = args.text
+        title = args.title
+        category = args.category
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -48,7 +48,6 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
         })
     }
 
-
     private fun changeText(increment: Boolean) {
         size = if (increment) {
             counter = counter.plus(5F)
@@ -65,10 +64,4 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
         return px / scaledDensity
     }
 
-    companion object {
-        const val READ_KEY_TEXT = "text"
-        const val CATEGORY="CATEGORY"
-        const val READ_KEY_TITLE = "READ_KEY_TITLE"
-
-    }
 }
