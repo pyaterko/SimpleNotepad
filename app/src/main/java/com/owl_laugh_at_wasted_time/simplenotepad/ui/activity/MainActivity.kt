@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.simplenotepad.Initializer
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -75,7 +76,17 @@ class MainActivity : AppCompatActivity() {
     private fun launchFragment(destination: Int) {
         navController.popBackStack()
         navController.popBackStack()
-        navController.navigate(destination)
+        navController.navigate(
+            destination,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.enter
+                    exit = R.anim.exit
+                    popEnter = R.anim.pop_enter
+                    popExit = R.anim.pop_exit
+                }
+            })
     }
 
     companion object {
