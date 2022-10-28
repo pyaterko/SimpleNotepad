@@ -110,6 +110,12 @@ fun parsePriority(priority: String): PriorityToDo {
         "Низкий приоритет" -> {
             PriorityToDo.LOW
         }
+        "High priority" -> {
+            PriorityToDo.HIGH
+        }
+        "Low priority" -> {
+            PriorityToDo.LOW
+        }
         else -> {
             PriorityToDo.NOT
         }

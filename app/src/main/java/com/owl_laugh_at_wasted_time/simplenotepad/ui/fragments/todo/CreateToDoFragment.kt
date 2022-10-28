@@ -127,7 +127,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     }
 
     private fun verifyPrioretyFromUser(priorety: String): Boolean {
-        return !(priorety.equals("Выберите приоритет"))
+        return !(priorety.equals("Выберите приоритет"))&&!(priorety.equals("Choose a priority"))
     }
 
     private fun showError() {

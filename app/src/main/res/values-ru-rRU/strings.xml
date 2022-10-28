@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Блокнот</string>
+    <string name="toDoListFragment">Дела</string>
+    <string name="notesListFragment">Заметки</string>
+    <string name="shoppingListFragment">Покупки</string>
+
+    <string name="title">Заголовок</string>
+    <string name="description">Описание</string>
+    <string name="please_fill_out_all_fields">Пожалуйста, заполните обязательные поля.</string>
+    <string name="action_yes">ДА</string>
+    <string name="action_no">НЕТ</string>
+    <string name="default_alert_message">Хотите удалить?</string>
+    <string name="empty_value">Значение пусто</string>
+    <string name="save_in_documents">сохранить в файл</string>
+    <string name="name_of_file">введите название файла</string>
+    <string name="file_save">Файл будет сохранен в папке documents</string>
+    <string name="success_save">Успещно сохранен</string>
+    <string name="not_file">файл с таким именем был удален или перемещен</string>
+    <string name="reminder">установить напоминание</string>
+    <string name="event">Мероприятие</string>
+    <string name="delete_event">удалить мероприятие</string>
+    <string name="error_priorety">измените приоритет запланированного дела на ВЫСОКИЙ</string>
+    <string name="edit_note">редактор</string>
+    <string name="delete_note">удалить заметку</string>
+    <string name="add_note">создать новую</string>
+    <string name="remote_from_file">восстановить из файла</string>
+    <string name="save">Сохранить</string>
+    <string name="successfully_added">Успешно добавлено!</string>
+    <string name="volume_setup">Запланировать покупку</string>
+    <string name="name_of_product">наименование товара</string>
+    <string name="default_alert_shop">Удалить товар из списка?</string>
+
+    <string name="schedule_an_event">Запланировать мероприятие</string>
+    <string name="action_confirm">Добавить</string>
+
+    <string name="undefined_error">Неопределенная ошибка</string>
+    <string name="create_data">добавлено</string>
+    <string name="planned">Запланировать</string>
+
+
+    <string-array name="priorities">
+        <item>Выберите приоритет</item>
+        <item>Высокий приоритет</item>
+        <item>Низкий приоритет</item>
+        <item>Без приоритета</item>
+    </string-array>
+</resources>
