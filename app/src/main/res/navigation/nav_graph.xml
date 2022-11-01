@@ -8,16 +8,22 @@
     <fragment
         android:id="@+id/toDoListFragment"
         android:name="com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.todo.ToDoListFragment"
-        android:label="ToDoListFragment"
+        android:label="@string/todo_lable"
         tools:layout="@layout/fragment_list_todo">
         <action
             android:id="@+id/action_toDoListFragment_to_createToDoFragment"
             app:destination="@id/createToDoFragment" />
+        <action
+            android:id="@+id/action_toDoListFragment_to_notesListFragment"
+            app:destination="@id/notesListFragment" />
+        <action
+            android:id="@+id/action_toDoListFragment_to_shoppingListFragment"
+            app:destination="@id/shoppingListFragment" />
     </fragment>
     <fragment
         android:id="@+id/createToDoFragment"
         android:name="com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.todo.CreateToDoFragment"
-        android:label="CreateToDoFragment"
+        android:label="@string/create_todo_lable"
         tools:layout="@layout/fragment_create_todo">
         <action
             android:id="@+id/action_createToDoFragment_to_toDoListFragment"
@@ -30,7 +36,7 @@
     <fragment
         android:id="@+id/notesListFragment"
         android:name="com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment"
-        android:label="fragment_list_notes"
+        android:label="@string/notes_list_lable"
         tools:layout="@layout/fragment_list_notes">
         <action
             android:id="@+id/action_notesListFragment_to_readFragment"
@@ -42,7 +48,7 @@
     <fragment
         android:id="@+id/createNotesFragment"
         android:name="com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.CreateNotesFragment"
-        android:label="fragment_create_notes"
+        android:label="@string/create_note_lable"
         tools:layout="@layout/fragment_create_notes" >
         <action
             android:id="@+id/action_createNotesFragment_to_notesListFragment"
@@ -55,12 +61,12 @@
     <fragment
         android:id="@+id/shoppingListFragment"
         android:name="com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.shopping.ShoppingListFragment"
-        android:label="fragment_shopping_list"
+        android:label="@string/shopping_list_lable"
         tools:layout="@layout/fragment_shopping_list" />
     <fragment
         android:id="@+id/readFragment"
         android:name="com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.read.ReadFragment"
-        android:label="fragment_read"
+        android:label="{title} "
         tools:layout="@layout/fragment_read" >
         <action
             android:id="@+id/action_readFragment_to_notesListFragment"

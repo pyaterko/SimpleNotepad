@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -51,6 +52,22 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         setFabOnClickListener()
         binding.recyclerViewListNotes.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.recyclerViewListNotes.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) {
+                        binding.fab.fab.collapse()
+                        binding.fab.fab.isVisible = false
+
+                    } else if (dy < 0) {
+                        binding.fab.fab.isVisible = true
+                        binding.fab.fab.collapse()
+                    } else {
+                        Log.d("TAG", "No Vertical Scrolled")
+                    }
+                }
+            }
+        )
         binding.recyclerViewListNotes.adapter = adapter
         viewModel.listNotes.collectWhileStarted {
             binding.noDataImageView.isVisible = it.size == 0
@@ -64,6 +81,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
 
         adapter.onItemClickListener = {
+            binding.fab.fab.collapse()
             binding.searchNote.onActionViewCollapsed()
             val directions =
                 NotesListFragmentDirections.actionNotesListFragmentToReadFragment(
@@ -73,6 +91,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
 
         adapter.onNoteLongClickListener = {
+            binding.fab.fab.collapse()
             binding.searchNote.onActionViewCollapsed()
             val directions =
                 NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(it.id)
@@ -98,10 +117,9 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     }
 
     private fun setFabOnClickListener() {
-        binding.buttonFabNotesList.setOnClickListener {
-            showFabMenu(it)
-        }
+        initFab()
     }
+
 
     private fun setupSwipe(recyclerView: RecyclerView?) {
         val callBack = object : ItemTouchHelper.SimpleCallback(
@@ -203,33 +221,19 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.show()
     }
 
-    private fun showFabMenu(view: View) {
-        val popupMenu = PopupMenu(view.context, view)
-        popupMenu.menu.add(
-            0,
-            EDITOR,
-            Menu.NONE, view.context.getString(R.string.add_note)
-        )
-        popupMenu.menu.add(
-            0,
-            SAVE_FILE,
-            Menu.NONE,
-            view.context.getString(R.string.remote_from_file)
-        )
-        popupMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                EDITOR -> {
-                    val directions =
-                        NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment()
-                    launchFragment(directions)
-                }
-                SAVE_FILE -> {
-                    openFile()
-                }
-            }
-            return@setOnMenuItemClickListener true
+    private fun initFab() {
+        binding.fab.fabNote.setOnClickListener {
+            binding.fab.fab.collapse()
+            val directions =
+                NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment()
+            launchFragment(directions)
         }
-        popupMenu.show()
+
+        binding.fab.fabRemoteFromFile.setOnClickListener {
+            binding.fab.fab.collapse()
+            openFile()
+        }
+
     }
 
     private fun launchFragment(directions: NavDirections) {

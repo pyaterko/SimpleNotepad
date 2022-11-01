@@ -6,6 +6,11 @@ plugins {
 
 }
 
+boolean signConfigExists = project.hasProperty("SIGN_PROPS") && new File(project.property("SIGN_PROPS")).exists()
+if (signConfigExists) {
+    Properties props = new Properties()
+    props.load(new FileInputStream(file(project.property("SIGN_PROPS"))))
+}
 android {
     compileSdkVersion Config.compile_sdk
     defaultConfig {
@@ -54,5 +59,13 @@ dependencies {
     implementation Fragment.navigation_dinamic_fragment
     implementation Dagger.dagger
     kapt Dagger.dagger_compiler
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+//    implementation 'com.android.support:multidex:1.0.3'
+//    implementation 'ch.acra:acra-core:5.9.3'
+//    implementation 'ch.acra:acra-http:5.9.3'
+//    implementation 'ch.acra:acra-toast:5.9.3'
+//    implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
+//    implementation 'com.github.bosphere.android-filelogger:filelogger:1.0.7'
 
 }
