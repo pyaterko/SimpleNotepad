@@ -17,15 +17,13 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.owl_laugh_at_wasted_time.domain.*
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.listener
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.parsePriority
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.shakeAndVibrate
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateTodoBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.notification.NotificationHelper
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,22 +32,24 @@ import java.util.*
 class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     private var itemToDo = ItemToDo()
+    private var idItemToDo = UNDEFINED_ID
     private var showAnErrorInTheSelection = false
     private val binding by viewBinding(FragmentCreateTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
     private val args: CreateToDoFragmentArgs by navArgs()
 
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         component.inject(this)
+        idItemToDo = args.todoId
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         launchScope {
-            val id = args.todoId
-            if (id != UNDEFINED_ID) {
-                itemToDo = viewModel.getNoteById(id)
+            if (idItemToDo != UNDEFINED_ID) {
+                itemToDo = viewModel.getNoteById(idItemToDo)
             }
             setData(binding.todoTitle, binding.todoText)
         }
@@ -70,14 +70,24 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
             showError()
         }
 
+        binding.currentPrioritiesSpinner.setSelection(args.priority)
+
         binding.indicatorColor.setOnClickListener {
             openPalette()
         }
 
         setToolBarMenu(
             blockCreateMenu = {
-                val menuItemAlarm = it.findItem(R.id.menu_alarm)
-                menuItemAlarm.setVisible(true)
+                if (idItemToDo != UNDEFINED_ID) {
+                    if (itemToDo.data == "") {
+                        val menuItemAlarm = it.findItem(R.id.menu_alarm)
+                        menuItemAlarm.setVisible(true)
+                    } else {
+                        val notificationOff = it.findItem(R.id.menu_notifications_off)
+                        notificationOff.setVisible(true)
+                    }
+                }
+
                 val menuItemSave = it.findItem(R.id.menu_save)
                 menuItemSave.setVisible(true)
             },
@@ -87,6 +97,9 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                         checkBeforeIvent { _, _, _ ->
                             setReminder()
                         }
+                    }
+                    R.id.menu_notifications_off -> {
+                        deleteNotification()
                     }
                     R.id.menu_save -> {
                         checkBeforeIvent { title, description, getPriority ->
@@ -138,23 +151,43 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 calendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
                 calendar.set(Calendar.MINUTE, materialTimePicker.minute)
 
-                val text = SimpleDateFormat(
+                val data = SimpleDateFormat(
                     DATE_TIME_FORMAT,
                     Locale.getDefault()
                 )
                     .format(calendar.time)
-                itemToDo.data = text
+                itemToDo.data = data
                 itemToDo.title = binding.todoTitle.text.toString()
                 itemToDo.text = binding.todoText.text.toString()
                 itemToDo.priority =
                     parsePriority(binding.currentPrioritiesSpinner.selectedItem.toString())
                 if (itemToDo.id != UNDEFINED_ID) {
+                    setNotification(data)
                     launchScope {
                         viewModel.addItemNote(itemToDo)
                     }
                 }
                 addEvent(itemToDo.title, calendar.time.time)
             }
+        }
+    }
+
+    private fun setNotification(text: String) {
+        NotificationHelper(requireContext()).createNotification(
+            itemToDo.id,
+            itemToDo.title,
+            text
+        )
+    }
+
+    private fun deleteNotification() {
+        try {
+            itemToDo.data = ""
+            NotificationHelper(requireContext()).deleteNotification(idItemToDo)
+        } catch (e: Exception) {
+        }
+        launchScope {
+            viewModel.addItemNote(itemToDo)
         }
     }
 

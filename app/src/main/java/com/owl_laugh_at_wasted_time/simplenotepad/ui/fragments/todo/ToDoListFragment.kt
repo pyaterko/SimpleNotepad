@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getId
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListTodoBinding
 import com.owl_laugh_at_wasted_time.settings.activity.SettingsActivity
@@ -57,7 +58,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
 
         adapter.onItemClickListener = {
             val directions =
-                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(it.id)
+                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(it.priority.getId(),it.id)
             launchFragment(directions)
         }
 
@@ -107,7 +108,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
     private fun setFabOnClickListener() {
         binding.buttonFabToDoList.setOnClickListener {
             val directions =
-                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment()
+                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(0,0)
             launchFragment(directions)
 
         }

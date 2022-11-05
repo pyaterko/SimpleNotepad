@@ -1,10 +1,17 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.activity
 
+
+
+
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -34,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        if (preferences(this).getBoolean(CURRENT_BOOLEAN_STATE,true)){
+        if (preferences(this).getBoolean(CURRENT_BOOLEAN_STATE, true)) {
             startActivity(Intent(applicationContext, IntroActivity::class.java))
             preferences(this).edit().putBoolean(CURRENT_BOOLEAN_STATE, false).apply()
         }
@@ -50,6 +57,17 @@ class MainActivity : AppCompatActivity() {
         ).build()
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
+
+
+
+
+
+
+
+
+
+
+
         binding.selectTabs.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {}
@@ -58,6 +76,8 @@ class MainActivity : AppCompatActivity() {
                 when (tab.position) {
                     0 -> {
                         navController.navigateUp()
+
+
                     }
                     1 -> {
                         navController.navigateUp()

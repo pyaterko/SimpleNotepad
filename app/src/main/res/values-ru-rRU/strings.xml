@@ -32,7 +32,7 @@
     <string name="action_confirm">Добавить</string>
     <string name="undefined_error">Неопределенная ошибка</string>
     <string name="create_data">добавлено</string>
-    <string name="planned">Запланировать</string>
+    <string name="planned">Уведомление</string>
 
 
     <string-array name="priorities">

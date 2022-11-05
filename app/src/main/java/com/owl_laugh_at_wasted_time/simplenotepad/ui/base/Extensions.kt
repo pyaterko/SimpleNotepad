@@ -106,6 +106,15 @@ fun PriorityToDo.getColor() = when (this) {
     }
 }
 
+fun PriorityToDo.getId() = when (this) {
+    PriorityToDo.HIGH -> 1
+    PriorityToDo.LOW ->2
+    PriorityToDo.NOT -> 3
+    else -> {
+      0
+    }
+}
+
 fun parsePriority(priority: String): PriorityToDo {
     return when (priority) {
         "Высокий приоритет" -> {
