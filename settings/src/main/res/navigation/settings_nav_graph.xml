@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_nav_graph"
+    app:startDestination="@id/settingsFragment">
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsFragment"
+        android:label="@string/settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_settingsInterfase"
+            app:destination="@id/settingsInterfase" />
+        <action
+            android:id="@+id/action_settingsFragment_to_settingsBehavuors"
+            app:destination="@id/settingsBehavuors" />
+        <action
+            android:id="@+id/action_settingsFragment_to_settingsData"
+            app:destination="@id/settingsData" />
+        <action
+            android:id="@+id/action_settingsFragment_to_chengelogFragment"
+            app:destination="@id/chengelogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsInterfase"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsInterfase"
+        android:label="@string/settings_screen_interface" />
+    <fragment
+        android:id="@+id/settingsBehavuors"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsBehavuors"
+        android:label="@string/settings_screen_behaviors" />
+    <fragment
+        android:id="@+id/settingsData"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsData"
+        android:label="@string/settings_screen_data" />
+    <fragment
+        android:id="@+id/chengelogFragment"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.ChengelogFragment"
+        android:label="@string/settings_changelog"
+        tools:layout="@layout/fragment_chengelog" />
+</navigation>

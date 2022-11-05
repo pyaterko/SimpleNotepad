@@ -1,0 +1,46 @@
+<resources>
+
+    <string name="help">Справка</string>
+    <string name="settings">Настройки</string>
+    <string name="settings_screen_interface">Интерфейс</string>
+    <string name="settings_changelog">История изменений</string>
+    <string name="settings_screen_data">Данные</string>
+    <string name="settings_category_preferences">Параметры</string>
+    <string name="settings_category_about">О приложении</string>
+    <string name="settings_tour_show_again">Обучение</string>
+    <string name="settings_screen_behaviors">Взаимодействие</string>
+    <string name="settings_enable_swipe">Смахивание</string>
+    <string name="settings_enable_swipe_summary">Сдвиг заметок позволит выполнить действие</string>
+    <string name="settings_swipe_to_trash">Жест удаления</string>
+    <string name="settings_fab_expansion_behavior">Поведение всплывающей кнопки</string>
+    <string name="settings_fab_expansion_behavior_summary_on">Короткое касание создает заметку</string>
+    <string name="settings_fab_expansion_behavior_summary_off">Короткое касание позволяет выбрать опции</string>
+    <string name="settings_prettified_dates">Наглядные даты</string>
+    <string name="settings_prettified_dates_summary_on">Даты указываются в упрощённом формате</string>
+    <string name="settings_prettified_dates_summary_off">Даты указываются более подробно</string>
+    <string name="tour_listactivity_home_title">Список дел</string>
+    <string name="tour_listactivity_home_detail">Держите список дел на виду.Если он будет у вас перед глазами, вы вряд ли что-то забудете. Так же лучше выделять дела цветом. Яркие цвета опять же будут привлекать ваше внимание.</string>
+    <string name="tour_listactivity_tag_detail">Список дел без сроков — это список желаний, и не более. Сроки помогают определять приоритеты задач и проектов по важности и необходимым временным затратам.</string>
+    <string name="tour_detailactivity_attachment_title">Работайте с заметками</string>
+    <string name="tour_detailactivity_attachment_detail">Один из самых важных инструментов жизни — это собственная система ведения заметок. Она помогает писать статьи, работать над сложными проектами и быстрее осваивать новые области знаний!</string>
+    <string name="tour_listactivity_final_title">Приятного пользования!</string>
+    <string name="tour_listactivity_final_detail">Блокнот — простой блокнот, идеально подходящий для быстрых заметок. Программа состоит из трех разделов - дела, заметки и покупки, каждый раздел со своим функционалом!</string>
+    <string name="tour_community">Гибкие настройки помогут вам подстроить приложение по свои нужды!</string>
+    <string name="shopping_list_lable">Список покупок</string>
+    <string name="settings_data">settings_data</string>
+    <string name="settings_interface">settings_interface</string>
+    <string name="settings_behaviors">settings_behaviors</string>
+    <string name="settings_tour_show">settings_tour_show_again</string>
+    <string name="settings_changel">settings_changelog</string>
+    <string name="settings_import_data_key">settings_import_data</string>
+    <string name="settings_fab_expansion_behavior_key">settings_fab_expansion_behavior</string>
+    <string name="settings_enable_swipe_key">settings_enable_swipe</string>
+    <string name="settings_prettified_dates_key">settings_prettified_dates</string>
+    <string name="settings_swipe_to_trash_key">settings_swipe_to_trash</string>
+    <string name="swipe_removal">Удаление смахиванием</string>
+    <string name="settings_import">Управление копиями</string>
+    <string name="settings_tour_show_again_summary">Повторно пройти обучающую инструкцию</string>
+    <string name="version">\n\n\nБлокнот :\nверсия 1.0</string>
+
+
+</resources>

@@ -18,4 +18,6 @@
         <item name="android:background">@drawable/fab_labels_background</item>
         <item name="android:textColor">@color/text_color</item>
     </style>
+    <style name="NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    </style>
 </resources>

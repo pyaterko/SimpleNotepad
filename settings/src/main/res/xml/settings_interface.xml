@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:fitsSystemWindows="true">
+
+  <SwitchPreference
+    android:defaultValue="false"
+    android:key="@string/settings_fab_expansion_behavior_key"
+    android:summaryOff="@string/settings_fab_expansion_behavior_summary_off"
+    android:summaryOn="@string/settings_fab_expansion_behavior_summary_on"
+    android:title="@string/settings_fab_expansion_behavior"
+    app:iconSpaceReserved="false" />
+
+  <SwitchPreference
+    android:defaultValue="true"
+    android:key="@string/settings_prettified_dates_key"
+    android:summaryOff="@string/settings_prettified_dates_summary_off"
+    android:summaryOn="@string/settings_prettified_dates_summary_on"
+    android:title="@string/settings_prettified_dates"
+    app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

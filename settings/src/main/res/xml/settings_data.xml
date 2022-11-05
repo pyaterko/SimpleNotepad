@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:fitsSystemWindows="true">
+
+
+  <CheckBoxPreference
+      android:key="@string/settings_import_data_key"
+      android:title="@string/settings_import"
+      android:summaryOff="импорт и экспорт отключечы"
+      android:summaryOn="импорт и экспорт включены"
+      app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

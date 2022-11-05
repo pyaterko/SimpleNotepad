@@ -19,6 +19,8 @@ object Modules {
     const val domain = ":domain"
     const val data = ":data"
     const val viewmodel = ":viewmodel"
+    const val intro = ":instruction"
+    const val settings = ":settings"
 }
 
 object Versions {
@@ -48,6 +50,34 @@ object Versions {
     const val runtime = "2.4.2"
     const val roomCompiler = "2.4.2"
 
+    //floatingactionbutton
+    const val floatingactionbutton = "1.10.1"
+
+    //glide
+    const val glide = "4.12.0"
+    const val glideCompiler = "4.12.0"
+
+    //appintro
+    const val appintro = "1.3.0"
+
+}
+
+object Intro {
+    const val appintro = "com.github.paolorotolo:appintro:${Versions.appintro}"
+}
+
+object Glide {
+    const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
+    const val glideIntegration = "com.github.bumptech.glide:okhttp3-integration:${Versions.glide}"
+    const val glide_compiler = "com.github.bumptech.glide:compiler:${Versions.glideCompiler}"
+}
+
+object Pref {
+    const val pref = "androidx.preference:preference-ktx:1.2.0"
+}
+
+object Fab {
+    const val fab = "com.getbase:floatingactionbutton:${Versions.floatingactionbutton}"
 }
 
 object Fragment {

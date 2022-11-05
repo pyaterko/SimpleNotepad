@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.toDateString
+import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemNoteBinding
 
 
@@ -74,14 +77,22 @@ class NotesListRVAdapter : RecyclerView.Adapter<NotesListRVAdapter.NoteViewHolde
         val context: Context,
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        val format = preferences(context).getBoolean(
+            context.getString(R.string.settings_prettified_dates_key),
+            false
+        )
+
         fun bind(note: ItemNote) {
             with(binding) {
                 imageViewMoreVert.tag = note
                 itemFon.setBackgroundColor(note.color?.getColorDrawable(context))
                 textViewTitle.text = note.title
                 textViewDescription.text = note.text
-                textViewNameDayOfWeek.text = note.dateOfCreation
-
+                if (!format) {
+                    textViewNameDayOfWeek.text = toDateString(note.dateOfCreation)
+                } else {
+                    textViewNameDayOfWeek.text = note.dateOfCreation
+                }
             }
         }
     }

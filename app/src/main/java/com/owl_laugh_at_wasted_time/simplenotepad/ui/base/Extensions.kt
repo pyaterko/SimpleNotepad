@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.preference.PreferenceManager
 import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_IN
 import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_OUT
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
@@ -49,14 +50,17 @@ fun View.shakeAndVibrate() {
     vibe?.vibrate(100)
 }
 
-fun toDateString(value: String): String? =
+fun preferences(context: Context) =
+    PreferenceManager.getDefaultSharedPreferences(context)
+
+fun toDateString(value: String): String =
     try {
         SimpleDateFormat(DATE_FORMAT_IN, Locale.getDefault())
-            .parse(value)?.let { date ->
+            .parse(value).let { date ->
                 SimpleDateFormat(DATE_FORMAT_OUT, Locale.getDefault()).format(date)
             }
     } catch (err: Exception) {
-        null
+        ""
     }
 
 fun ItemColor.getColorDrawable(context: Context) =
@@ -249,6 +253,216 @@ fun showActionAlertDialog(
     }
     dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
 
+}
+
+fun getProductName(name: String): String {
+    if (name.filter { it in ' '..'Z' || it in 'a'..'z' }.length == name.length) {
+        return name
+    }
+    when (name) {
+        "рис" -> {
+            return "rice"
+        }
+        "гречка" -> {
+            return "buckwheat"
+        }
+        "соль" -> {
+            return "salt"
+        }
+        "чай" -> {
+            return "tea"
+        }
+        "кофе" -> {
+            return "coffee"
+        }
+        "пщено" -> {
+            return "wheat"
+        }
+        "макароны" -> {
+            return "pasta"
+        }
+        "кетчуп" -> {
+            return "ketchup"
+        }
+        "майонез" -> {
+            return "mayonnaise"
+        }
+        "томатная паста" -> {
+            return "tomato paste"
+        }
+        "масло" -> {
+            return "butter"
+        }
+        "лимон" -> {
+            return "lemon"
+        }
+        "губки для мытья посуды" -> {
+            return "sponges for washing dishes"
+        }
+        "стиральный порошек" -> {
+            return "washing powder"
+        }
+        "пакеты для мусора" -> {
+            return "garbage bags"
+        }
+        "пакеты" -> {
+            return "packages"
+        }
+        "туалетная бумага" -> {
+            return "toilet paper"
+        }
+        "салфетки" -> {
+            return "napkins"
+        }
+        "жидкость для промывания труб" -> {
+            return "pipe washing liquid"
+        }
+        "зубная паста" -> {
+            return "toothpast"
+        }
+        "зубная щетка" -> {
+            return "toothbrush"
+        }
+        "мыло" -> {
+            return "lather"
+        }
+        "фольга" -> {
+            return "foil"
+        }
+        "пищевая пленка" -> {
+            return "cling film"
+        }
+        "рукав для запекания" -> {
+            return "sleeve for baking"
+        }
+        "грибы" -> {
+            return "mushrooms"
+        }
+        "авокадо" -> {
+            return "avocado"
+        }
+        "ананас" -> {
+            return "pineapple"
+        }
+        "баклажаны" -> {
+            return "eggplant"
+        }
+        "брокколи" -> {
+            return "broccoli"
+        }
+        "виноград" -> {
+            return "grape"
+        }
+        "говядина" -> {
+            return "beef"
+        }
+        "имбирь" -> {
+            return "ginger"
+        }
+        "индейка" -> {
+            return "turkey"
+        }
+        "какао" -> {
+            return "cocoa"
+        }
+        "кальмар" -> {
+            return "squid"
+        }
+        "капуста" -> {
+            return "cabbage"
+        }
+        "картошка" -> {
+            return "potatoes"
+        }
+        "кефир" -> {
+            return "kefir"
+        }
+        "киви" -> {
+            return "kiwi"
+        }
+        "кокос" -> {
+            return "coconut"
+        }
+        "корица" -> {
+            return "cinnamon"
+        }
+        "кролик" -> {
+            return "rabbit"
+        }
+        "кунжут" -> {
+            return "sesame"
+        }
+        "курица" -> {
+            return "chicken"
+        }
+        "лаваш" -> {
+            return "pita"
+        }
+        "морковь" -> {
+            return "carrot"
+        }
+        "мука" -> {
+            return "flour"
+        }
+        "хлеб" -> {
+            return "bread"
+        }
+        "овощи" -> {
+            return "vegetables"
+        }
+        "огурец" -> {
+            return "cucumber"
+        }
+        "перец" -> {
+            return "pepper"
+        }
+        "петрушка" -> {
+            return "parsley"
+        }
+        "помидоры" -> {
+            return "tomatoes"
+        }
+        "рыба" -> {
+            return "fish"
+        }
+        "свекла" -> {
+            return "beet"
+        }
+        "скумбрия" -> {
+            return "mackerel"
+        }
+        "сливки" -> {
+            return "cream"
+        }
+        "цветная капуста" -> {
+            return "cauliflower"
+        }
+        "чеснок" -> {
+            return "garlic"
+        }
+        "чечевица" -> {
+            return "lentils"
+        }
+        "яйца" -> {
+            return "eggs"
+        }
+        "молоко" -> {
+            return "milk"
+        }
+        "сметана" -> {
+            return "sour cream"
+        }
+        "укроп" -> {
+            return "dill"
+        }
+        "сыр" -> {
+            return "cheese"
+        }
+        "мясо" -> {
+            return "meat"
+        }
+    }
+    return "food"
 }
 
 

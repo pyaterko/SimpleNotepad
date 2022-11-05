@@ -51,17 +51,6 @@
         android:layout_marginTop="@dimen/size_xx_small" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabCreateNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/size_xx_medium"
-        android:layout_marginBottom="@dimen/size_xx_medium"
-        android:backgroundTint="@color/teal_700"
-        app:srcCompat="@drawable/ic_save"
-        app:tint="#FFFFFF" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/indicator_color"
         android:layout_width="@dimen/size_large"
         android:layout_height="@dimen/size_large"

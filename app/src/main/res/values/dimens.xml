@@ -34,6 +34,7 @@
     <dimen name="zero">0dp</dimen>
     <dimen name="height_hinder">200dp</dimen>
     <dimen name="size_color_pictyres_layout">120dp</dimen>
+    <dimen name="intro_side_padding">64dp</dimen>
 
 
 </resources>

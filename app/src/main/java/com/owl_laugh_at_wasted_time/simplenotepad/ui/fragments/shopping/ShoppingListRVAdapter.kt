@@ -8,8 +8,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingListBinding
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getProductName
+import com.owl_laugh_at_wasted_time.simplenotepad.R
+import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingBinding
 
 class ShoppingListDiffCallBack(
     private val oldItem: List<ShoppingListItem>,
@@ -42,7 +49,7 @@ class ShoppingListRVAdapter : RecyclerView.Adapter<ShoppingListRVAdapter.Shoppin
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListItemHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemShoppingListBinding.inflate(inflater, parent, false)
+        val binding = ItemShoppingBinding.inflate(inflater, parent, false)
         return ShoppingListItemHolder(binding, parent.context)
     }
 
@@ -59,7 +66,13 @@ class ShoppingListRVAdapter : RecyclerView.Adapter<ShoppingListRVAdapter.Shoppin
         holder.binding.imageButtonShoppingList.setOnClickListener {
             onDeleteButtonClickListener?.invoke(it)
         }
-
+        Glide.with(holder.binding.ivFoto)
+            .load("https://source.unsplash.com/random/300x300?${getProductName(shoppingListItem.text)}")
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .transition(DrawableTransitionOptions().crossFade(DELAY))
+            .placeholder(R.drawable.macronutrientes)
+            .error(R.drawable.macronutrientes)
+            .into(holder.binding.ivFoto)
         holder.binding.textViewItemShoppingList.text = shoppingListItem.text
         holder.binding.checkBoxShoppingList.isChecked = shoppingListItem.done
     }
@@ -73,7 +86,11 @@ class ShoppingListRVAdapter : RecyclerView.Adapter<ShoppingListRVAdapter.Shoppin
     }
 
     class ShoppingListItemHolder(
-        val binding: ItemShoppingListBinding,
+        val binding: ItemShoppingBinding,
         val context: Context
     ) : RecyclerView.ViewHolder(binding.root)
+
+    companion object {
+        private const val DELAY = 800
+    }
 }

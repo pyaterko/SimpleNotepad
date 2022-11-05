@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="size_xx_medium">20dp</dimen>
+    <dimen name="size_large">30dp</dimen>
+    <dimen name="intro_side_padding">64dp</dimen>
+
+</resources>

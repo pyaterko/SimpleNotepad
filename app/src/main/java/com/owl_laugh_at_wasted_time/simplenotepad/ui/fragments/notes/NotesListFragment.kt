@@ -8,22 +8,24 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.getbase.floatingactionbutton.AddFloatingActionButton
+import com.getbase.floatingactionbutton.FloatingActionsMenu
+import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notepad.NotesListRVAdapter
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorString
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
@@ -41,27 +43,41 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     private val binding by viewBinding(FragmentListNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
     private val adapter: NotesListRVAdapter by lazy { NotesListRVAdapter() }
+    private lateinit var mActionsMenu: FloatingActionsMenu
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         component.inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val tab: TabLayout.Tab? =
+                        (activity as MainActivity).binding.selectTabs.getTabAt(0)
+                    tab?.select()
+                }
+            })
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mActionsMenu = binding.fab.fab
         setFabOnClickListener()
-        binding.recyclerViewListNotes.layoutManager =
-            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        setRVLaoutManager()
         binding.recyclerViewListNotes.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (dy > 0) {
-                        binding.fab.fab.collapse()
-                        binding.fab.fab.isVisible = false
+                        collapseFab()
+                        mActionsMenu.isVisible = false
 
                     } else if (dy < 0) {
-                        binding.fab.fab.isVisible = true
-                        binding.fab.fab.collapse()
+                        mActionsMenu.isVisible = true
+                        collapseFab()
                     } else {
                         Log.d("TAG", "No Vertical Scrolled")
                     }
@@ -74,14 +90,19 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
             adapter.notes = it
             listNotes = it.toList()
         }
-        setupSwipe(binding.recyclerViewListNotes)
+
+        setupSwipe(binding.recyclerViewListNotes, block = {
+            showDeleteAlertDialog(it)
+        })
+
         adapter.onImageViewMoreVertListener = {
+            collapseFab()
             val note = it.tag as ItemNote
             showNoteMenu(it, note.id)
         }
 
         adapter.onItemClickListener = {
-            binding.fab.fab.collapse()
+            collapseFab()
             binding.searchNote.onActionViewCollapsed()
             val directions =
                 NotesListFragmentDirections.actionNotesListFragmentToReadFragment(
@@ -91,14 +112,44 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
 
         adapter.onNoteLongClickListener = {
-            binding.fab.fab.collapse()
+            collapseFab()
             binding.searchNote.onActionViewCollapsed()
             val directions =
                 NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(it.id)
             launchFragment(directions)
         }
         setSearch()
+        setToolBarMenu(
+            blockCreateMenu = {
+                val menuItemStream = it.findItem(R.id.menu_view_stream)
+                val menuItemGrid = it.findItem(R.id.menu_grid_view)
+                menuItemStream?.setVisible(true)
+                menuItemGrid?.setVisible(true)
+            },
+            blockMenuItemSelected = {
+                when (it.itemId) {
+                    R.id.menu_view_stream -> {
+                        preferences(requireContext()).edit()
+                            .putBoolean(CURRENT_BOOLEAN_STATE, false).apply()
+                        setRVLaoutManager()
+                    }
+                    R.id.menu_grid_view -> {
+                        preferences(requireContext()).edit()
+                            .putBoolean(CURRENT_BOOLEAN_STATE, true).apply()
+                        setRVLaoutManager()
+                    }
+                }
+            })
+    }
 
+    private fun setRVLaoutManager() {
+        if (preferences(requireContext()).getBoolean(CURRENT_BOOLEAN_STATE, true)) {
+            binding.recyclerViewListNotes.layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        } else {
+            binding.recyclerViewListNotes.layoutManager =
+                LinearLayoutManager(requireContext())
+        }
     }
 
     private fun setSearch() {
@@ -120,31 +171,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         initFab()
     }
 
-
-    private fun setupSwipe(recyclerView: RecyclerView?) {
-        val callBack = object : ItemTouchHelper.SimpleCallback(
-            0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return true
-            }
-
-            override fun onSwiped(
-                viewHolder: RecyclerView.ViewHolder,
-                direction: Int
-            ) {
-                showDeleteAlertDialog(viewHolder)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(callBack)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
-
-
     private fun showDeleteAlertDialog(
         viewHolder: RecyclerView.ViewHolder? = null,
         view: View? = null
@@ -161,14 +187,11 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
             getString(R.string.default_alert_message),
             actionPB1 = {
                 if (note != null) {
-                    launchScope {
-                        viewModel.deleteNote(note)
-                    }
-
+                    deleteNote(note)
                 }
             },
             actionNB1 = {
-                binding.recyclerViewListNotes.adapter = adapter
+                binding.recyclerViewListNotes.adapter?.notifyDataSetChanged()
             }
         )
     }
@@ -176,15 +199,25 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     private fun showNoteMenu(view: View, id: Int) {
         val popupMenu = PopupMenu(view.context, view)
         val note = view.tag as ItemNote
+        popupMenu.menu.add(0, DELETE, Menu.NONE, view.context.getString(R.string.delete_note))
         popupMenu.menu.add(0, EDITOR, Menu.NONE, view.context.getString(R.string.edit_note))
-        popupMenu.menu.add(
-            0,
-            SAVE_FILE,
-            Menu.NONE,
-            view.context.getString(R.string.save_in_documents)
-        )
+        if (preferences(requireContext()).getBoolean(
+                getString(R.string.settings_import_data_key),
+                false
+            )
+        ) {
+            popupMenu.menu.add(
+                0,
+                SAVE_FILE,
+                Menu.NONE,
+                view.context.getString(R.string.save_in_documents)
+            )
+        }
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
+                DELETE -> {
+                    showDeleteAlertDialog(null, view)
+                }
                 EDITOR -> {
                     val directions =
                         NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(id)
@@ -212,8 +245,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                             }
                         )
                     }
-
-
                 }
             }
             return@setOnMenuItemClickListener true
@@ -221,33 +252,69 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.show()
     }
 
+    private fun deleteNote(note: ItemNote) {
+        launchScope {
+            viewModel.deleteNote(note)
+        }
+    }
+
     private fun initFab() {
+        val fabAddButton: AddFloatingActionButton = mActionsMenu
+            .findViewById(com.getbase.floatingactionbutton.R.id.fab_expand_menu_button)
+
+        fabAddButton.setOnLongClickListener {
+            mActionsMenu.toggle()
+            return@setOnLongClickListener true
+        }
+
+        fabAddButton.setOnClickListener {
+            if (mActionsMenu.isExpanded) {
+                mActionsMenu.collapse()
+                return@setOnClickListener
+            }
+            if (preferences(requireContext()).getBoolean(
+                    getString(R.string.settings_fab_expansion_behavior_key),
+                    false
+                )
+            ) {
+                val directions =
+                    NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment()
+                launchFragment(directions)
+            } else {
+                mActionsMenu.expand()
+            }
+            setOnItemsFabListener()
+        }
+    }
+
+    private fun setOnItemsFabListener() {
         binding.fab.fabNote.setOnClickListener {
-            binding.fab.fab.collapse()
+            collapseFab()
             val directions =
                 NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment()
             launchFragment(directions)
         }
 
-        binding.fab.fabRemoteFromFile.setOnClickListener {
-            binding.fab.fab.collapse()
-            openFile()
+        if (preferences(requireContext()).getBoolean(
+                getString(R.string.settings_import_data_key),
+                false
+            )
+        ) {
+            binding.fab.fabRemoteFromFile.visibility = View.VISIBLE
+            binding.fab.fabRemoteFromFile.setOnClickListener {
+                collapseFab()
+                openFile()
+            }
+        } else {
+            binding.fab.fabRemoteFromFile.visibility = View.GONE
         }
-
     }
 
-    private fun launchFragment(directions: NavDirections) {
-        findNavController().navigate(
-            directions,
-            navOptions {
-                anim {
-                    enter = R.anim.enter
-                    exit = R.anim.exit
-                    popEnter = R.anim.pop_enter
-                    popExit = R.anim.pop_exit
-                }
-            }
-        )
+    private fun collapseFab() {
+        val mActionsMenu = binding.fab.fab
+        if (mActionsMenu.isExpanded()) {
+            mActionsMenu.collapse();
+        }
     }
 
     private fun requestPermision() {
@@ -262,7 +329,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         requireContext(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     ) != PackageManager.PERMISSION_GRANTED
-
 
     private fun openFile() {
         val dirList: MutableList<String> = ArrayList()
@@ -291,12 +357,15 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         }
     }
 
+
     companion object {
         private const val TEXT_WILD = "text/*"
         private const val OPEN_DOCUMENT = 1
+        private const val DELETE = 0
         private const val EDITOR = 1
         private const val SAVE_FILE = 2
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
+        private const val CURRENT_BOOLEAN_STATE = "CURRENT_BOOLEAN_STATE"
 
     }
 }

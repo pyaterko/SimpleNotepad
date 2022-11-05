@@ -3,11 +3,21 @@ package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.read
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentReadBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
 
 
 class ReadFragment : Fragment(R.layout.fragment_read) {
@@ -27,9 +37,22 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
         category = args.category
     }
 
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity).binding.selectContainerCard.visibility = View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as MainActivity).binding.selectContainerCard.visibility = View.VISIBLE
+    }
+
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
 
         binding = FragmentReadBinding.bind(view)
         binding.textRead.setText("$title\n$text")
@@ -62,5 +85,6 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
         val scaledDensity = resources.displayMetrics.scaledDensity
         return px / scaledDensity
     }
+
 
 }

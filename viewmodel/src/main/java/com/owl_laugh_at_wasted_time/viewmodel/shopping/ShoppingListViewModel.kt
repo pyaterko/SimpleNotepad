@@ -1,8 +1,10 @@
 package com.owl_laugh_at_wasted_time.viewmodel.shopping
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.domain.repository.ShoppingListRepository
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShoppingListViewModel @Inject constructor(
@@ -15,7 +17,9 @@ class ShoppingListViewModel @Inject constructor(
         repository.delete(shoppingListItem.id)
     }
 
-    suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
-        repository.add(shoppingListItem)
+     fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
+         viewModelScope.launch {
+             repository.add(shoppingListItem)
+         }
     }
 }

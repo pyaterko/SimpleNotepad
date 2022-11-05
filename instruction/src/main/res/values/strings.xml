@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Notebook</string>
+    <string name="categories">indicate deadlines</string>
+    <string name="tour_listactivity_home_title">To-do list</string>
+    <string name="tour_listactivity_home_detail">Keep a to-do list in plain sight. If you have it in front of your eyes, you are unlikely to forget anything. It is also better to highlight things with color. Bright colors will grab your attention again..</string>
+    <string name="tour_listactivity_tag_detail">A to-do list without a deadline is a wish list, nothing more. Deadlines help prioritize tasks and projects in terms of importance and time required.</string>
+    <string name="tour_detailactivity_attachment_title">Work with notes</string>
+    <string name="tour_detailactivity_attachment_detail">One of the most important tools in life is your own note-taking system. It helps you write articles, work on complex projects, and master new areas of knowledge faster!</string>
+    <string name="tour_detailactivity_links_detail">And if you need to go to the store, make a shopping list so you don t waste time walking between departments remembering what you need.</string>
+    <string name="tour_listactivity_final_title">Enjoy</string>
+    <string name="tour_listactivity_final_detail">Notebook is the simplest notepad, ideal for quick notes. The program consists of three sections - affairs, notes and a purchases, each section with its own functionality.!</string>
+    <string name="tour_community">Flexible settings will help you customize the application to your needs!</string>
+    <string name="shopping_list_lable">Shopping list</string>
+
+
+</resources>

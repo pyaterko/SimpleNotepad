@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="settings_enable_swipe"
+        android:summary="@string/settings_enable_swipe_summary"
+        android:title="@string/settings_enable_swipe"
+        app:defaultValue="false"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:dependency="@string/settings_enable_swipe_key"
+        android:key="@string/settings_swipe_to_trash_key"
+        android:summary="@string/swipe_removal"
+        android:title="@string/settings_swipe_to_trash"
+        app:iconSpaceReserved="false" />
+
+
+
+</PreferenceScreen>

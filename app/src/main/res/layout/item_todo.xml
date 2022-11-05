@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/teal_200"
+    android:layout_margin="@dimen/size_max_small"
     android:paddingBottom="@dimen/size_x_small">
+
 
     <TextView
         android:id="@+id/textTitle"
@@ -79,7 +81,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="220dp"
+        app:layout_constraintGuide_percent="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
 

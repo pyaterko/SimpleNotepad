@@ -46,6 +46,8 @@ dependencies {
     implementation project(Modules.domain)
     implementation project(Modules.data)
     implementation project(Modules.viewmodel)
+    implementation project(Modules.intro)
+    implementation project(Modules.settings)
 
     implementation Design.appcompat
     implementation Design.material
@@ -59,13 +61,17 @@ dependencies {
     implementation Fragment.navigation_dinamic_fragment
     implementation Dagger.dagger
     kapt Dagger.dagger_compiler
-    implementation 'com.getbase:floatingactionbutton:1.10.1'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation Fab.fab
+    implementation Glide.glide
+    implementation Glide.glideIntegration
+    kapt Glide.glide_compiler
+    implementation Pref.pref
+
+
 //    implementation 'com.android.support:multidex:1.0.3'
 //    implementation 'ch.acra:acra-core:5.9.3'
 //    implementation 'ch.acra:acra-http:5.9.3'
 //    implementation 'ch.acra:acra-toast:5.9.3'
-//    implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
 //    implementation 'com.github.bosphere.android-filelogger:filelogger:1.0.7'
 
 }

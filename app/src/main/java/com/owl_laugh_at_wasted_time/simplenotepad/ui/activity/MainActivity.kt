@@ -1,18 +1,17 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.activity
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.tabs.TabLayout
+import com.owl_laugh_at_wasted_time.instruction.intro.activity.IntroActivity
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.simplenotepad.Initializer
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ActivityMainBinding
@@ -22,9 +21,10 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.todo.ToDoListFrag
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding by viewBinding(ActivityMainBinding::inflate)
+    val binding by viewBinding(ActivityMainBinding::inflate)
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+
 
     val component by lazy {
         Initializer.component(this)
@@ -34,17 +34,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        if (preferences(this).getBoolean(CURRENT_BOOLEAN_STATE,true)){
+            startActivity(Intent(applicationContext, IntroActivity::class.java))
+            preferences(this).edit().putBoolean(CURRENT_BOOLEAN_STATE, false).apply()
+        }
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.createNotesFragment,
-                R.id.createToDoFragment,
-                R.id.readFragment,
-                R.id.toDoListFragment
-            )
-        )
+        appBarConfiguration = AppBarConfiguration.Builder(
+            R.id.toDoListFragment,
+            R.id.createToDoFragment,
+            R.id.createNotesFragment,
+            R.id.readFragment
+        ).build()
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
         binding.selectTabs.addOnTabSelectedListener(object :
@@ -71,28 +74,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         selectHome()
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        return super.onSupportNavigateUp()
     }
 
     private fun selectHome() {
         navController.navigateUp()
         val tab: TabLayout.Tab? = binding.selectTabs.getTabAt(0)
         tab?.select()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_settings -> {
-
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onRequestPermissionsResult(
@@ -118,23 +106,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchFragment(destination: Int) {
-        navController.popBackStack()
-        navController.popBackStack()
-        navController.navigate(
-            destination,
-            null,
-            navOptions {
-                anim {
-                    enter = R.anim.enter
-                    exit = R.anim.exit
-                    popEnter = R.anim.pop_enter
-                    popExit = R.anim.pop_exit
-                }
-            })
-    }
 
     companion object {
+        private const val CURRENT_BOOLEAN_STATE = "CURRENT_BOOLEAN_STATE"
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
     }
 }
