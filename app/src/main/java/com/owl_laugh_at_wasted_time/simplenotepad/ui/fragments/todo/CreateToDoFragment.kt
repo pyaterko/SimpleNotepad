@@ -17,10 +17,13 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.owl_laugh_at_wasted_time.domain.*
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.listener
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.parsePriority
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.shakeAndVibrate
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateTodoBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.notification.NotificationHelper
@@ -173,19 +176,21 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     }
 
     private fun setNotification(text: String) {
-        NotificationHelper(requireContext()).createNotification(
-            itemToDo.id,
-            itemToDo.title,
-            text
-        )
+        val service = Intent(requireContext(), NotificationHelper::class.java)
+        service.setAction("ACTION_START_FOREGROUND_SERVICE")
+        service.putExtra("itemId", itemToDo.id)
+        service.putExtra("itemTitle", itemToDo.title)
+        service.putExtra("data", text)
+        activity?.startForegroundService(service)
     }
 
+
     private fun deleteNotification() {
-        try {
             itemToDo.data = ""
-            NotificationHelper(requireContext()).deleteNotification(idItemToDo)
-        } catch (e: Exception) {
-        }
+            val service = Intent(requireContext(), NotificationHelper::class.java)
+            service.setAction("ACTION_STOP_FOREGROUND_SERVICE")
+            service.putExtra("itemId", itemToDo.id)
+            activity?.startService(service)
         launchScope {
             viewModel.addItemNote(itemToDo)
         }
@@ -202,12 +207,12 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     override fun onStop() {
         super.onStop()
-        (activity as MainActivity).binding.selectContainerCard.visibility = View.VISIBLE
+        (activity as MainNoteBookActivity).binding.selectContainerCard.visibility = View.VISIBLE
     }
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).binding.selectContainerCard.visibility = View.GONE
+        (activity as MainNoteBookActivity).binding.selectContainerCard.visibility = View.GONE
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(
                 sequence: CharSequence?,

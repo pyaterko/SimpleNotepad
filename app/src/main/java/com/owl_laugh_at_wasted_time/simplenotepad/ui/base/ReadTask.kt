@@ -5,16 +5,16 @@ import android.app.AlertDialog
 import android.net.Uri
 import android.os.AsyncTask
 import com.owl_laugh_at_wasted_time.simplenotepad.R
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.ref.WeakReference
 
 @SuppressLint("StaticFieldLeak")
-class ReadTask(editor: MainActivity, private val block: (str: String) -> Unit) :
+class ReadTask(editor: MainNoteBookActivity, private val block: (str: String) -> Unit) :
     AsyncTask<Uri?, Void?, CharSequence>() {
-    private val editorWeakReference: WeakReference<MainActivity>
+    private val editorWeakReference: WeakReference<MainNoteBookActivity>
     val s = "UTF-8"
     private var match = s
 
@@ -25,7 +25,7 @@ class ReadTask(editor: MainActivity, private val block: (str: String) -> Unit) :
     }
 
     init {
-        editorWeakReference = WeakReference<MainActivity>(editor)
+        editorWeakReference = WeakReference<MainNoteBookActivity>(editor)
     }
 
     @Deprecated("Deprecated in Java")
@@ -66,7 +66,7 @@ class ReadTask(editor: MainActivity, private val block: (str: String) -> Unit) :
         title: Int,
         message: String,
         neutralButton: Int,
-        editor: MainActivity
+        editor: MainNoteBookActivity
     ) {
         val builder = AlertDialog.Builder(editor)
         builder.setTitle(title)

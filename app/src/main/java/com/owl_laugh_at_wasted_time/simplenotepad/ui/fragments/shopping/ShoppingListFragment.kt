@@ -2,29 +2,19 @@ package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.shopping
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ActivityMainBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentShoppingListBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.read.ReadFragmentDirections
 import com.owl_laugh_at_wasted_time.viewmodel.shopping.ShoppingListViewModel
 
 class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list) {
@@ -43,7 +33,7 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list) {
             .onBackPressedDispatcher
             .addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val tab: TabLayout.Tab? =(activity as MainActivity).binding.selectTabs.getTabAt(0)
+                    val tab: TabLayout.Tab? =(activity as MainNoteBookActivity).binding.selectTabs.getTabAt(0)
                     tab?.select()
                 }
             })

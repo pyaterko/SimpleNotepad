@@ -14,7 +14,7 @@ import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateNotesBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
@@ -95,12 +95,12 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).binding.selectContainerCard.visibility = View.GONE
+        (activity as MainNoteBookActivity).binding.selectContainerCard.visibility = View.GONE
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as MainActivity).binding.selectContainerCard.visibility = View.VISIBLE
+        (activity as MainNoteBookActivity).binding.selectContainerCard.visibility = View.VISIBLE
     }
 
     private fun closePalette() {

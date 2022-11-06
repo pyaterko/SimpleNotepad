@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.launchAndRepeatOnStart
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.simplenotepad.R
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.viewmodel.base.ViewModelFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
     lateinit var viewModelFactory: ViewModelFactory
 
     val component by lazy {
-        (activity as MainActivity).component
+        (activity as MainNoteBookActivity).component
     }
 
     fun launchScope(block: suspend () -> Unit) {

@@ -2,7 +2,7 @@ package com.owl_laugh_at_wasted_time.simplenotepad.di
 
 import android.content.Context
 import com.owl_laugh_at_wasted_time.data.di.DataModule
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.CreateNotesFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.shopping.ShoppingListFragment
@@ -34,7 +34,7 @@ interface AppComponent {
     }
 
     fun context(): Context
-    fun inject(activity: MainActivity)
+    fun inject(activity: MainNoteBookActivity)
     fun inject(fragment: ShoppingListFragment)
     fun inject(fragment: NotesListFragment)
     fun inject(fragment: CreateNotesFragment)

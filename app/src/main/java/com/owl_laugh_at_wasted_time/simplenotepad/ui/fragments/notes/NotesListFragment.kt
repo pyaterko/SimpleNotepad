@@ -29,7 +29,7 @@ import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.pr
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ReadTask
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
@@ -57,7 +57,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
             .addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     val tab: TabLayout.Tab? =
-                        (activity as MainActivity).binding.selectTabs.getTabAt(0)
+                        (activity as MainNoteBookActivity).binding.selectTabs.getTabAt(0)
                     tab?.select()
                 }
             })
@@ -348,7 +348,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
             OPEN_DOCUMENT -> {
                 val content = data?.data
                 content?.let {
-                    val read = ReadTask(activity as MainActivity) {
+                    val read = ReadTask(activity as MainNoteBookActivity) {
                         viewModel.restoreNote(it, "")
                     }
                     read.execute(it)

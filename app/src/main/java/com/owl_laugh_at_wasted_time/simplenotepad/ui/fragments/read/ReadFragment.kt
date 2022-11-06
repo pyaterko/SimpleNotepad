@@ -3,21 +3,12 @@ package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.read
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentReadBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 
 
 class ReadFragment : Fragment(R.layout.fragment_read) {
@@ -39,12 +30,12 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).binding.selectContainerCard.visibility = View.GONE
+        (activity as MainNoteBookActivity).binding.selectContainerCard.visibility = View.GONE
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as MainActivity).binding.selectContainerCard.visibility = View.VISIBLE
+        (activity as MainNoteBookActivity).binding.selectContainerCard.visibility = View.VISIBLE
     }
 
 
