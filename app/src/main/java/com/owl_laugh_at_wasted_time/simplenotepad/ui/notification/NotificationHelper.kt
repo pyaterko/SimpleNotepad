@@ -16,7 +16,7 @@ class NotificationHelper(context: Context) {
 
     init {
         builder = NotificationCompat.Builder(context)
-            .setSmallIcon(R.drawable.ic_alarm_add_black_18dp)
+            .setSmallIcon(R.drawable.ic_baseline_notifications)
         notificationManager = NotificationManagerCompat.from(context)
         val intent = Intent(context, MainActivity::class.java)
         pendingIntent =
@@ -32,7 +32,6 @@ class NotificationHelper(context: Context) {
     }
 
     fun deleteNotification(id:Int){
-      //  builder?.setOngoing(false)
         notificationManager?.cancel(id)
     }
 }

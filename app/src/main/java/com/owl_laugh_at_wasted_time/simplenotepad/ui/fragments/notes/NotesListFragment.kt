@@ -130,12 +130,12 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 when (it.itemId) {
                     R.id.menu_view_stream -> {
                         preferences(requireContext()).edit()
-                            .putBoolean(CURRENT_BOOLEAN_STATE, false).apply()
+                            .putBoolean(CURRENT_BOOLEAN, false).apply()
                         setRVLaoutManager()
                     }
                     R.id.menu_grid_view -> {
                         preferences(requireContext()).edit()
-                            .putBoolean(CURRENT_BOOLEAN_STATE, true).apply()
+                            .putBoolean(CURRENT_BOOLEAN, true).apply()
                         setRVLaoutManager()
                     }
                 }
@@ -143,7 +143,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     }
 
     private fun setRVLaoutManager() {
-        if (preferences(requireContext()).getBoolean(CURRENT_BOOLEAN_STATE, true)) {
+        if (preferences(requireContext()).getBoolean(CURRENT_BOOLEAN, true)) {
             binding.recyclerViewListNotes.layoutManager =
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         } else {
@@ -365,7 +365,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         private const val EDITOR = 1
         private const val SAVE_FILE = 2
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
-        private const val CURRENT_BOOLEAN_STATE = "CURRENT_BOOLEAN_STATE"
+        private const val CURRENT_BOOLEAN = "CURRENT_BOOLEAN"
 
     }
 }

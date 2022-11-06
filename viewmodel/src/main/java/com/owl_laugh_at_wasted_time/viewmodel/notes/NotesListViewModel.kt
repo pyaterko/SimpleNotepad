@@ -94,12 +94,11 @@ class NotesListViewModel @Inject constructor(
     }
 
     fun restoreNote(line: String, name: String): String {
-        val idPattern = Pattern.compile("<<id:(.*?)>>")
+
         val dateOfCreationPattern = Pattern.compile("<<dateOfCreation:(.*?)>>")
         val colorPattern = Pattern.compile("<<color:(.*?)>>")
         val titlePattern = Pattern.compile("<<title:(.*?)>>")
 
-        val idMatcher = idPattern.matcher(line)
         val dateOfCreationMatcher = dateOfCreationPattern.matcher(line)
         val colorMatcher = colorPattern.matcher(line)
         val titleMatcher = titlePattern.matcher(line)
@@ -129,8 +128,8 @@ class NotesListViewModel @Inject constructor(
                 addItemNote(
                     ItemNote(
                         id,
-                        title,
-                        text,
+                        title.trim(),
+                        text.trim(),
                         color.getItemNoteColor(),
                         dateOfCreation
                     )
@@ -139,8 +138,8 @@ class NotesListViewModel @Inject constructor(
                 addItemNote(
                     ItemNote(
                         id,
-                        name,
-                        line,
+                        name.trim(),
+                        line.trim(),
                         ItemColor.WHITE
                     )
                 )
