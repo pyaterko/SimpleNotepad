@@ -19,4 +19,12 @@
     android:title="@string/settings_prettified_dates"
     app:iconSpaceReserved="false" />
 
+  <CheckBoxPreference
+      android:key="@string/show_notifications_key"
+      android:title="@string/show_notifications"
+      android:summaryOff="@string/notifications_are_disabled"
+      android:summaryOn="@string/notifications_enabled"
+      app:defaultValue="true"
+      app:iconSpaceReserved="false" />
+
 </PreferenceScreen>

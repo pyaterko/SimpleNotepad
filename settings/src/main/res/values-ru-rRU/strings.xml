@@ -41,6 +41,10 @@
     <string name="settings_import">Управление копиями</string>
     <string name="settings_tour_show_again_summary">Повторно пройти обучающую инструкцию</string>
     <string name="version">\n\n\nБлокнот :\nверсия 1.0</string>
+    <string name="show_notifications">Показывать уведомления</string>
+    <string name="show_notifications_key">show_notifications_key</string>
+    <string name="notifications_are_disabled">уведомления отключечы</string>
+    <string name="notifications_enabled">уведомления включены</string>
 
 
 </resources>

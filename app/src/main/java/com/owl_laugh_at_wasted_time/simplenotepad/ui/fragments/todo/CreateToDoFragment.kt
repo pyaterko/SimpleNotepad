@@ -17,10 +17,8 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.owl_laugh_at_wasted_time.domain.*
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.listener
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.parsePriority
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.shakeAndVibrate
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
+import com.owl_laugh_at_wasted_time.settings.R.string.show_notifications_key
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateTodoBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
@@ -81,13 +79,17 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
         setToolBarMenu(
             blockCreateMenu = {
-                if (idItemToDo != UNDEFINED_ID) {
-                    if (itemToDo.data == "") {
-                        val menuItemAlarm = it.findItem(R.id.menu_alarm)
-                        menuItemAlarm.setVisible(true)
-                    } else {
-                        val notificationOff = it.findItem(R.id.menu_notifications_off)
-                        notificationOff.setVisible(true)
+                if (preferences(requireContext()).getBoolean(getString(
+                        show_notifications_key
+                    ),true)){
+                    if (idItemToDo != UNDEFINED_ID) {
+                        if (itemToDo.data == "") {
+                            val menuItemAlarm = it.findItem(R.id.menu_alarm)
+                            menuItemAlarm.setVisible(true)
+                        } else {
+                            val notificationOff = it.findItem(R.id.menu_notifications_off)
+                            notificationOff.setVisible(true)
+                        }
                     }
                 }
 

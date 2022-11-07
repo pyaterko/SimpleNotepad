@@ -1,11 +1,8 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.activity
 
 
-
-
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,8 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -45,10 +40,10 @@ class MainNoteBookActivity : AppCompatActivity() {
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "channel_name"
-            val descriptionText ="channel_description"
+            val descriptionText = "channel_description"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("CHANNEL_ID", name, importance).
-            apply {
+            val channel = NotificationChannel("CHANNEL_ID", name, importance)
+                .apply {
                 description = descriptionText
             }
             // Register the channel with the system
@@ -103,6 +98,7 @@ class MainNoteBookActivity : AppCompatActivity() {
                 }
             }
         })
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

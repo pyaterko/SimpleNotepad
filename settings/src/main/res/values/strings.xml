@@ -31,5 +31,9 @@
     <string name="swipe_removal">Swipe removal</string>
     <string name="settings_swipe_to_trash">Swipe to trash</string>
     <string name="version">\n\n\nNotebook :\nversion 1.0</string>
+    <string name="show_notifications">Show notifications</string>
+    <string name="show_notifications_key">show_notifications_key</string>
+    <string name="notifications_are_disabled">notifications are disabled</string>
+    <string name="notifications_enabled">notifications enabled</string>
 
 </resources>
