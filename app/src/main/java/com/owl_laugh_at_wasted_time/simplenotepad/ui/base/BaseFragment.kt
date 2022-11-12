@@ -1,5 +1,6 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.base
 
+import android.content.Intent
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -18,6 +19,7 @@ import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.la
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.notification.NotificationHelper
 import com.owl_laugh_at_wasted_time.viewmodel.base.ViewModelFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -106,6 +108,15 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
                 }
             }
         )
+    }
+
+     fun deleteNotification(itemId:Int,block:()->Unit,blockTwo:()->Unit) {
+        block.invoke()
+        val service = Intent(requireContext(), NotificationHelper::class.java)
+        service.setAction("ACTION_STOP_FOREGROUND_SERVICE")
+        service.putExtra("itemId", itemId)
+        activity?.startService(service)
+       blockTwo.invoke()
     }
 
 }

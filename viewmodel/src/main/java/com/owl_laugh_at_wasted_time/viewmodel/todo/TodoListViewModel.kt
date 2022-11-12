@@ -1,8 +1,10 @@
 package com.owl_laugh_at_wasted_time.viewmodel.todo
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.repository.ToDoRepository
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -15,11 +17,17 @@ class TodoListViewModel @Inject constructor(
     suspend fun getNoteById(noteId: Int) =
         repository.getById(noteId)
 
-    suspend fun addItemNote(item: ItemToDo) {
-        repository.add(item)
+     fun addItemNote(item: ItemToDo) {
+         viewModelScope.launch {
+             repository.add(item)
+         }
+
     }
 
-    suspend fun deleteNote(itemNote: ItemToDo) {
-        repository.delete(itemNote.id)
+     fun deleteNote(itemNote: ItemToDo) {
+        viewModelScope.launch {
+            repository.delete(itemNote.id)
+        }
+
     }
 }

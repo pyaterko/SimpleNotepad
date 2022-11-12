@@ -130,7 +130,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
             getString(R.string.default_alert_message),
             actionPB1 = {
                 if (note != null) {
-                    launchScope {
+                    deleteNotification(note.id,{}){
                         viewModel.deleteNote(note)
                     }
                 }

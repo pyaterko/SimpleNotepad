@@ -60,7 +60,6 @@ dependencies {
     implementation Fragment.navigation_ui_ktx
     implementation Fragment.navigation_dinamic_fragment
     implementation Dagger.dagger
-    implementation 'com.google.firebase:firebase-installations-ktx:17.0.3'
     kapt Dagger.dagger_compiler
     implementation Fab.fab
     implementation Glide.glide
