@@ -33,7 +33,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButtonShoppingList"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/checkBoxShoppingList"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Salmon Salad" />
@@ -47,16 +47,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/textViewItemShoppingList"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageButtonShoppingList"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginHorizontal="@dimen/size_medium"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_baseline_delete_outline_24" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

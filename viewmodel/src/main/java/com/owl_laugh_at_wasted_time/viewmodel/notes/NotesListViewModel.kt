@@ -13,6 +13,7 @@ import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
 import com.owl_laugh_at_wasted_time.viewmodel.R
+import com.owl_laugh_at_wasted_time.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.launch
 import java.io.*
 import java.util.regex.Pattern
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 class NotesListViewModel @Inject constructor(
     private val repositoryNote: NoteRepository,
-) : ViewModel() {
+) : BaseViewModel() {
 
     val listNotes = repositoryNote.getLiveDate()
 
@@ -34,13 +35,13 @@ class NotesListViewModel @Inject constructor(
             repositoryNote.add(item)
     }
 
-    suspend fun deleteNote(itemNote: ItemNote) {
-        repositoryNote.delete(itemNote.id)
+    suspend fun deleteNote(itemId:Int) {
+        repositoryNote.delete(itemId)
     }
 
 
     fun save(context: Context, fileName: String, text: String) {
-        viewModelScope.launch {
+        viewModelScopeCoroutine.launch {
             saveFile(context, fileName, text)
         }
     }
@@ -147,6 +148,8 @@ class NotesListViewModel @Inject constructor(
         }
         return title
     }
+
+    override fun handleError(throwable: Throwable) { }
 
 }
 

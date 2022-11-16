@@ -9,32 +9,37 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.elveum.elementadapter.SimpleBindingAdapter
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getId
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
+import com.owl_laugh_at_wasted_time.settings.activity.SettingsActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListTodoBinding
-import com.owl_laugh_at_wasted_time.settings.activity.SettingsActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnToDoListener
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createToDoAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
 
 
-class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
+class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListener {
 
 
     private var listToDo: List<ItemToDo>? = null
     private val binding by viewBinding(FragmentListTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
-    private val adapter: ToDoListRVAdapter by lazy { ToDoListRVAdapter() }
+    private lateinit var adapter: SimpleBindingAdapter<ItemToDo>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         component.inject(this)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,30 +47,31 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         setFabOnClickListener()
         binding.recyclerViewListToDo.layoutManager =
             LinearLayoutManager(requireContext())
+        adapter = createToDoAdapter(requireContext(), this)
         binding.recyclerViewListToDo.adapter = adapter
-        viewModel.listNotes.collectWhileStarted {
+        binding.recyclerViewListToDo.isNestedScrollingEnabled = false
+        val dividerItemDecoration = ItemDecoration(16)
+        binding.recyclerViewListToDo.addItemDecoration(dividerItemDecoration)
+        viewModel.flow.collectWhileStarted {
             binding.noDataImageView.isVisible = it.size == 0
-            adapter.list = it
+            adapter.submitList(it)
             listToDo = it.toList()
         }
-        setupSwipe(binding.recyclerViewListToDo, block = {
-            showDeleteAlertDialog(it)
-        })
-
-        adapter.onImageViewMoreVertListener = {
-            showToDoMenu(it)
-        }
-
-        adapter.onItemClickListener = {
-            val directions =
-                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(it.priority.getId(),it.id)
-            launchFragment(directions)
+        if (preferences(requireContext()).getBoolean(
+                getString(R.string.settings_swipe_to_trash_key),
+                true
+            )
+        ) {
+            val touchCallback =
+                TouchHelperCallback(adapter) { itemToDo -> showDeleteAlertDialog(itemToDo.id) }
+            val touchHelper = ItemTouchHelper(touchCallback)
+            touchHelper.attachToRecyclerView(binding.recyclerViewListToDo)
         }
 
         setToolBarMenu(blockCreateMenu = {
             val settings = it.findItem(R.id.menu_settings)
             settings?.setVisible(true)
-        }, blockMenuItemSelected = {
+        }, {
             when (it.itemId) {
                 R.id.menu_settings -> {
                     val settingsIntent = Intent(requireContext(), SettingsActivity::class.java)
@@ -77,9 +83,27 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
         setSearch()
     }
 
+    override fun launchToCreateToDoFragment(itemToDo: ItemToDo) {
+        val directions =
+            ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(
+                itemToDo.priority.getId(),
+                itemToDo.id
+            )
+        launchFragment(directions)
+    }
+
+    override fun showMenu(view: View) {
+        showToDoMenu(view)
+    }
+
     private fun showToDoMenu(view: View) {
         val popupMenu = PopupMenu(view.context, view)
-        popupMenu.menu.add(0, DELETE_TO_DO, Menu.NONE, view.context.getString(R.string.delete_event))
+        popupMenu.menu.add(
+            0,
+            DELETE_TO_DO,
+            Menu.NONE,
+            view.context.getString(R.string.delete_event)
+        )
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 DELETE_TO_DO -> {
@@ -97,9 +121,10 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
                 binding.searchToDo.onActionViewCollapsed()
                 return true
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 val list = listToDo?.filter { it.title.contains(newText, true) }
-                adapter.list = list?.toList() ?: emptyList()
+                adapter.submitList(list?.toList() ?: emptyList())
                 return true
             }
         })
@@ -108,36 +133,27 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo) {
     private fun setFabOnClickListener() {
         binding.buttonFabToDoList.setOnClickListener {
             val directions =
-                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(0,0)
+                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(0, 0)
             launchFragment(directions)
 
         }
     }
 
     private fun showDeleteAlertDialog(
-        viewHolder: RecyclerView.ViewHolder? = null,
+        itemId: Int = 0,
         view: View? = null
     ) {
-        var note: ItemToDo? = null
-        if (view == null) {
-            if (viewHolder != null) {
-                note = adapter.list[viewHolder.adapterPosition]
-            }
+        val note: ItemToDo?
+        val id = if (view == null) {
+            itemId
         } else {
             note = view.tag as ItemToDo
+            note.id
         }
         displayAConfirmationDialog(requireContext(),
             getString(R.string.default_alert_message),
-            actionPB1 = {
-                if (note != null) {
-                    deleteNotification(note.id,{}){
-                        viewModel.deleteNote(note)
-                    }
-                }
-            },
-            actionNB1 = {
-                binding.recyclerViewListToDo.adapter?.notifyDataSetChanged()
-            }
+           { deleteNotification(id, {}) { viewModel.deleteNote(id) } },
+            { binding.recyclerViewListToDo.adapter?.notifyDataSetChanged() }
         )
     }
 

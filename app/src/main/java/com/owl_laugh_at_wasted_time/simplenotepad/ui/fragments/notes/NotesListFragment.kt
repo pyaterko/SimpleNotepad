@@ -15,34 +15,36 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.elveum.elementadapter.SimpleBindingAdapter
 import com.getbase.floatingactionbutton.AddFloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.notepad.NotesListRVAdapter
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorString
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ReadTask
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnNoteListener
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createNotesAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 import java.io.File
 
 
-class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
+class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteListener {
 
     private lateinit var listNotes: List<ItemNote>
     private val binding by viewBinding(FragmentListNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
-    private val adapter: NotesListRVAdapter by lazy { NotesListRVAdapter() }
+    private lateinit var adapter: SimpleBindingAdapter<ItemNote>
     private lateinit var mActionsMenu: FloatingActionsMenu
 
     override fun onAttach(context: Context) {
@@ -84,40 +86,23 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
                 }
             }
         )
+        adapter = createNotesAdapter(requireContext(),this)
         binding.recyclerViewListNotes.adapter = adapter
+        binding.recyclerViewListNotes.isNestedScrollingEnabled = false
+        val dividerItemDecoration = ItemDecoration(16)
+        binding.recyclerViewListNotes.addItemDecoration(dividerItemDecoration)
         viewModel.listNotes.collectWhileStarted {
             binding.noDataImageView.isVisible = it.size == 0
-            adapter.notes = it
+            adapter.submitList(it)
             listNotes = it.toList()
         }
 
-        setupSwipe(binding.recyclerViewListNotes, block = {
-            showDeleteAlertDialog(it)
-        })
-
-        adapter.onImageViewMoreVertListener = {
-            collapseFab()
-            val note = it.tag as ItemNote
-            showNoteMenu(it, note.id)
+        val touchCallback = TouchHelperCallback(adapter) { itemNote ->
+            showDeleteAlertDialog(itemNote.id)
         }
+        val touchHelper = ItemTouchHelper(touchCallback)
+        touchHelper.attachToRecyclerView(binding.recyclerViewListNotes)
 
-        adapter.onItemClickListener = {
-            collapseFab()
-            binding.searchNote.onActionViewCollapsed()
-            val directions =
-                NotesListFragmentDirections.actionNotesListFragmentToReadFragment(
-                    true, it.title, it.text
-                )
-            launchFragment(directions)
-        }
-
-        adapter.onNoteLongClickListener = {
-            collapseFab()
-            binding.searchNote.onActionViewCollapsed()
-            val directions =
-                NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(it.id)
-            launchFragment(directions)
-        }
         setSearch()
         setToolBarMenu(
             blockCreateMenu = {
@@ -161,7 +146,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 val list = listNotes.filter { it.title.contains(newText, true) }
-                adapter.notes = list.toList()
+                adapter.submitList(list.toList())
                 return true
             }
         })
@@ -172,29 +157,27 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
     }
 
     private fun showDeleteAlertDialog(
-        viewHolder: RecyclerView.ViewHolder? = null,
+        itemId: Int = 0,
         view: View? = null
     ) {
         var note: ItemNote? = null
-        if (view == null) {
-            if (viewHolder != null) {
-                note = adapter.notes[viewHolder.adapterPosition]
-            }
+        val id = if (view == null) {
+            itemId
         } else {
             note = view.tag as ItemNote
+            note.id
         }
         displayAConfirmationDialog(requireContext(),
             getString(R.string.default_alert_message),
             actionPB1 = {
-                if (note != null) {
-                    deleteNote(note)
-                }
+                deleteNote(id)
             },
             actionNB1 = {
                 binding.recyclerViewListNotes.adapter?.notifyDataSetChanged()
             }
         )
     }
+
 
     private fun showNoteMenu(view: View, id: Int) {
         val popupMenu = PopupMenu(view.context, view)
@@ -216,7 +199,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 DELETE -> {
-                    showDeleteAlertDialog(null, view)
+                    showDeleteAlertDialog(0, view)
                 }
                 EDITOR -> {
                     val directions =
@@ -252,9 +235,9 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         popupMenu.show()
     }
 
-    private fun deleteNote(note: ItemNote) {
+    private fun deleteNote(itemId: Int) {
         launchScope {
-            viewModel.deleteNote(note)
+            viewModel.deleteNote(itemId)
         }
     }
 
@@ -366,6 +349,29 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes) {
         private const val SAVE_FILE = 2
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
         private const val CURRENT_BOOLEAN = "CURRENT_BOOLEAN"
-
     }
+
+    override fun launchToReadFragment(itemNote: ItemNote) {
+        collapseFab()
+        binding.searchNote.onActionViewCollapsed()
+        val directions =
+            NotesListFragmentDirections.actionNotesListFragmentToReadFragment(
+                true, itemNote.title, itemNote.text
+            )
+        launchFragment(directions)
+    }
+
+    override fun launchToCreateNotesFragment(itemNote: ItemNote) {
+        collapseFab()
+        binding.searchNote.onActionViewCollapsed()
+        val directions =
+            NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(itemNote.id)
+        launchFragment(directions)
+    }
+
+    override fun showMenu(view: View, itemNote: ItemNote) {
+        collapseFab()
+        showNoteMenu(view, itemNote.id)
+    }
+
 }

@@ -131,6 +131,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                             launchScope {
                                 viewModel.addItemNote(itemToDo)
                             }
+                          hideKeyboard(requireActivity())
                             findNavController().navigateUp()
                         }
                     }

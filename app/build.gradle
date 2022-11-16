@@ -66,12 +66,6 @@ dependencies {
     implementation Glide.glideIntegration
     kapt Glide.glide_compiler
     implementation Pref.pref
-
-
-//    implementation 'com.android.support:multidex:1.0.3'
-//    implementation 'ch.acra:acra-core:5.9.3'
-//    implementation 'ch.acra:acra-http:5.9.3'
-//    implementation 'ch.acra:acra-toast:5.9.3'
-//    implementation 'com.github.bosphere.android-filelogger:filelogger:1.0.7'
+    implementation Adapter.adapter
 
 }

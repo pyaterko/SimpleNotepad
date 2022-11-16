@@ -4,17 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.domain.repository.ShoppingListRepository
+import com.owl_laugh_at_wasted_time.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShoppingListViewModel @Inject constructor(
     private val repository: ShoppingListRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
      val shoppingList = repository.getAllData()
 
-    suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
-        repository.delete(shoppingListItem.id)
+     fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
+         viewModelScopeCoroutine.launch {
+             repository.delete(shoppingListItem.id)
+         }
     }
 
      fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
@@ -22,4 +25,6 @@ class ShoppingListViewModel @Inject constructor(
              repository.add(shoppingListItem)
          }
     }
+
+    override fun handleError(throwable: Throwable) {}
 }

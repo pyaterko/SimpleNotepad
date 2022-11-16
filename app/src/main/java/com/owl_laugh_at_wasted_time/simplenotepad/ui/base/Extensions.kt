@@ -1,5 +1,6 @@
 package com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.CycleInterpolator
 import android.view.animation.TranslateAnimation
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -475,3 +477,13 @@ fun getProductName(name: String): String {
 }
 
 
+fun hideKeyboard(activity: Activity) {
+    val inputMethodManager =
+        activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val currentFocusedView = activity.currentFocus
+    currentFocusedView?.let {
+        inputMethodManager.hideSoftInputFromWindow(
+            currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
+}

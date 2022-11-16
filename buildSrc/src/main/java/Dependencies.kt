@@ -117,7 +117,9 @@ object Room {
 }
 
 
-
+object Adapter {
+    const val adapter = "com.elveum:element-adapter:0.4"
+}
 
 
 

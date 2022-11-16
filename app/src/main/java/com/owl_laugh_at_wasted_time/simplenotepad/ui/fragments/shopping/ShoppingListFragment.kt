@@ -1,39 +1,54 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.shopping
 
 import android.content.Context
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.elveum.elementadapter.SimpleBindingAdapter
+import com.elveum.elementadapter.simpleAdapter
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getProductName
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentShoppingListBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnShoppingListener
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createSoppingAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.shopping.ShoppingListViewModel
 
-class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list) {
+class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list),OnShoppingListener {
 
     private val binding by viewBinding(FragmentShoppingListBinding::bind)
     private val viewModel by viewModels<ShoppingListViewModel> { viewModelFactory }
-    private lateinit var adapter: ShoppingListRVAdapter
+    private lateinit var adapter: SimpleBindingAdapter<ShoppingListItem>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         component.inject(this)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity()
             .onBackPressedDispatcher
             .addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val tab: TabLayout.Tab? =(activity as MainNoteBookActivity).binding.selectTabs.getTabAt(0)
+                    val tab: TabLayout.Tab? =
+                        (activity as MainNoteBookActivity).binding.selectTabs.getTabAt(0)
                     tab?.select()
                 }
             })
@@ -42,9 +57,17 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ShoppingListRVAdapter()
+        adapter = createSoppingAdapter(this)
         binding.recyclerViewShoppingItem.layoutManager = LinearLayoutManager(requireActivity())
         binding.recyclerViewShoppingItem.adapter = adapter
+        binding.recyclerViewShoppingItem.isNestedScrollingEnabled = false
+        val dividerItemDecoration = ItemDecoration(16)
+        binding.recyclerViewShoppingItem.addItemDecoration(dividerItemDecoration)
+        val touchCallback = TouchHelperCallback(adapter) { item ->
+            showDeleteAlertDialog(item)
+        }
+        val touchHelper = ItemTouchHelper(touchCallback)
+        touchHelper.attachToRecyclerView(binding.recyclerViewShoppingItem)
 
         viewModel.shoppingList.collectWhileStarted {
             if (it.isEmpty()) {
@@ -52,7 +75,7 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list) {
             } else {
                 binding.noDataImageView.visibility = View.GONE
             }
-            adapter.shoppingList = it.sortedBy { it.done }
+            adapter.submitList(it.sortedBy { it.done })
         }
 
         binding.buttonFabShoppingList.setOnClickListener {
@@ -65,21 +88,10 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list) {
                 R.string.name_of_product,
                 actionPB1 = {
                     if (it.isNotBlank()) {
-                            viewModel.addShoppingListItem(ShoppingListItem(text = it))
+                        viewModel.addShoppingListItem(ShoppingListItem(text = it))
                     }
                 }
-
             )
-        }
-        adapter.onCheckBoxClickListener = {
-            val item = it.tag as ShoppingListItem
-            launchScope {
-                viewModel.addShoppingListItem(item.copy(done = !item.done))
-            }
-        }
-        adapter.onDeleteButtonClickListener = {
-            val item = it.tag as ShoppingListItem
-            showDeleteAlertDialog(item)
         }
 
     }
@@ -92,8 +104,14 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list) {
                 launchScope {
                     viewModel.deleteShoppingListItem(item)
                 }
-
+            },
+            actionNB1 = {
+                adapter.notifyDataSetChanged()
             }
         )
+    }
+
+    override fun markAsPurchased(item: ShoppingListItem) {
+            viewModel.addShoppingListItem(item.copy(done = !item.done))
     }
 }
