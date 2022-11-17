@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_notes_rec_view_layout"
@@ -20,71 +19,50 @@
             android:layout_height="match_parent"
             android:padding="24dp">
 
+
             <EditText
                 android:id="@+id/todo_title"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:ems="10"
-                android:hint="@string/title"
+                android:hint="@string/schedule_an_event"
                 android:inputType="textPersonName"
                 android:paddingHorizontal="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/current_priorities_spinner" />
+                app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                app:layout_constraintEnd_toStartOf="@+id/tv_add"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toTopOf="@+id/textView2" />
 
-            <Spinner
-                android:id="@+id/current_priorities_spinner"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="8dp"
-                android:entries="@array/priorities"
-                android:paddingHorizontal="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/todo_text"
+            <LinearLayout
+                android:id="@+id/linear"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:ems="10"
-                android:gravity="top|start"
-                android:hint="@string/description"
-                android:inputType="textMultiLine"
+                android:orientation="vertical"
                 android:paddingHorizontal="24dp"
-                android:paddingTop="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_error" />
+                app:layout_constraintTop_toBottomOf="@+id/ll_error">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="*"
-                android:textSize="@dimen/text_size_large"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="36dp"
                 android:text="*"
                 android:textSize="@dimen/text_size_large"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/ll_error"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/dialog_error_background_red"
                 android:drawablePadding="@dimen/size_xx_medium"
                 android:paddingHorizontal="@dimen/size_medium"
@@ -94,23 +72,32 @@
                 android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_icon"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.77"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/todo_title"
                 tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_add"
+                android:layout_width="@dimen/size_xxx_large"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="+"
+                android:textSize="36sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 
-
-
-
-        <com.owl_laugh_at_wasted_time.simplenotepad.ui.castomview.ColorPickerView
-            android:id="@+id/colorPicturesToDo"
-            android:layout_marginTop="@dimen/size_xx_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top" />
+    <com.owl_laugh_at_wasted_time.simplenotepad.ui.castomview.ColorPickerView
+        android:id="@+id/colorPicturesToDo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/size_xx_small" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -118,9 +105,9 @@
         android:layout_width="@dimen/size_large"
         android:layout_height="@dimen/size_large"
         android:layout_gravity="end"
-        app:borderWidth="0dp"
         android:layout_marginTop="@dimen/size_medium"
-        android:layout_marginEnd="@dimen/size_medium" />
+        android:layout_marginEnd="@dimen/size_medium"
+        app:borderWidth="0dp" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

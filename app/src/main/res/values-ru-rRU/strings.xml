@@ -28,61 +28,11 @@
     <string name="volume_setup">Запланировать покупку</string>
     <string name="name_of_product">наименование товара</string>
     <string name="default_alert_shop">Удалить товар из списка?</string>
-    <string name="schedule_an_event">Запланировать мероприятие</string>
+    <string name="schedule_an_event">Запланировать</string>
     <string name="action_confirm">Добавить</string>
     <string name="undefined_error">Неопределенная ошибка</string>
     <string name="create_data">добавлено</string>
-    <string name="planned">Уведомление</string>
-
-
-    <string-array name="priorities">
-        <item>Выберите приоритет</item>
-        <item>Высокий приоритет</item>
-        <item>Низкий приоритет</item>
-        <item>Без приоритета</item>
-    </string-array>
-
-    <string-array name="navigation_list">
-        <item>Заметки</item>
-        <item>Архив</item>
-        <item>Напоминания</item>
-        <item>Корзина</item>
-        <item>Без категории</item>
-    </string-array>
-    <string-array name="sortable_columns_human_readable">
-        <item>По заголовкам</item>
-        <item>По дате создания</item>
-        <item>По дате посл. изменения</item>
-        <item>По дате напоминания</item>
-    </string-array>
-    <string-array name="checked_items_behavior">
-        <item>Сохранять положение</item>
-        <item>Помещать в конец списка</item>
-        <item>Помещать после невыбранных пунктов</item>
-    </string-array>
-    <string-array name="colors_app">
-        <item>Отключено</item>
-        <item>Небольшой индикатор</item>
-        <item>Только списка заметок</item>
-        <item>Полноценное</item>
-    </string-array>
-    <string-array name="colors_widget">
-        <item>Отключено</item>
-        <item>Небольшой индикатор</item>
-        <item>В списке заметок</item>
-    </string-array>
-    <string-array name="attachments_actions">
-        <item>Поделиться</item>
-        <item>Удалить</item>
-        <item>Убрать все</item>
-        <item>Редактировать</item>
-    </string-array>
-
-    <string-array name="checked_items_behavior_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
+    <string name="planned">Выполнить до</string>
 
 
     <string name="share">Поделиться</string>

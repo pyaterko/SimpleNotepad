@@ -34,6 +34,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.noteTitle.requestFocus()
         launchScope {
             val id = args.noteId
             if (id != UNDEFINED_ID) {

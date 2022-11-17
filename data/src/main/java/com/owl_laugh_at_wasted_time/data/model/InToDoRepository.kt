@@ -7,6 +7,7 @@ import com.owl_laugh_at_wasted_time.domain.repository.ToDoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import java.util.*
 import javax.inject.Inject
 
 
@@ -21,14 +22,14 @@ class InToDoRepository @Inject constructor(
     }
 
     override suspend fun add(item: ItemToDo) {
-        itemToDoDao.add(mapper.mapEntityToDbModel(item))
+        mapper.mapEntityToDbModel(item)?.let { itemToDoDao.add(it) }
     }
 
-    override suspend fun delete(itemId: Int) {
+    override suspend fun delete(itemId: UUID) {
         itemToDoDao.delete(itemId)
     }
 
-    override suspend fun getById(itemId: Int): ItemToDo {
+    override suspend fun getById(itemId: UUID): ItemToDo {
         val noteDBModel = itemToDoDao.getItemById(itemId)
         return mapper.mapDbModelToEntity(noteDBModel)
     }

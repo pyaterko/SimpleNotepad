@@ -27,16 +27,14 @@
         tools:layout="@layout/fragment_create_todo">
         <argument
             android:name="todo_id"
-            android:defaultValue="0"
-            app:argType="integer" />
+            app:argType="java.util.UUID"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_createToDoFragment_to_toDoListFragment"
             app:destination="@id/toDoListFragment"
             app:popUpTo="@id/createToDoFragment"
             app:popUpToInclusive="true" />
-        <argument
-            android:name="priority"
-            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/notesListFragment"

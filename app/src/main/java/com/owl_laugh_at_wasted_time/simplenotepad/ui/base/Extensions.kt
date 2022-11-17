@@ -24,7 +24,6 @@ import androidx.preference.PreferenceManager
 import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_IN
 import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_OUT
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
-import com.owl_laugh_at_wasted_time.domain.entity.PriorityToDo
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.DialogShoppingListBinding
 import kotlinx.coroutines.launch
@@ -86,55 +85,6 @@ fun ItemColor.getColorString() = when (this) {
     ItemColor.PINK -> "PINK"
     ItemColor.GREEN -> "GREEN"
     ItemColor.BLUE -> "BLUE"
-}
-
-fun PriorityToDo.getColorDrawable(context: Context) =
-    ContextCompat.getDrawable(context, getColorRes())
-
-fun PriorityToDo.getColorRes() = when (this) {
-    PriorityToDo.HIGH -> R.drawable.high_priority
-    PriorityToDo.LOW -> R.drawable.low_priority
-    else -> {
-        R.drawable.item_menu
-    }
-}
-
-fun PriorityToDo.getColor() = when (this) {
-    PriorityToDo.HIGH -> R.color.color_red
-    PriorityToDo.LOW -> R.color.color_text_secondary
-    PriorityToDo.NOT -> R.color.disabled_2
-    else -> {
-        R.color.black
-    }
-}
-
-fun PriorityToDo.getId() = when (this) {
-    PriorityToDo.HIGH -> 1
-    PriorityToDo.LOW ->2
-    PriorityToDo.NOT -> 3
-    else -> {
-      0
-    }
-}
-
-fun parsePriority(priority: String): PriorityToDo {
-    return when (priority) {
-        "Высокий приоритет" -> {
-            PriorityToDo.HIGH
-        }
-        "Низкий приоритет" -> {
-            PriorityToDo.LOW
-        }
-        "High priority" -> {
-            PriorityToDo.HIGH
-        }
-        "Low priority" -> {
-            PriorityToDo.LOW
-        }
-        else -> {
-            PriorityToDo.NOT
-        }
-    }
 }
 
 fun listener(context: Context, lyambda: () -> Unit): AdapterView.OnItemSelectedListener = object :

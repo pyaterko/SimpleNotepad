@@ -7,23 +7,23 @@ import javax.inject.Inject
 
 class ItemToDoMapper @Inject constructor() {
 
-    fun mapEntityToDbModel(item: ItemToDo) = ItemToDoDbModel(
-        id = item.id,
+    fun mapEntityToDbModel(item: ItemToDo) = item.id?.let {
+        ItemToDoDbModel(
+        id = it,
         title = item.title,
-        text = item.text,
+        done = item. done  ,
         color = item.color,
         dateOfCreation = item.dateOfCreation,
-        priority = item.priority,
         data = item.data
     )
+    }
 
     fun mapDbModelToEntity(itemDbModel: ItemToDoDbModel) = ItemToDo(
         id = itemDbModel.id,
         title = itemDbModel.title,
-        text = itemDbModel.text,
+        done = itemDbModel. done  ,
         color = itemDbModel.color,
         dateOfCreation = itemDbModel.dateOfCreation,
-        priority = itemDbModel.priority,
         data = itemDbModel.data
     )
 

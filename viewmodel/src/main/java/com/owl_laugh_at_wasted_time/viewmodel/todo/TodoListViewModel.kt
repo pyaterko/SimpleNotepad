@@ -5,6 +5,7 @@ import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.repository.ToDoRepository
 import com.owl_laugh_at_wasted_time.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 
@@ -14,16 +15,16 @@ class TodoListViewModel @Inject constructor(
 
     val flow = repository.getAllDate()
 
-    suspend fun getNoteById(noteId: Int) =
+    suspend fun getNoteById(noteId: UUID) =
         repository.getById(noteId)
 
-    fun addItemNote(item: ItemToDo) {
+    fun addToDo(item: ItemToDo) {
         viewModelScopeCoroutine.launch {
             repository.add(item)
         }
     }
 
-    fun deleteNote(itemId: Int) {
+    fun deleteNote(itemId: UUID) {
         viewModelScope.launch {
             repository.delete(itemId)
         }

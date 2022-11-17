@@ -7,14 +7,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class ItemToDo(
-    var id: Int = UNDEFINED_ID,
+    var id: UUID? = UUID.randomUUID(),
     var title: String = "",
-    var text: String = "",
     var color: ItemColor = ItemColor.WHITE,
     var dateOfCreation: String = SimpleDateFormat(
         DATE_TIME_FORMAT,
         Locale.getDefault()
     ).format(Date()),
-    var priority: PriorityToDo = PriorityToDo.NOT,
-    var data: String = ""
+    var data: String = "",
+    var done: Boolean=false
 )

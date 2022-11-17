@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.elveum.elementadapter.SimpleBindingAdapter
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
+import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getId
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.settings.activity.SettingsActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -23,18 +23,23 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnSubTaskListener
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnToDoListener
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createSubTaskAdapter
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createToDoAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
+import java.util.*
 
 
-class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListener {
+class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListener,
+    OnSubTaskListener {
 
 
     private var listToDo: List<ItemToDo>? = null
     private val binding by viewBinding(FragmentListTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
     private lateinit var adapter: SimpleBindingAdapter<ItemToDo>
+    private lateinit var adapterSubTask: SimpleBindingAdapter<SubTaskItem>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -43,11 +48,21 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapterSubTask = createSubTaskAdapter(this)
+        adapterSubTask.submitList(
+            listOf(
+                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",false),
+                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",true),
+                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",false),
+                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",true),
+                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",false),
+            ).sortedBy { it.done }
 
+        )
         setFabOnClickListener()
         binding.recyclerViewListToDo.layoutManager =
             LinearLayoutManager(requireContext())
-        adapter = createToDoAdapter(requireContext(), this)
+        adapter = createToDoAdapter(requireContext(), this,adapterSubTask)
         binding.recyclerViewListToDo.adapter = adapter
         binding.recyclerViewListToDo.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
@@ -86,14 +101,17 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
     override fun launchToCreateToDoFragment(itemToDo: ItemToDo) {
         val directions =
             ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(
-                itemToDo.priority.getId(),
                 itemToDo.id
             )
         launchFragment(directions)
     }
 
-    override fun showMenu(view: View) {
-        showToDoMenu(view)
+    override fun showSubTasks(view: View) {
+        if (view.isVisible) {
+            view.visibility = View.GONE
+        } else {
+            view.visibility = View.VISIBLE
+        }
     }
 
     private fun showToDoMenu(view: View) {
@@ -133,14 +151,14 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
     private fun setFabOnClickListener() {
         binding.buttonFabToDoList.setOnClickListener {
             val directions =
-                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(0, 0)
+                ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment()
             launchFragment(directions)
 
         }
     }
 
     private fun showDeleteAlertDialog(
-        itemId: Int = 0,
+        itemId: UUID? = null,
         view: View? = null
     ) {
         val note: ItemToDo?
@@ -152,12 +170,16 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         }
         displayAConfirmationDialog(requireContext(),
             getString(R.string.default_alert_message),
-           { deleteNotification(id, {}) { viewModel.deleteNote(id) } },
+            { deleteNotification(id!!, {}) { viewModel.deleteNote(id) } },
             { binding.recyclerViewListToDo.adapter?.notifyDataSetChanged() }
         )
     }
 
     companion object {
         private const val DELETE_TO_DO = 2
+    }
+
+    override fun markAsPurchased(item: SubTaskItem) {
+
     }
 }

@@ -23,6 +23,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.notification.NotificationHe
 import com.owl_laugh_at_wasted_time.viewmodel.base.ViewModelFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 
@@ -110,7 +111,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         )
     }
 
-     fun deleteNotification(itemId:Int,block:()->Unit,blockTwo:()->Unit) {
+     fun deleteNotification(itemId:UUID,block:()->Unit,blockTwo:()->Unit) {
         block.invoke()
         val service = Intent(requireContext(), NotificationHelper::class.java)
         service.setAction("ACTION_STOP_FOREGROUND_SERVICE")

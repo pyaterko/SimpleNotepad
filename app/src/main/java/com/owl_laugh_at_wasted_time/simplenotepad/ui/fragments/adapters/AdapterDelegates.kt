@@ -4,12 +4,15 @@ import android.content.Context
 import android.graphics.Paint
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.elveum.elementadapter.SimpleBindingAdapter
 import com.elveum.elementadapter.simpleAdapter
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
+import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getProductName
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
@@ -17,10 +20,30 @@ import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.to
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemNoteBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemSubtaskBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemTodoBinding
 
+fun createSubTaskAdapter(listener: OnSubTaskListener) =
+    simpleAdapter<SubTaskItem, ItemSubtaskBinding> {
+        areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
+        areContentsSame = { oldItem, newItem -> oldItem == newItem }
+        bind { item ->
+            tvSubtask.text = item.text
+            chbSubtask.isChecked = item.done
+        }
+        listeners {
+            chbSubtask.onClick {
+                listener.markAsPurchased(it)
+            }
+        }
+    }
 
-fun createToDoAdapter(context: Context, listener: OnToDoListener) =
+
+fun createToDoAdapter(
+    context: Context,
+    listener: OnToDoListener,
+    adapter: SimpleBindingAdapter<SubTaskItem>
+) =
     simpleAdapter<ItemToDo, ItemTodoBinding> {
         areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
         areContentsSame = { oldItem, newItem -> oldItem == newItem }
@@ -31,10 +54,7 @@ fun createToDoAdapter(context: Context, listener: OnToDoListener) =
             )
             itemFon.setBackgroundColor(item.color?.getColorDrawable(context))
             textTitle.text = item.title
-            textDescription.text = item.text
-            imageMoreVert.setBackgroundDrawable(
-                item.priority.getColorDrawable(context)
-            )
+
             if (!format) {
                 textViewNameDayOfWeek.text = toDateString(item.dateOfCreation)
                 iventDayOfWeek.text = toDateString(item.data)
@@ -45,11 +65,13 @@ fun createToDoAdapter(context: Context, listener: OnToDoListener) =
 
         }
         listeners {
+            rvSubtaskList.layoutManager = LinearLayoutManager(context)
+            rvSubtaskList.adapter = adapter
             root.onClick {
                 listener.launchToCreateToDoFragment(it)
             }
-            imageMoreVert.onClick {
-                listener.showMenu(imageMoreVert)
+            buttonOpenRv.onClick {
+                listener.showSubTasks(rvSubtaskList)
             }
         }
     }
@@ -116,10 +138,13 @@ private fun TextView.showStrikeThrough(show: Boolean) {
         else paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
 }
 
+interface OnSubTaskListener {
+    fun markAsPurchased(item: SubTaskItem)
+}
 
 interface OnToDoListener {
     fun launchToCreateToDoFragment(itemToDo: ItemToDo)
-    fun showMenu(view: View)
+    fun showSubTasks(view: View)
 
 }
 

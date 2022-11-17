@@ -7,17 +7,26 @@ import android.os.Bundle
 import android.provider.CalendarContract
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.owl_laugh_at_wasted_time.domain.*
+import com.owl_laugh_at_wasted_time.domain.DATE_TIME_FORMAT
+import com.owl_laugh_at_wasted_time.domain.TIME_STRING_DAY
+import com.owl_laugh_at_wasted_time.domain.TIME_STRING_MONTH
+import com.owl_laugh_at_wasted_time.domain.TIME_STRING_YEAR
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.hideKeyboard
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.shakeAndVibrate
 import com.owl_laugh_at_wasted_time.settings.R.string.show_notifications_key
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateTodoBinding
@@ -33,11 +42,12 @@ import java.util.*
 class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     private var itemToDo = ItemToDo()
-    private var idItemToDo = UNDEFINED_ID
+    private var idItemToDo: UUID? = null
     private var showAnErrorInTheSelection = false
     private val binding by viewBinding(FragmentCreateTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
     private val args: CreateToDoFragmentArgs by navArgs()
+    private var allEds: ArrayList<View> = arrayListOf()
 
 
     override fun onAttach(context: Context) {
@@ -48,17 +58,37 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.todoTitle.requestFocus()
         launchScope {
-            if (idItemToDo != UNDEFINED_ID) {
-                itemToDo = viewModel.getNoteById(idItemToDo)
+            if (idItemToDo != null) {
+                itemToDo = viewModel.getNoteById(idItemToDo!!)
             }
-            setData(binding.todoTitle, binding.todoText)
+            setData(binding.todoTitle)
         }
-        SEtOnClickListeners()
+        setOnClickListeners()
         initMenu()
+        val linear = binding.linear
+        binding.tvAdd.setOnClickListener {
+            addSubTask(linear)
+        }
     }
 
-    private fun SEtOnClickListeners() {
+    private fun addSubTask(linear: LinearLayout) {
+        val viewSub: View = layoutInflater.inflate(R.layout.custom_edittext_layout, null)
+        val deleteField: TextView = viewSub.findViewById(R.id.button2) as TextView
+        deleteField.setOnClickListener {
+            try {
+                (viewSub.parent as LinearLayout).removeView(viewSub)
+                allEds.remove(viewSub)
+            } catch (ex: IndexOutOfBoundsException) {
+                ex.printStackTrace()
+            }
+        }
+        allEds.add(viewSub)
+        linear.addView(viewSub)
+    }
+
+    private fun setOnClickListeners() {
         binding.colorPicturesToDo.onColorClickListener = {
             itemToDo.color = it
             binding.indicatorColor.setBackgroundTintList(
@@ -70,13 +100,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
             )
             closePalette()
         }
-        binding.currentPrioritiesSpinner.onItemSelectedListener = listener(requireContext()) {
-            binding.textView.setTextColor(resources.getColor(R.color.black,null))
-            showError()
-        }
-
-        binding.currentPrioritiesSpinner.setSelection(args.priority)
-
         binding.indicatorColor.setOnClickListener {
             openPalette()
         }
@@ -92,10 +115,8 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                     )
                 ) {
                     if (itemToDo.data == "") {
-                        if (idItemToDo != UNDEFINED_ID) {
-                            val menuItemAlarm = it.findItem(R.id.menu_alarm)
-                            menuItemAlarm.setVisible(true)
-                        }
+                        val menuItemAlarm = it.findItem(R.id.menu_alarm)
+                        menuItemAlarm.setVisible(true)
                     } else {
                         val notificationOff = it.findItem(R.id.menu_notifications_off)
                         notificationOff.setVisible(true)
@@ -108,31 +129,39 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
             blockMenuItemSelected = {
                 when (it.itemId) {
                     R.id.menu_alarm -> {
-                        checkBeforeIvent { title, description, getPriority ->
+                        checkBeforeIvent { title ->
                             itemToDo.title = title
-                            itemToDo.text = description
-                            itemToDo.priority = parsePriority(getPriority)
                             setReminder()
                         }
                     }
                     R.id.menu_notifications_off -> {
                         it.setVisible(false)
-                        deleteNotification(idItemToDo, block = {
-                            itemToDo.data = ""
-                        }, blockTwo = {
-                            viewModel.addItemNote(itemToDo)
-                        })
+                        itemToDo.id?.let { uuid ->
+                            deleteNotification(uuid, block = {
+                                itemToDo.data = ""
+                            }, blockTwo = {
+                                viewModel.addToDo(itemToDo)
+                            })
+                        }
+
                     }
                     R.id.menu_save -> {
-                        checkBeforeIvent { title, description, getPriority ->
+                        checkBeforeIvent { title ->
                             itemToDo.title = title
-                            itemToDo.text = description
-                            itemToDo.priority = parsePriority(getPriority)
-                            launchScope {
-                                viewModel.addItemNote(itemToDo)
-                            }
-                          hideKeyboard(requireActivity())
+                            viewModel.addToDo(itemToDo)
+                            hideKeyboard(requireActivity())
                             findNavController().navigateUp()
+                        }
+                        val items = arrayOfNulls<String>(allEds.size)
+                        for (i in allEds.indices) {
+                            items[i] = (allEds.get(i)
+                                .findViewById<View>(R.id.editText) as EditText).text.toString()
+
+                            Log.e(
+                                "MainActivity",
+                                (allEds.get(i)
+                                    .findViewById<View>(R.id.editText) as EditText).text.toString()
+                            )
                         }
                     }
                 }
@@ -181,7 +210,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                     .format(calendar.time)
                 itemToDo.data = data
                 setNotification(data)
-                viewModel.addItemNote(itemToDo)
+                viewModel.addToDo(itemToDo)
                 addEvent(itemToDo.title, calendar.time.time)
             }
         }
@@ -229,8 +258,8 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 count: Int
             ) {
                 showAnErrorInTheSelection = false
-                binding.textView2.setTextColor(resources.getColor(R.color.black,null))
-                showError()
+                binding.textView2.setTextColor(resources.getColor(R.color.black, null))
+                binding.llError.visibility = View.GONE
             }
 
             override fun afterTextChanged(sequence: Editable?) {}
@@ -238,29 +267,17 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         binding.todoTitle.addTextChangedListener(textWatcher)
     }
 
-    private fun isShowAnErrorInTheSelection(title: Boolean, priorety: Boolean) {
+    private fun isShowAnErrorInTheSelection(title: Boolean) {
         if (showAnErrorInTheSelection) {
             when (title) {
                 true -> {
                     binding.llError.visibility = View.GONE
-                    binding.textView2.setTextColor(resources.getColor(R.color.black,null))
+                    binding.textView2.setTextColor(resources.getColor(R.color.black, null))
                 }
                 false -> {
                     binding.llError.visibility = View.VISIBLE
-                    binding.textView2.setTextColor(resources.getColor(R.color.color_red,null))
+                    binding.textView2.setTextColor(resources.getColor(R.color.color_red, null))
                     binding.textView2.shakeAndVibrate()
-                }
-            }
-            when (priorety) {
-                true -> {
-
-                    if (title) binding.llError.visibility = View.GONE
-                    binding.textView.setTextColor(resources.getColor(R.color.black,null))
-                }
-                false -> {
-                    binding.textView.setTextColor(resources.getColor(R.color.color_red,null))
-                    binding.textView.shakeAndVibrate()
-                    if (title) binding.llError.visibility = View.VISIBLE
                 }
             }
         }
@@ -275,34 +292,21 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         return !(priorety.equals("Выберите приоритет")) && !(priorety.equals("Choose a priority"))
     }
 
-    private fun showError() {
-        if ((binding.todoTitle.text.toString().isNotEmpty()) &&
-            !(binding.currentPrioritiesSpinner.selectedItem.toString()).equals("Выберите приоритет")
-        ) {
-            binding.llError.visibility = View.GONE
-        }
-    }
 
-    private fun checkBeforeIvent(ivent: (String, String, String) -> Unit) {
+    private fun checkBeforeIvent(ivent: (String) -> Unit) {
         val title = binding.todoTitle.text.toString()
-        val description = binding.todoText.text.toString()
-        val getPriority = binding.currentPrioritiesSpinner.selectedItem.toString()
-        if (verifyTitleFromUser(title) &&
-            verifyPrioretyFromUser(getPriority)
-        ) {
-            ivent.invoke(title, description, getPriority)
+        if (verifyTitleFromUser(title)) {
+            ivent.invoke(title)
         } else {
             showAnErrorInTheSelection = true
             isShowAnErrorInTheSelection(
-                verifyTitleFromUser(title),
-                verifyPrioretyFromUser(getPriority)
+                verifyTitleFromUser(title)
             )
         }
     }
 
-    private fun setData(title: EditText, text: EditText) {
+    private fun setData(title: EditText) {
         title.setText(itemToDo.title)
-        text.setText(itemToDo.text)
         setColorInIndicator(itemToDo.color.getColorDrawable(requireContext()))
     }
 
