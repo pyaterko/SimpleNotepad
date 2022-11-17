@@ -1,30 +1,21 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.todo
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
-import com.owl_laugh_at_wasted_time.domain.DATE_TIME_FORMAT
-import com.owl_laugh_at_wasted_time.domain.TIME_STRING_DAY
-import com.owl_laugh_at_wasted_time.domain.TIME_STRING_MONTH
-import com.owl_laugh_at_wasted_time.domain.TIME_STRING_YEAR
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
+import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.hideKeyboard
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.shakeAndVibrate
 import com.owl_laugh_at_wasted_time.settings.R.string.show_notifications_key
@@ -33,9 +24,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateTodo
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.notification.NotificationHelper
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -48,6 +37,8 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
     private val args: CreateToDoFragmentArgs by navArgs()
     private var allEds: ArrayList<View> = arrayListOf()
+    private lateinit var linear: LinearLayout
+    private var setSubTasks = true
 
 
     override fun onAttach(context: Context) {
@@ -58,37 +49,53 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        linear = binding.linear
         binding.todoTitle.requestFocus()
+        showKeyboard(binding.todoTitle)
         launchScope {
             if (idItemToDo != null) {
+                viewModel.flowSubTask(idItemToDo!!).collectWhileStarted {
+                    if (setSubTasks) {
+                        for (i in it) {
+                            addSubTaskLine(linear, i.text, i.done)
+                        }
+                    }
+                    setSubTasks = false
+                }
                 itemToDo = viewModel.getNoteById(idItemToDo!!)
             }
             setData(binding.todoTitle)
         }
         setOnClickListeners()
         initMenu()
-        val linear = binding.linear
-        binding.tvAdd.setOnClickListener {
-            addSubTask(linear)
-        }
+
     }
 
-    private fun addSubTask(linear: LinearLayout) {
+    private fun addSubTaskLine(linear: LinearLayout, str: String = "", done: Boolean = false) {
         val viewSub: View = layoutInflater.inflate(R.layout.custom_edittext_layout, null)
         val deleteField: TextView = viewSub.findViewById(R.id.button2) as TextView
         deleteField.setOnClickListener {
             try {
                 (viewSub.parent as LinearLayout).removeView(viewSub)
                 allEds.remove(viewSub)
+                viewModel.deleteItemById(str)
             } catch (ex: IndexOutOfBoundsException) {
                 ex.printStackTrace()
             }
         }
+        val text = viewSub.findViewById(R.id.editText) as EditText
+        val chb = viewSub.findViewById(R.id.chb_current) as CheckBox
+        chb.isChecked = done
+        text.setText(str)
+        text.requestFocus()
         allEds.add(viewSub)
         linear.addView(viewSub)
     }
 
     private fun setOnClickListeners() {
+        binding.tvAdd.setOnClickListener {
+            addSubTaskLine(linear)
+        }
         binding.colorPicturesToDo.onColorClickListener = {
             itemToDo.color = it
             binding.indicatorColor.setBackgroundTintList(
@@ -122,7 +129,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                         notificationOff.setVisible(true)
                     }
                 }
-
                 val menuItemSave = it.findItem(R.id.menu_save)
                 menuItemSave.setVisible(true)
             },
@@ -131,19 +137,18 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                     R.id.menu_alarm -> {
                         checkBeforeIvent { title ->
                             itemToDo.title = title
-                            setReminder()
+                            setReminder(itemToDo) {
+                                viewModel.addToDo(it)
+                                saveSubTaskList()
+                            }
                         }
                     }
                     R.id.menu_notifications_off -> {
                         it.setVisible(false)
                         itemToDo.id?.let { uuid ->
-                            deleteNotification(uuid, block = {
-                                itemToDo.data = ""
-                            }, blockTwo = {
-                                viewModel.addToDo(itemToDo)
-                            })
+                            deleteNotification(uuid, { itemToDo.data = "" },
+                                { viewModel.addToDo(itemToDo) })
                         }
-
                     }
                     R.id.menu_save -> {
                         checkBeforeIvent { title ->
@@ -152,86 +157,27 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                             hideKeyboard(requireActivity())
                             findNavController().navigateUp()
                         }
-                        val items = arrayOfNulls<String>(allEds.size)
-                        for (i in allEds.indices) {
-                            items[i] = (allEds.get(i)
-                                .findViewById<View>(R.id.editText) as EditText).text.toString()
-
-                            Log.e(
-                                "MainActivity",
-                                (allEds.get(i)
-                                    .findViewById<View>(R.id.editText) as EditText).text.toString()
-                            )
-                        }
+                        saveSubTaskList()
                     }
                 }
             })
     }
 
-    private fun setReminder() {
-        val dateRangePicker =
-            MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Выберите дату для напоминания")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                .build()
-        dateRangePicker.show(parentFragmentManager, "TAGTAG")
-        dateRangePicker.addOnPositiveButtonClickListener {
-            val materialTimePicker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(0)
-                .setMinute(0)
-                .setTitleText("Выберите время для напоминания")
-                .build()
-            materialTimePicker.show(parentFragmentManager, "TAG")
-            materialTimePicker.addOnPositiveButtonClickListener {
-                val month: String = SimpleDateFormat(
-                    TIME_STRING_MONTH,
-                    Locale.getDefault()
-                ).format(Date(dateRangePicker.selection!!))
-                val year: String = SimpleDateFormat(
-                    TIME_STRING_YEAR,
-                    Locale.getDefault()
-                ).format(Date(dateRangePicker.selection!!))
-                val day: String = SimpleDateFormat(
-                    TIME_STRING_DAY,
-                    Locale.getDefault()
-                ).format(Date(dateRangePicker.selection!!))
-                val calendar = Calendar.getInstance()
-                calendar.set(Calendar.DAY_OF_MONTH, day.toInt())
-                calendar.set(Calendar.YEAR, year.toInt())
-                calendar.set(Calendar.MONTH, month.toInt() - 1)
-                calendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
-                calendar.set(Calendar.MINUTE, materialTimePicker.minute)
-
-                val data = SimpleDateFormat(
-                    DATE_TIME_FORMAT,
-                    Locale.getDefault()
+    private fun saveSubTaskList() {
+        for (i in allEds.indices) {
+            val text = (allEds.get(i)
+                .findViewById<View>(R.id.editText) as EditText).text.toString()
+            val chb = allEds.get(i).findViewById(R.id.chb_current) as CheckBox
+            if (text != "") {
+                viewModel.addSubTask(
+                    SubTaskItem(
+                        itemToDo.id!!,
+                        text,
+                        chb.isChecked
+                    )
                 )
-                    .format(calendar.time)
-                itemToDo.data = data
-                setNotification(data)
-                viewModel.addToDo(itemToDo)
-                addEvent(itemToDo.title, calendar.time.time)
             }
         }
-    }
-
-    private fun setNotification(text: String) {
-        val service = Intent(requireContext(), NotificationHelper::class.java)
-        service.setAction("ACTION_START_FOREGROUND_SERVICE")
-        service.putExtra("itemId", itemToDo.id)
-        service.putExtra("itemTitle", itemToDo.title)
-        service.putExtra("data", text)
-        activity?.startForegroundService(service)
-    }
-
-    private fun addEvent(title: String, begin: Long) {
-        val intent = Intent(Intent.ACTION_INSERT).apply {
-            data = CalendarContract.Events.CONTENT_URI
-            putExtra(CalendarContract.Events.TITLE, title)
-            putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin)
-        }
-        startActivity(intent)
     }
 
     override fun onStop() {
@@ -243,6 +189,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         super.onStart()
         (activity as MainNoteBookActivity).binding.selectContainerCard.visibility = View.GONE
         val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(sequence: Editable?) {}
             override fun beforeTextChanged(
                 sequence: CharSequence?,
                 start: Int,
@@ -261,8 +208,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 binding.textView2.setTextColor(resources.getColor(R.color.black, null))
                 binding.llError.visibility = View.GONE
             }
-
-            override fun afterTextChanged(sequence: Editable?) {}
         }
         binding.todoTitle.addTextChangedListener(textWatcher)
     }
@@ -287,11 +232,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     private fun verifyTitleFromUser(title: String): Boolean {
         return (title.isNotEmpty())
     }
-
-    private fun verifyPrioretyFromUser(priorety: String): Boolean {
-        return !(priorety.equals("Выберите приоритет")) && !(priorety.equals("Choose a priority"))
-    }
-
 
     private fun checkBeforeIvent(ivent: (String) -> Unit) {
         val title = binding.todoTitle.text.toString()

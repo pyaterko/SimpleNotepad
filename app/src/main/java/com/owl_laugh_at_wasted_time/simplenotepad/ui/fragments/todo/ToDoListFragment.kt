@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -23,23 +24,19 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnSubTaskListener
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnToDoListener
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createSubTaskAdapter
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createToDoAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
 import java.util.*
 
 
-class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListener,
-    OnSubTaskListener {
+class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListener {
 
 
     private var listToDo: List<ItemToDo>? = null
     private val binding by viewBinding(FragmentListTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
     private lateinit var adapter: SimpleBindingAdapter<ItemToDo>
-    private lateinit var adapterSubTask: SimpleBindingAdapter<SubTaskItem>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,29 +45,18 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapterSubTask = createSubTaskAdapter(this)
-        adapterSubTask.submitList(
-            listOf(
-                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",false),
-                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",true),
-                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",false),
-                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",true),
-                SubTaskItem(1, UUID.randomUUID(),"fggagdfgdf",false),
-            ).sortedBy { it.done }
-
-        )
         setFabOnClickListener()
         binding.recyclerViewListToDo.layoutManager =
             LinearLayoutManager(requireContext())
-        adapter = createToDoAdapter(requireContext(), this,adapterSubTask)
+        adapter = createToDoAdapter(requireContext(), this)
         binding.recyclerViewListToDo.adapter = adapter
         binding.recyclerViewListToDo.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
         binding.recyclerViewListToDo.addItemDecoration(dividerItemDecoration)
-        viewModel.flow.collectWhileStarted {
+        viewModel.flowToDo.collectWhileStarted {
             binding.noDataImageView.isVisible = it.size == 0
-            adapter.submitList(it)
-            listToDo = it.toList()
+            adapter.submitList(it.sortedBy { it.done })
+            listToDo = it.sortedBy { it.done }
         }
         if (preferences(requireContext()).getBoolean(
                 getString(R.string.settings_swipe_to_trash_key),
@@ -104,6 +90,30 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
                 itemToDo.id
             )
         launchFragment(directions)
+    }
+
+    override fun markAsDoneToDo(itemToDo: ItemToDo) {
+        viewModel.addToDo(itemToDo.copy(done = !itemToDo.done))
+    }
+
+    override fun markAsDone(item: SubTaskItem) {
+        viewModel.addSubTask(item.copy(done = !item.done))
+    }
+
+    override fun deleteItem(item: SubTaskItem) {
+     viewModel.deleteItemById(item.text)
+    }
+
+    override fun getSubTaskList(adapter: SimpleBindingAdapter<SubTaskItem>,itemToDo: ItemToDo, textView: TextView) {
+        viewModel.flowSubTask(itemToDo.id!!).collectWhileStarted {
+            adapter.submitList(it.sortedBy { it.done })
+            val tasks = it.size
+            var tasksCompleted = 0
+            for (item in it) {
+                if (item.done) tasksCompleted++
+            }
+            textView.text = "$tasks/$tasksCompleted"
+        }
     }
 
     override fun showSubTasks(view: View) {
@@ -179,7 +189,4 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         private const val DELETE_TO_DO = 2
     }
 
-    override fun markAsPurchased(item: SubTaskItem) {
-
-    }
 }

@@ -21,4 +21,11 @@
         android:background="@drawable/ic_baseline_delete_outline_24"
         android:gravity="center"
         android:textSize="20sp" />
+    <CheckBox
+        android:id="@+id/chb_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:visibility="gone"
+        android:focusable="true" />
 </LinearLayout>

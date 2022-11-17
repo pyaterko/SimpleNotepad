@@ -12,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.hideKeyboard
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
@@ -35,6 +34,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.noteTitle.requestFocus()
+        showKeyboard(binding.noteTitle)
         launchScope {
             val id = args.noteId
             if (id != UNDEFINED_ID) {

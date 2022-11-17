@@ -40,5 +40,11 @@ interface DataModule {
         ) =
             provideDataBase(context).itemNoteDao()
 
+        @Singleton
+        @Provides
+        fun provideSubTaskDao(
+            context: Context
+        ) =
+            provideDataBase(context).subTaskDao()
     }
 }

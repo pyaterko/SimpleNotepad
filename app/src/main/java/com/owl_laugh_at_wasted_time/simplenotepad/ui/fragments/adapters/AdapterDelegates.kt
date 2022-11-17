@@ -23,17 +23,21 @@ import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingBindin
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemSubtaskBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemTodoBinding
 
-fun createSubTaskAdapter(listener: OnSubTaskListener) =
+private fun createSubTaskAdapter(listener: OnToDoListener) =
     simpleAdapter<SubTaskItem, ItemSubtaskBinding> {
-        areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
+        areItemsSame = { oldItem, newItem -> oldItem.text == newItem.text }
         areContentsSame = { oldItem, newItem -> oldItem == newItem }
         bind { item ->
+            tvSubtask.showStrikeThrough(item.done)
             tvSubtask.text = item.text
             chbSubtask.isChecked = item.done
         }
         listeners {
             chbSubtask.onClick {
-                listener.markAsPurchased(it)
+                listener.markAsDone(it)
+            }
+            tvDelete.onClick {
+                listener.deleteItem(it)
             }
         }
     }
@@ -41,20 +45,23 @@ fun createSubTaskAdapter(listener: OnSubTaskListener) =
 
 fun createToDoAdapter(
     context: Context,
-    listener: OnToDoListener,
-    adapter: SimpleBindingAdapter<SubTaskItem>
+    listener: OnToDoListener
 ) =
     simpleAdapter<ItemToDo, ItemTodoBinding> {
         areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
         areContentsSame = { oldItem, newItem -> oldItem == newItem }
         bind { item ->
+            val adapter = createSubTaskAdapter(listener)
+            rvSubtaskList.layoutManager = LinearLayoutManager(context)
+            rvSubtaskList.adapter = adapter
+            listener.getSubTaskList(adapter,item, tvCount)
             val format = preferences(context).getBoolean(
                 context.getString(R.string.settings_prettified_dates_key),
                 false
             )
             itemFon.setBackgroundColor(item.color?.getColorDrawable(context))
             textTitle.text = item.title
-
+            checkBox.isChecked = item.done
             if (!format) {
                 textViewNameDayOfWeek.text = toDateString(item.dateOfCreation)
                 iventDayOfWeek.text = toDateString(item.data)
@@ -65,13 +72,15 @@ fun createToDoAdapter(
 
         }
         listeners {
-            rvSubtaskList.layoutManager = LinearLayoutManager(context)
-            rvSubtaskList.adapter = adapter
             root.onClick {
                 listener.launchToCreateToDoFragment(it)
             }
             buttonOpenRv.onClick {
+                buttonOpenRv.animate().rotation(buttonOpenRv.rotation + 180f)
                 listener.showSubTasks(rvSubtaskList)
+            }
+            checkBox.onClick {
+                listener.markAsDoneToDo(it)
             }
         }
     }
@@ -138,14 +147,13 @@ private fun TextView.showStrikeThrough(show: Boolean) {
         else paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
 }
 
-interface OnSubTaskListener {
-    fun markAsPurchased(item: SubTaskItem)
-}
-
 interface OnToDoListener {
     fun launchToCreateToDoFragment(itemToDo: ItemToDo)
+    fun markAsDoneToDo(itemToDo: ItemToDo)
+    fun getSubTaskList(adapter: SimpleBindingAdapter<SubTaskItem>,itemToDo: ItemToDo, textView: TextView)
     fun showSubTasks(view: View)
-
+    fun markAsDone(item: SubTaskItem)
+    fun deleteItem(item: SubTaskItem)
 }
 
 interface OnShoppingListener {

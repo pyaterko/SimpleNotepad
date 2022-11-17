@@ -4,7 +4,6 @@ import java.util.*
 
 
 data class SubTaskItem(
-    val id: Int,
     val idParent: UUID,
     val text: String,
     var done: Boolean
