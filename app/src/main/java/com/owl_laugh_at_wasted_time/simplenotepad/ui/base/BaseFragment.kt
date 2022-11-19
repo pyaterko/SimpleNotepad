@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.provider.CalendarContract
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -22,6 +23,7 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.owl_laugh_at_wasted_time.domain.DATE_TIME_FORMAT
@@ -45,13 +47,13 @@ import javax.inject.Inject
 open class BaseFragment(layout: Int) : Fragment(layout) {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    protected lateinit var viewModelFactory: ViewModelFactory
 
-    val component by lazy {
+    protected val component by lazy {
         (activity as MainNoteBookActivity).component
     }
 
-    fun launchScope(block: suspend () -> Unit) {
+    protected fun launchScope(block: suspend () -> Unit) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 block.invoke()
@@ -59,7 +61,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         }
     }
 
-    fun <T> Flow<T>.collectWhileStarted(block: (T) -> Unit) {
+    protected fun <T> Flow<T>.collectWhileStarted(block: (T) -> Unit) {
         launchAndRepeatOnStart {
             collect { block.invoke(it) }
         }
@@ -94,7 +96,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         }
     }
 
-    fun setToolBarMenu(
+    protected fun setToolBarMenu(
         blockCreateMenu: ((Menu) -> Unit)?,
         blockMenuItemSelected: ((MenuItem) -> Unit)?
     ) {
@@ -112,7 +114,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    fun launchFragment(directions: NavDirections) {
+    protected fun launchFragment(directions: NavDirections) {
         findNavController().navigate(
             directions,
             navOptions {
@@ -126,7 +128,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         )
     }
 
-    fun deleteNotification(itemId: UUID, block: () -> Unit, blockTwo: () -> Unit) {
+    protected fun deleteNotification(itemId: UUID, block: () -> Unit, blockTwo: () -> Unit) {
         block.invoke()
         val service = Intent(requireContext(), NotificationHelper::class.java)
         service.setAction("ACTION_STOP_FOREGROUND_SERVICE")
@@ -135,7 +137,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         blockTwo.invoke()
     }
 
-    fun setReminder(itemToDo: ItemToDo, add: (ItemToDo) -> Unit) {
+    protected fun setReminder(itemToDo: ItemToDo, add: (ItemToDo) -> Unit) {
         val dateRangePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Выберите дату для напоминания")
@@ -218,4 +220,26 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         imm!!.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 
+    protected fun fabActionOnScroll(
+        recyclerView: RecyclerView,
+        fab: FloatingActionButton?,
+        show: (() -> Unit)?,
+        hide: (() -> Unit)?
+    ) {
+        recyclerView.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) {
+                        fab?.visibility = View.INVISIBLE
+                        hide?.invoke()
+                    } else if (dy < 0) {
+                        show?.invoke()
+                        fab?.visibility = View.VISIBLE
+                    } else {
+                        Log.d("TAG", "No Vertical Scrolled")
+                    }
+                }
+            }
+        )
+    }
 }

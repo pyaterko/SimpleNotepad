@@ -1,26 +1,19 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.shopping
 
 import android.content.Context
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.elveum.elementadapter.SimpleBindingAdapter
-import com.elveum.elementadapter.simpleAdapter
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getProductName
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentShoppingListBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
@@ -30,7 +23,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnShoppi
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createSoppingAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.shopping.ShoppingListViewModel
 
-class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list),OnShoppingListener {
+class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list), OnShoppingListener {
 
     private val binding by viewBinding(FragmentShoppingListBinding::bind)
     private val viewModel by viewModels<ShoppingListViewModel> { viewModelFactory }
@@ -69,6 +62,12 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list),OnSho
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(binding.recyclerViewShoppingItem)
 
+        fabActionOnScroll(
+            binding.recyclerViewShoppingItem,
+            binding.buttonFabShoppingList,
+            null,
+            null
+        )
         viewModel.shoppingList.collectWhileStarted {
             if (it.isEmpty()) {
                 binding.noDataImageView.visibility = View.VISIBLE
@@ -112,6 +111,6 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list),OnSho
     }
 
     override fun markAsPurchased(item: ShoppingListItem) {
-            viewModel.addShoppingListItem(item.copy(done = !item.done))
+        viewModel.addShoppingListItem(item.copy(done = !item.done))
     }
 }

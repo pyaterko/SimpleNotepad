@@ -70,22 +70,13 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         mActionsMenu = binding.fab.fab
         setFabOnClickListener()
         setRVLaoutManager()
-        binding.recyclerViewListNotes.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy > 0) {
-                        collapseFab()
-                        mActionsMenu.isVisible = false
-
-                    } else if (dy < 0) {
-                        mActionsMenu.isVisible = true
-                        collapseFab()
-                    } else {
-                        Log.d("TAG", "No Vertical Scrolled")
-                    }
-                }
-            }
-        )
+        fabActionOnScroll( binding.recyclerViewListNotes,null,{
+            mActionsMenu.isVisible = true
+            collapseFab()
+        },{
+            collapseFab()
+            mActionsMenu.isVisible = false
+        })
         adapter = createNotesAdapter(requireContext(),this)
         binding.recyclerViewListNotes.adapter = adapter
         binding.recyclerViewListNotes.isNestedScrollingEnabled = false
@@ -105,13 +96,12 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
 
         setSearch()
         setToolBarMenu(
-            blockCreateMenu = {
+          {
                 val menuItemStream = it.findItem(R.id.menu_view_stream)
                 val menuItemGrid = it.findItem(R.id.menu_grid_view)
                 menuItemStream?.setVisible(true)
                 menuItemGrid?.setVisible(true)
-            },
-            blockMenuItemSelected = {
+            }, {
                 when (it.itemId) {
                     R.id.menu_view_stream -> {
                         preferences(requireContext()).edit()

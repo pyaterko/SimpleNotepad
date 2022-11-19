@@ -10,13 +10,10 @@
     android:background="@color/teal_200"
     android:paddingBottom="@dimen/size_max_small">
 
-
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:lines="1"
         android:padding="@dimen/size_xx_small"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_standard_header"
