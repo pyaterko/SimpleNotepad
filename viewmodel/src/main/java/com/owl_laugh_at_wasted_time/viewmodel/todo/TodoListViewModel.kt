@@ -54,7 +54,7 @@ class TodoListViewModel @Inject constructor(
         }
     }
 
-    fun deleteNote(itemId: UUID) {
+    fun deleteItem(itemId: UUID) {
         viewModelScope.launch {
             toDoRepository.delete(itemId)
         }

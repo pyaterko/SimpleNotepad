@@ -180,7 +180,10 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         }
         displayAConfirmationDialog(requireContext(),
             getString(R.string.default_alert_message),
-            { deleteNotification(id!!, {}) { viewModel.deleteNote(id) } },
+            { deleteNotification(id!!, {}) {
+                viewModel.deleteItem(id)
+                viewModel.deleteSubTask(id)
+            } },
             { binding.recyclerViewListToDo.adapter?.notifyDataSetChanged() }
         )
     }
