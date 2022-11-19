@@ -16,9 +16,7 @@ import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.shakeAndVibrate
-import com.owl_laugh_at_wasted_time.settings.R.string.show_notifications_key
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateTodoBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
@@ -113,62 +111,34 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     }
 
     private fun initMenu() {
-        setToolBarMenu(
-            blockCreateMenu = {
-                if (preferences(requireContext()).getBoolean(
-                        getString(
-                            show_notifications_key
-                        ), true
-                    )
-                ) {
-                    if (itemToDo.data == "") {
-                        val menuItemAlarm = it.findItem(R.id.menu_alarm)
-                        menuItemAlarm.setVisible(true)
-                    } else {
-                        val notificationOff = it.findItem(R.id.menu_notifications_off)
-                        notificationOff.setVisible(true)
+        setToolBarMenu({
+            val menuItemSave = it.findItem(R.id.menu_save)
+            menuItemSave.setVisible(true)
+        }, {
+            when (it.itemId) {
+                R.id.menu_save -> {
+                    checkBeforeIvent { title ->
+                        itemToDo.title = title
+                        viewModel.addToDo(itemToDo)
+                        hideKeyboard(requireActivity())
+                        findNavController().navigateUp()
+                        setNotification(saveSubTaskList(), itemToDo)
                     }
+
                 }
-                val menuItemSave = it.findItem(R.id.menu_save)
-                menuItemSave.setVisible(true)
-            },
-            blockMenuItemSelected = {
-                when (it.itemId) {
-                    R.id.menu_alarm -> {
-                        checkBeforeIvent { title ->
-                            itemToDo.title = title
-                            setReminder(itemToDo) {
-                                viewModel.addToDo(it)
-                                saveSubTaskList()
-                            }
-                        }
-                    }
-                    R.id.menu_notifications_off -> {
-                        it.setVisible(false)
-                        itemToDo.id?.let { uuid ->
-                            deleteNotification(uuid, { itemToDo.data = "" },
-                                { viewModel.addToDo(itemToDo) })
-                        }
-                    }
-                    R.id.menu_save -> {
-                        checkBeforeIvent { title ->
-                            itemToDo.title = title
-                            viewModel.addToDo(itemToDo)
-                            hideKeyboard(requireActivity())
-                            findNavController().navigateUp()
-                        }
-                        saveSubTaskList()
-                    }
-                }
-            })
+            }
+        })
     }
 
-    private fun saveSubTaskList() {
+    private fun saveSubTaskList(): ArrayList<String> {
+        val array = arrayListOf<String>()
+        var counter = 1
         for (i in allEds.indices) {
             val text = (allEds.get(i)
                 .findViewById<View>(R.id.editText) as EditText).text.toString()
             val chb = allEds.get(i).findViewById(R.id.chb_current) as CheckBox
             if (text != "") {
+                array.add("${counter++} - $text")
                 viewModel.addSubTask(
                     SubTaskItem(
                         itemToDo.id!!,
@@ -178,6 +148,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 )
             }
         }
+        return array
     }
 
     override fun onStop() {
@@ -195,9 +166,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 start: Int,
                 count: Int,
                 after: Int
-            ) {
-            }
-
+            ) {}
             override fun onTextChanged(
                 sequence: CharSequence?,
                 start: Int,

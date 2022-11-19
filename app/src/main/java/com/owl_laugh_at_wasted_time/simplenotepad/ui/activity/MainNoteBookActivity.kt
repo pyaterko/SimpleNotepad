@@ -58,7 +58,7 @@ class MainNoteBookActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        createNotificationChannel()
+       // createNotificationChannel()
 
         if (preferences(this).getBoolean(CURRENT_BOOLEAN_STATE, true)) {
             startActivity(Intent(applicationContext, IntroActivity::class.java))

@@ -89,6 +89,10 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         setSearch()
     }
 
+    override fun setReminder(itemToDo: ItemToDo) {
+        setDateOfComplection(itemToDo) { viewModel.addToDo(it) }
+    }
+
     override fun launchToCreateToDoFragment(itemToDo: ItemToDo) {
         val directions =
             ToDoListFragmentDirections.actionToDoListFragmentToCreateToDoFragment(
@@ -98,6 +102,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
     }
 
     override fun markAsDoneToDo(itemToDo: ItemToDo) {
+        deleteNotification(itemToDo.id.hashCode(), {})
         viewModel.addToDo(itemToDo.copy(done = !itemToDo.done))
     }
 
@@ -161,17 +166,17 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         itemId: UUID? = null,
         view: View? = null
     ) {
-        val note: ItemToDo?
+        val itemToDo: ItemToDo?
         val id = if (view == null) {
             itemId
         } else {
-            note = view.tag as ItemToDo
-            note.id
+            itemToDo = view.tag as ItemToDo
+            itemToDo.id
         }
         displayAConfirmationDialog(requireContext(),
             getString(R.string.default_alert_message),
             {
-                deleteNotification(id!!, {}) {
+                deleteNotification(id!!.hashCode()) {
                     viewModel.deleteItem(id)
                     viewModel.deleteSubTask(id)
                 }

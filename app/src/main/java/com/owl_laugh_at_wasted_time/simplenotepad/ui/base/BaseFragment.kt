@@ -67,35 +67,6 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         }
     }
 
-    fun setupSwipe(recyclerView: RecyclerView?, block: (RecyclerView.ViewHolder) -> Unit) {
-        val callBack = object : ItemTouchHelper.SimpleCallback(
-            0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return true
-            }
-
-            override fun onSwiped(
-                viewHolder: RecyclerView.ViewHolder,
-                direction: Int
-            ) {
-                block.invoke(viewHolder)
-            }
-        }
-        val swipe = preferences(requireContext()).getBoolean(
-            getString(R.string.settings_swipe_to_trash_key),
-            false
-        )
-        if (swipe) {
-            val itemTouchHelper = ItemTouchHelper(callBack)
-            itemTouchHelper.attachToRecyclerView(recyclerView)
-        }
-    }
-
     protected fun setToolBarMenu(
         blockCreateMenu: ((Menu) -> Unit)?,
         blockMenuItemSelected: ((MenuItem) -> Unit)?
@@ -128,16 +99,15 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         )
     }
 
-    protected fun deleteNotification(itemId: UUID, block: () -> Unit, blockTwo: () -> Unit) {
-        block.invoke()
+    protected fun deleteNotification(itemId: Int, blockTwo: () -> Unit) {
         val service = Intent(requireContext(), NotificationHelper::class.java)
         service.setAction("ACTION_STOP_FOREGROUND_SERVICE")
-        service.putExtra("itemId", itemId)
+        service.putExtra("itemId", itemId.hashCode())
         activity?.startService(service)
         blockTwo.invoke()
     }
 
-    protected fun setReminder(itemToDo: ItemToDo, add: (ItemToDo) -> Unit) {
+    protected fun setDateOfComplection(itemToDo: ItemToDo, add: (ItemToDo) -> Unit) {
         val dateRangePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Выберите дату для напоминания")
@@ -178,20 +148,20 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
                 )
                     .format(calendar.time)
                 itemToDo.data = data
-                setNotification(data, itemToDo)
                 add.invoke(itemToDo)
                 addEvent(itemToDo.title, calendar.time.time)
             }
         }
     }
 
-    private fun setNotification(text: String, itemToDo: ItemToDo) {
+    protected fun setNotification(arrayList: ArrayList<String>, itemToDo: ItemToDo) {
         val service = Intent(requireContext(), NotificationHelper::class.java)
         service.setAction("ACTION_START_FOREGROUND_SERVICE")
-        service.putExtra("itemId", itemToDo.id)
+        service.putExtra("itemId", itemToDo.id.hashCode())
         service.putExtra("itemTitle", itemToDo.title)
-        service.putExtra("data", text)
-        activity?.startForegroundService(service)
+        service.putStringArrayListExtra("array", arrayList)
+        service.putExtra("data", itemToDo.dateOfCreation)
+        activity?.startService(service)
     }
 
     private fun addEvent(title: String, begin: Long) {
@@ -213,7 +183,6 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
             )
         }
     }
-
 
     protected fun showKeyboard(view: View) {
         val imm = ContextCompat.getSystemService(requireContext(), InputMethodManager::class.java)

@@ -26,6 +26,7 @@ import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_OUT
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.DialogShoppingListBinding
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -425,5 +426,4 @@ fun getProductName(name: String): String {
     }
     return "food"
 }
-
 

@@ -7,6 +7,7 @@ import com.owl_laugh_at_wasted_time.domain.repository.SubTaskRepository
 import com.owl_laugh_at_wasted_time.domain.repository.ToDoRepository
 import com.owl_laugh_at_wasted_time.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class TodoListViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val flowToDo = toDoRepository.getAllDate()
+
 
     fun flowSubTask(itemId: UUID)=subTaskRepository.getById(itemId)
 

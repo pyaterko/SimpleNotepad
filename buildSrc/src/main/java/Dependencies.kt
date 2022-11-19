@@ -5,7 +5,7 @@ object Config {
         "com.owl_laugh_at_wasted_time.simplenotepad"
     const val compile_sdk = 32
     const val min_sdk = 24
-    const val target_sdk = 24
+    const val target_sdk = 32
     val java_version = JavaVersion.VERSION_1_8
 }
 
