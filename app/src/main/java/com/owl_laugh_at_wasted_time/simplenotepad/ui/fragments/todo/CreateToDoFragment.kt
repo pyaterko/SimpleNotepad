@@ -69,6 +69,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     }
 
+
     private fun addSubTaskLine(linear: LinearLayout, str: String = "", done: Boolean = false) {
         val viewSub: View = layoutInflater.inflate(R.layout.custom_edittext_layout, null)
         val deleteField: TextView = viewSub.findViewById(R.id.button2) as TextView
@@ -112,10 +113,21 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     private fun initMenu() {
         setToolBarMenu({
+            val menuItemAlarm = it.findItem(R.id.menu_alarm)
             val menuItemSave = it.findItem(R.id.menu_save)
+            menuItemAlarm.setVisible(true)
             menuItemSave.setVisible(true)
         }, {
             when (it.itemId) {
+                R.id.menu_alarm -> {
+                    checkBeforeIvent { title ->
+                        itemToDo.title = title
+                        setDateOfComplection(itemToDo) {
+                            viewModel.addToDo(it)
+                            setNotification(saveSubTaskList(), it)
+                        }
+                    }
+                }
                 R.id.menu_save -> {
                     checkBeforeIvent { title ->
                         itemToDo.title = title
@@ -166,7 +178,9 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                 start: Int,
                 count: Int,
                 after: Int
-            ) {}
+            ) {
+            }
+
             override fun onTextChanged(
                 sequence: CharSequence?,
                 start: Int,

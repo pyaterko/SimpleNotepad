@@ -11,6 +11,7 @@ import com.elveum.elementadapter.SimpleBindingAdapter
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentShoppingListBinding
@@ -56,11 +57,17 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list), OnSh
         binding.recyclerViewShoppingItem.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
         binding.recyclerViewShoppingItem.addItemDecoration(dividerItemDecoration)
-        val touchCallback = TouchHelperCallback(adapter) { item ->
-            showDeleteAlertDialog(item)
+        if (preferences(requireContext()).getBoolean(
+                getString(R.string.settings_swipe_to_trash_key),
+                true
+            )
+        ){
+            val touchCallback = TouchHelperCallback(adapter) { item ->
+                showDeleteAlertDialog(item)
+            }
+            val touchHelper = ItemTouchHelper(touchCallback)
+            touchHelper.attachToRecyclerView(binding.recyclerViewShoppingItem)
         }
-        val touchHelper = ItemTouchHelper(touchCallback)
-        touchHelper.attachToRecyclerView(binding.recyclerViewShoppingItem)
 
         fabActionOnScroll(
             binding.recyclerViewShoppingItem,

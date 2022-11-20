@@ -20,7 +20,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -32,7 +31,6 @@ import com.owl_laugh_at_wasted_time.domain.TIME_STRING_MONTH
 import com.owl_laugh_at_wasted_time.domain.TIME_STRING_YEAR
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.launchAndRepeatOnStart
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.notification.NotificationHelper
@@ -52,6 +50,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
     protected val component by lazy {
         (activity as MainNoteBookActivity).component
     }
+
 
     protected fun launchScope(block: suspend () -> Unit) {
         viewLifecycleOwner.lifecycleScope.launch {

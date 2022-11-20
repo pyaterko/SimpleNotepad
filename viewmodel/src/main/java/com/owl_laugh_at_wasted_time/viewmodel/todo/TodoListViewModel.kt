@@ -6,8 +6,6 @@ import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
 import com.owl_laugh_at_wasted_time.domain.repository.SubTaskRepository
 import com.owl_laugh_at_wasted_time.domain.repository.ToDoRepository
 import com.owl_laugh_at_wasted_time.viewmodel.base.BaseViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -18,31 +16,31 @@ class TodoListViewModel @Inject constructor(
     private val subTaskRepository: SubTaskRepository
 ) : BaseViewModel() {
 
-    val flowToDo = toDoRepository.getAllDate()
+    val liveData = toDoRepository.getAllDate()
+
+    fun flowSubTask(itemId: UUID) = subTaskRepository.getById(itemId)
 
 
-    fun flowSubTask(itemId: UUID)=subTaskRepository.getById(itemId)
-
-     fun addSubTask(item: SubTaskItem){
+    fun addSubTask(item: SubTaskItem) {
         viewModelScopeCoroutine.launch {
             subTaskRepository.add(item)
         }
     }
 
-     fun deleteSubTask(itemId: UUID){
-         viewModelScopeCoroutine.launch {
-             subTaskRepository.delete(itemId)
-         }
-     }
+    fun deleteSubTask(itemId: UUID) {
+        viewModelScopeCoroutine.launch {
+            subTaskRepository.delete(itemId)
+        }
+    }
 
-     fun updateDoneSubTask(  id: String, done: Boolean){
-         viewModelScopeCoroutine.launch {
-             subTaskRepository.updateDone(id, done)
-         }
-     }
+    fun updateDoneSubTask(id: String, done: Boolean) {
+        viewModelScopeCoroutine.launch {
+            subTaskRepository.updateDone(id, done)
+        }
+    }
 
-     fun deleteItemById(itemId: String){
-        viewModelScopeCoroutine.launch{
+    fun deleteItemById(itemId: String) {
+        viewModelScopeCoroutine.launch {
             subTaskRepository.deleteItemById(itemId)
         }
     }

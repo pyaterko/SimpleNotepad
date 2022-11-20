@@ -1,5 +1,7 @@
 package com.owl_laugh_at_wasted_time.data.model
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.owl_laugh_at_wasted_time.data.dao.ItemToDoDao
 import com.owl_laugh_at_wasted_time.data.entity.ItemToDoDbModel
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
@@ -14,9 +16,10 @@ class InToDoRepository @Inject constructor(
     private val itemToDoDao: ItemToDoDao
 ) : ToDoRepository {
 
-    override fun getAllDate(): Flow<List<ItemToDo>> {
-        val list = itemToDoDao.getAllData()
-        return list.map { lictDbModel -> lictDbModel.map { it.toItemToDo() } }
+    override fun getAllDate(): LiveData<List<ItemToDo>> =Transformations.map(
+        itemToDoDao.getAllData()
+    ){
+     it.map { itenDbModel -> itenDbModel.toItemToDo() }
     }
 
     override suspend fun add(item: ItemToDo) {

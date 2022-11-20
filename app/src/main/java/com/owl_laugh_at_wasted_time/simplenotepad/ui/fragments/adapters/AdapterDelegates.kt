@@ -49,7 +49,7 @@ fun createToDoAdapter(
 ) =
     simpleAdapter<ItemToDo, ItemTodoBinding> {
         areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
-        areContentsSame = { oldItem, newItem -> oldItem.data == newItem.data }
+        areContentsSame = { oldItem, newItem -> oldItem == newItem }
         bind { item ->
             val adapter = createSubTaskAdapter(listener)
             rvSubtaskList.layoutManager = LinearLayoutManager(context)
@@ -81,9 +81,6 @@ fun createToDoAdapter(
             }
             checkBox.onClick {
                 listener.markAsDoneToDo(it)
-            }
-            iventDayOfWeek.onClick {
-                listener.setReminder(it)
             }
         }
     }
@@ -151,7 +148,6 @@ private fun TextView.showStrikeThrough(show: Boolean) {
 }
 
 interface OnToDoListener {
-    fun setReminder(itemToDo: ItemToDo)
     fun launchToCreateToDoFragment(itemToDo: ItemToDo)
     fun markAsDoneToDo(itemToDo: ItemToDo)
     fun getSubTaskList(adapter: SimpleBindingAdapter<SubTaskItem>,itemToDo: ItemToDo, textView: TextView)

@@ -88,11 +88,18 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             listNotes = it.toList()
         }
 
-        val touchCallback = TouchHelperCallback(adapter) { itemNote ->
-            showDeleteAlertDialog(itemNote.id)
+        if (preferences(requireContext()).getBoolean(
+                getString(R.string.settings_swipe_to_trash_key),
+                true
+            )
+        ){
+            val touchCallback = TouchHelperCallback(adapter) { itemNote ->
+                showDeleteAlertDialog(itemNote.id)
+            }
+            val touchHelper = ItemTouchHelper(touchCallback)
+            touchHelper.attachToRecyclerView(binding.recyclerViewListNotes)
         }
-        val touchHelper = ItemTouchHelper(touchCallback)
-        touchHelper.attachToRecyclerView(binding.recyclerViewListNotes)
+
 
         setSearch()
         setToolBarMenu(

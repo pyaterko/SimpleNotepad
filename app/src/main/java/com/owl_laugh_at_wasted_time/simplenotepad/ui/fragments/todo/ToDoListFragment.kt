@@ -41,6 +41,7 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         component.inject(this)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setFabOnClickListener()
@@ -51,11 +52,13 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         binding.recyclerViewListToDo.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
         binding.recyclerViewListToDo.addItemDecoration(dividerItemDecoration)
-        viewModel.flowToDo.collectWhileStarted {
+
+        viewModel.liveData.observe(viewLifecycleOwner) {
             binding.noDataImageView.isVisible = it.size == 0
-            adapter.submitList(it.sortedBy { it.done })
-            listToDo = it.sortedBy { it.done }
+            adapter.submitList(it.toList().sortedBy { it.done })
+            listToDo = it.toList().sortedBy { it.done }
         }
+
         if (preferences(requireContext()).getBoolean(
                 getString(R.string.settings_swipe_to_trash_key),
                 true
@@ -87,10 +90,6 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         })
 
         setSearch()
-    }
-
-    override fun setReminder(itemToDo: ItemToDo) {
-        setDateOfComplection(itemToDo) { viewModel.addToDo(it) }
     }
 
     override fun launchToCreateToDoFragment(itemToDo: ItemToDo) {

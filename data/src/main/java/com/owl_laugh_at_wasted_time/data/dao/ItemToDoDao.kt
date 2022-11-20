@@ -1,6 +1,7 @@
 package com.owl_laugh_at_wasted_time.data.dao
 
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.owl_laugh_at_wasted_time.data.entity.ItemToDoDbModel
 import com.owl_laugh_at_wasted_time.data.entity.ItemDoneUpdate
@@ -12,7 +13,7 @@ import java.util.*
 interface ItemToDoDao {
 
     @Query("SELECT * FROM todo_table")
-    fun getAllData(): Flow<List<ItemToDoDbModel>>
+    fun getAllData(): LiveData<List<ItemToDoDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun add(itemToDoDbModel: ItemToDoDbModel)
