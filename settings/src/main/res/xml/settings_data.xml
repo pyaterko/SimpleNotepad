@@ -9,6 +9,7 @@
       android:title="@string/settings_import"
       android:summaryOff="импорт и экспорт отключечы"
       android:summaryOn="импорт и экспорт включены"
+      app:defaultValue="true"
       app:iconSpaceReserved="false" />
 
 </PreferenceScreen>

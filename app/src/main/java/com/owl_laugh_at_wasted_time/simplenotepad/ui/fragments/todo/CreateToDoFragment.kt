@@ -124,7 +124,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                         itemToDo.title = title
                         setDateOfComplection(itemToDo) {
                             viewModel.addToDo(it)
-                            setNotification(saveSubTaskList(), it)
+                            addNotification(saveSubTaskList(), it)
                         }
                     }
                 }
@@ -134,7 +134,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
                         viewModel.addToDo(itemToDo)
                         hideKeyboard(requireActivity())
                         findNavController().navigateUp()
-                        setNotification(saveSubTaskList(), itemToDo)
+                        addNotification(saveSubTaskList(), itemToDo)
                     }
 
                 }

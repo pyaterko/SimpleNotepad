@@ -12,7 +12,7 @@
     app:iconSpaceReserved="false" />
 
   <SwitchPreference
-    android:defaultValue="true"
+    android:defaultValue="false"
     android:key="@string/settings_prettified_dates_key"
     android:summaryOff="@string/settings_prettified_dates_summary_off"
     android:summaryOn="@string/settings_prettified_dates_summary_on"

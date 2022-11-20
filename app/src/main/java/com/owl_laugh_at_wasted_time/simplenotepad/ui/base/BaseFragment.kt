@@ -153,7 +153,7 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         }
     }
 
-    protected fun setNotification(arrayList: ArrayList<String>, itemToDo: ItemToDo) {
+    protected fun addNotification(arrayList: ArrayList<String>, itemToDo: ItemToDo) {
         val service = Intent(requireContext(), NotificationHelper::class.java)
         service.setAction("ACTION_START_FOREGROUND_SERVICE")
         service.putExtra("itemId", itemToDo.id.hashCode())
@@ -161,6 +161,16 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
         service.putStringArrayListExtra("array", arrayList)
         service.putExtra("data", itemToDo.dateOfCreation)
         activity?.startService(service)
+    }
+
+    protected fun startNotificationService(arrayList: ArrayList<String>, itemToDo: ItemToDo) {
+        val service = Intent(requireContext(), NotificationHelper::class.java)
+        service.setAction("ACTION_START_FOREGROUND_SERVICE")
+        service.putExtra("itemId", itemToDo.id.hashCode())
+        service.putExtra("itemTitle", itemToDo.title)
+        service.putStringArrayListExtra("array", arrayList)
+        service.putExtra("data", itemToDo.dateOfCreation)
+        activity?.startForegroundService(service)
     }
 
     private fun addEvent(title: String, begin: Long) {
