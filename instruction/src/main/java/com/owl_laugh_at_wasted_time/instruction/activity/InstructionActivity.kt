@@ -35,42 +35,36 @@ class InstructionActivity : AppCompatActivity() {
         val words = arrayListOf(
             Slide(
                 getString(R.string.app_name),
-                true,
                 "#FFFFFFFF",
                 R.drawable.stock_photo,
                 getString(R.string.tour_listactivity_final_detail)
             ),
             Slide(
                 getString(R.string.app_name),
-                false,
                 "#71F44336",
                 R.drawable.slide2,
                 getString(R.string.tour_listactivity_home_detail)
             ),
             Slide(
                 getString(R.string.app_name),
-                false,
                 "#8bc34a",
                 R.drawable.slide3,
                 getString(R.string.tour_listactivity_tag_detail)
             ),
             Slide(
                 getString(R.string.tour_detailactivity_attachment_title),
-                false,
                 "#60FDD835",
                 R.drawable.slide4,
                 getString(R.string.tour_detailactivity_attachment_detail)
             ),
             Slide(
                 getString(R.string.shopping_list_lable),
-                false,
                 "#41BB86FC",
                 R.drawable.slide5,
                 getString(R.string.tour_detailactivity_links_detail)
             ),
             Slide(
                 getString(R.string.tour_listactivity_final_title),
-                false,
                 "#FFFFFFFF",
                 R.drawable.slide6,
                 getString(R.string.tour_community)

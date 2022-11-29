@@ -60,9 +60,9 @@ class PagerAdapter() :
           view.apply {
               textViewTitle.text=slide.title
               textViewDescriptor.text=slide.description
-              card.setBackgroundColor(Color.parseColor(slide.introImage1))
+              card.setBackgroundColor(Color.parseColor(slide.backgraund))
                   Glide.with(imageView)
-                      .load(slide.introImageSmall)
+                      .load(slide.slide)
                       .transform(
                           com.bumptech.glide.load.resource.bitmap.CenterInside(),
                           RoundedCorners(16)
@@ -70,7 +70,6 @@ class PagerAdapter() :
                       .transition(DrawableTransitionOptions.withCrossFade())
                       .transform().diskCacheStrategy(DiskCacheStrategy.NONE)
                       .transition(DrawableTransitionOptions.withCrossFade())
-                      //   .transition(DrawableTransitionOptions().crossFade(3000))
                       .into(imageView)
           }
 
