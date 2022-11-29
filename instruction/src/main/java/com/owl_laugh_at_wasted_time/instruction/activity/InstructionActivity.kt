@@ -19,9 +19,20 @@ class InstructionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val slides = getSlides()
+        setViewPager(slides)
+        setButton(slides)
+        binding.bottomButton.setListener { action ->
+            if (action == BottomButtonAction.POSITIVE) {
+                binding.pager.setCurrentItem(getItem(1), true)
+            }  else if (action == BottomButtonAction.NEGATIVE) {
+                binding.pager.setCurrentItem(getItem(-1), true)
+            }
+        }
+    }
 
+    private fun getSlides(): ArrayList<Slide> {
         val words = arrayListOf(
-
             Slide(
                 getString(R.string.app_name),
                 true,
@@ -64,41 +75,14 @@ class InstructionActivity : AppCompatActivity() {
                 R.drawable.slide6,
                 getString(R.string.tour_community)
             )
-
-
         )
-        setViewPager(words)
-        initActivAndHomeButton(words)
-
-        binding.bottomButton.setPositiveButtonText("ДАЛЕЕ")
-        binding.bottomButton.hideNegativeButton()
-
-        binding.bottomButton.setListener { action ->
-            if (action == BottomButtonAction.POSITIVE &&
-                binding.bottomButton.getPositiveButtonText() == "ДАЛЕЕ"
-            ) {
-
-                binding.pager.setCurrentItem(getItem(1), true)
-//                binding.bottomButton.isProgressMode = true
-//                lifecycleScope.launch {
-//                    delay(1000)
-//                    binding.bottomButton.isProgressMode = false
-//                    binding.pager.setCurrentItem(getItem(1), true)
-//                }
-            } else if (action == BottomButtonAction.POSITIVE &&
-                binding.bottomButton.getPositiveButtonText() == "ГОТОВО"
-            ) {
-                finish()
-            } else if (action == BottomButtonAction.NEGATIVE &&
-                binding.bottomButton.getNegativeButtonText() == "НАЗАД"
-            ) {
-                binding.pager.setCurrentItem(getItem(-1), true)
-            }
-        }
+        return words
     }
 
-    private fun initActivAndHomeButton(words: ArrayList<Slide>) {
+    private fun setButton(words: ArrayList<Slide>) {
         with(binding) {
+          bottomButton.setPositiveButtonText("ДАЛЕЕ")
+          bottomButton.hideNegativeButton()
             tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -106,6 +90,9 @@ class InstructionActivity : AppCompatActivity() {
                     if (tab?.position == words.size - 1) {
                         binding.bottomButton.setPositiveButtonText("ГОТОВО")
                         binding.bottomButton.hideNegativeButton()
+                        binding.bottomButton.replaceListener { action ->
+                            if (action == BottomButtonAction.POSITIVE) { finish() }
+                        }
                     } else if (tab?.position == 0) {
                         binding.bottomButton.hideNegativeButton()
                     } else {
