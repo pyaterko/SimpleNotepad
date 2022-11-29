@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.tabs.TabLayout
-import com.owl_laugh_at_wasted_time.instruction.intro.activity.IntroActivity
+import com.owl_laugh_at_wasted_time.instruction.activity.InstructionActivity
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.simplenotepad.Initializer
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -35,7 +35,7 @@ class MainNoteBookActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (preferences(this).getBoolean(CURRENT_BOOLEAN_STATE, true)) {
-            startActivity(Intent(applicationContext, IntroActivity::class.java))
+            startActivity(Intent(applicationContext, InstructionActivity::class.java))
             preferences(this).edit().putBoolean(CURRENT_BOOLEAN_STATE, false).apply()
         }
 

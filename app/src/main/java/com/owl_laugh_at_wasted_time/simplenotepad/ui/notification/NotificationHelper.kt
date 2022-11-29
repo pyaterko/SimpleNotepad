@@ -39,10 +39,10 @@ class NotificationHelper() : Service() {
                 "ACTION_STOP_FOREGROUND_SERVICE" -> {
                     deleteNotification(id!!)
                     listOfRunningNotifikation.remove(id)
-                    if (listOfRunningNotifikation.size == 0) {
-                        stopForeground(true)
-                        stopSelf()
-                    }
+//                    if (listOfRunningNotifikation.size == 0) {
+//                        stopForeground(true)
+//                        stopSelf()
+//                    }
                 }
                 "ACTION_START_FOREGROUND_SERVICE" -> {
                     listOfRunningNotifikation.add(id!!)
@@ -92,7 +92,8 @@ class NotificationHelper() : Service() {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .build()
             if (listOfRunningNotifikation.size == 1) {
-                startForeground(id, notification)
+                notificationManager?.notify(id, notification)
+          //      startForeground(id, notification)
             } else {
                 notificationManager?.notify(id, notification)
             }
@@ -106,7 +107,7 @@ class NotificationHelper() : Service() {
         val channelName = "Notepad Reminder Background Service"
         val chan = NotificationChannel(
             channelId,
-            channelName, NotificationManager.IMPORTANCE_MIN
+            channelName, NotificationManager.IMPORTANCE_DEFAULT
         )
         chan.lightColor = Color.BLUE
         chan.importance = NotificationManager.IMPORTANCE_MIN
@@ -122,5 +123,7 @@ class NotificationHelper() : Service() {
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
+
+
 
 }

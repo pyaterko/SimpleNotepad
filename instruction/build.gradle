@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -33,10 +34,13 @@ android {
 
 dependencies {
 
+    implementation Glide.glide
+    implementation Glide.glideIntegration
+    kapt Glide.glide_compiler
     implementation Design.appcompat
+    implementation Design.material
     implementation Kotlin.core
     implementation Kotlin.stdlib
     implementation Fragment.fragmentktx
-    implementation Intro.appintro
 
 }

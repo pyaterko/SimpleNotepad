@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabMaxWidth">200dp</item>
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+
+    </style>
+
+    <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="CustomTextAppearanceTab" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Button.White" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="MyButtonsStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="ConcreteMyButtonsStyle">
+        <item name="bottomPositiveBackgroundColor">#008800</item>
+    </style>
+
+    <style name="DefaultMyButtonsStyle">
+        <item name="bottomPositiveBackgroundColor">#495454</item>
+        <item name="bottomNegativeBackgroundColor">#BFC4CF</item>
+    </style>
+
+    <style name="MyBottomButtonsStyle">
+        <item name="bottomPositiveBackgroundColor">#ff8800</item>
+    </style>
+
+</resources>

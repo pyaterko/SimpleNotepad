@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/negativeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:freezesText="true"
+        android:paddingVertical="6dp"
+        android:textColor="@android:color/black"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toStartOf="@id/space"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rippleColor="#d8d8d8"
+        tools:text="Negative Button" />
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="12dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/positiveButton"
+        app:layout_constraintStart_toEndOf="@id/negativeButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/positiveButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="6dp"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/space"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Positive Button" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</merge>

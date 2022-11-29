@@ -49,7 +49,7 @@
             android:name="com.owl_laugh_at_wasted_time.settings.activity.SettingsActivity"/>
 
         <activity
-            android:name="com.owl_laugh_at_wasted_time.instruction.intro.activity.IntroActivity"
+            android:name="com.owl_laugh_at_wasted_time.instruction.activity.InstructionActivity"
             android:exported="true">
         </activity>
 

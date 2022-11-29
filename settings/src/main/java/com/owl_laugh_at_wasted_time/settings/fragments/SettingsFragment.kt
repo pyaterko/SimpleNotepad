@@ -7,9 +7,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 
-import com.owl_laugh_at_wasted_time.instruction.intro.activity.IntroActivity
+import com.owl_laugh_at_wasted_time.instruction.activity.InstructionActivity
 import com.owl_laugh_at_wasted_time.settings.R
-import com.owl_laugh_at_wasted_time.settings.activity.SettingsActivity
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -45,7 +44,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         tourShow?.setOnPreferenceClickListener {
-            startActivity(Intent(requireContext(), IntroActivity::class.java))
+            startActivity(Intent(requireContext(), InstructionActivity::class.java))
             return@setOnPreferenceClickListener true
         }
 
