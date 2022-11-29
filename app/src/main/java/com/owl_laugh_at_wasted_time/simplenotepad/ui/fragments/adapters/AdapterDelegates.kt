@@ -125,7 +125,7 @@ fun createSoppingAdapter(listener: OnShoppingListener) =
         bind { item ->
             textViewItemShoppingList.showStrikeThrough(item.done)
             Glide.with(ivFoto)
-                .load("https://source.unsplash.com/random/300x300?${getProductName(item.text)}")
+                .load("https://loremflickr.com/320/240/${item.text}")
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.macronutrientes)
                 .error(R.drawable.macronutrientes)

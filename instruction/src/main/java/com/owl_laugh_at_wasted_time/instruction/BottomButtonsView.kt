@@ -18,7 +18,6 @@ enum class BottomButtonAction {
 }
 
 typealias OnBottomButtonsActionListener = (BottomButtonAction) -> Unit
-typealias NextListener = (BottomButtonAction) -> Unit
 
 class BottomButtonsView @JvmOverloads constructor(
     context: Context,
@@ -44,7 +43,6 @@ class BottomButtonsView @JvmOverloads constructor(
     private val binding: PartButtonsBinding
 
     private var listener: OnBottomButtonsActionListener? = null
-    private var nextListener: NextListener? = null
 
     init {
         val inflater = LayoutInflater.from(context)
@@ -100,17 +98,6 @@ class BottomButtonsView @JvmOverloads constructor(
 
     fun setListener(listener: OnBottomButtonsActionListener?) {
         this.listener = listener
-    }
-
-    fun replaceListener(listener: NextListener?) {
-        this.listener = null
-        nextListener = listener
-        binding.positiveButton.setOnClickListener {
-            nextListener?.invoke(BottomButtonAction.POSITIVE)
-        }
-        binding.negativeButton.setOnClickListener {
-            nextListener?.invoke(BottomButtonAction.NEGATIVE)
-        }
     }
 
     fun setPositiveButtonText(text: String?) {

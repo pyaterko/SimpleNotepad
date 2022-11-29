@@ -16,6 +16,7 @@ class InstructionActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.MySimpleNotepad)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
@@ -84,7 +85,7 @@ class InstructionActivity : AppCompatActivity() {
                     if (tab?.position == words.size - 1) {
                         binding.bottomButton.setPositiveButtonText("ГОТОВО")
                         binding.bottomButton.hideNegativeButton()
-                        binding.bottomButton.replaceListener { action ->
+                        binding.bottomButton.setListener { action ->
                             if (action == BottomButtonAction.POSITIVE) { finish() }
                         }
                     } else if (tab?.position == 0) {
