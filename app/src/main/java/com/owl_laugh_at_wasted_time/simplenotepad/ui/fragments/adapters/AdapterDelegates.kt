@@ -14,7 +14,6 @@ import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getProductName
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.toDateString
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -54,7 +53,7 @@ fun createToDoAdapter(
             val adapter = createSubTaskAdapter(listener)
             rvSubtaskList.layoutManager = LinearLayoutManager(context)
             rvSubtaskList.adapter = adapter
-            listener.getSubTaskList(adapter,item, tvCount)
+            listener.getSubTaskList(adapter, item, tvCount)
             val format = preferences(context).getBoolean(
                 context.getString(R.string.settings_prettified_dates_key),
                 false
@@ -150,7 +149,12 @@ private fun TextView.showStrikeThrough(show: Boolean) {
 interface OnToDoListener {
     fun launchToCreateToDoFragment(itemToDo: ItemToDo)
     fun markAsDoneToDo(itemToDo: ItemToDo)
-    fun getSubTaskList(adapter: SimpleBindingAdapter<SubTaskItem>,itemToDo: ItemToDo, textView: TextView)
+    fun getSubTaskList(
+        adapter: SimpleBindingAdapter<SubTaskItem>,
+        itemToDo: ItemToDo,
+        textView: TextView
+    )
+
     fun showSubTasks(view: View)
     fun markAsDone(item: SubTaskItem)
     fun deleteItem(item: SubTaskItem)
