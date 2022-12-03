@@ -69,13 +69,13 @@ fun ItemColor.getColorDrawable(context: Context) =
     ContextCompat.getColor(context, getColorRes())
 
 fun ItemColor.getColorRes() = when (this) {
-    ItemColor.WHITE -> R.color.purple_500
-    ItemColor.VIOLET -> R.color.color_text_secondary
-    ItemColor.YELLOW -> R.color.color_yellow
-    ItemColor.RED -> R.color.color_red
-    ItemColor.PINK -> R.color.color_pink
+    ItemColor.WHITE -> R.color.colorNotPriority
+    ItemColor.YELLOW -> R.color.action_color
     ItemColor.GREEN -> R.color.color_green
     ItemColor.BLUE -> R.color.color_blue
+    ItemColor.RED -> R.color.colorAccent
+    ItemColor.VIOLET -> R.color.color_white
+    ItemColor.PINK -> R.color.color_violet
 }
 
 fun ItemColor.getColorString() = when (this) {
@@ -86,55 +86,6 @@ fun ItemColor.getColorString() = when (this) {
     ItemColor.PINK -> "PINK"
     ItemColor.GREEN -> "GREEN"
     ItemColor.BLUE -> "BLUE"
-}
-
-fun listener(context: Context, lyambda: () -> Unit): AdapterView.OnItemSelectedListener = object :
-    AdapterView.OnItemSelectedListener {
-    override fun onNothingSelected(p0: AdapterView<*>?) {}
-    override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View?,
-        position: Int,
-        id: Long
-    ) {
-        when (position) {
-            0 -> {
-                (parent?.getChildAt(0) as TextView).setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.black
-                    )
-                )
-            }
-            1 -> {
-                lyambda.invoke()
-                (parent?.getChildAt(0) as TextView).setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.color_red
-                    )
-                )
-            }
-            2 -> {
-                lyambda.invoke()
-                (parent?.getChildAt(0) as TextView).setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.color_green
-                    )
-                )
-            }
-            3 -> {
-                lyambda.invoke()
-                (parent?.getChildAt(0) as TextView).setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorNotPriority
-                    )
-                )
-            }
-        }
-    }
 }
 
 fun displayAConfirmationDialog(

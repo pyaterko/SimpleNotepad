@@ -7,88 +7,89 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.notes.CreateNotesFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="24dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
 
-            <EditText
-                android:id="@+id/todo_title"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:ems="10"
-                android:hint="@string/schedule_an_event"
-                android:inputType="textPersonName"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/todo_title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:hint="@string/schedule_an_event"
+            android:inputType="textPersonName"
+            android:textSize="20sp"
+            app:boxStrokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toStartOf="@+id/tv_add"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+        <ScrollView
+            android:id="@+id/editor_todo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingBottom="@dimen/size_xx_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_error">
+
+            <LinearLayout
+                android:id="@+id/linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/size_medium"
+                android:orientation="vertical"
                 android:paddingHorizontal="24dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView2"
-                app:layout_constraintEnd_toStartOf="@+id/tv_add"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
-                app:layout_constraintTop_toTopOf="@+id/textView2" />
+                android:paddingBottom="@dimen/size_xxx_medium">
 
-            <ScrollView
-                android:id="@+id/editor_todo"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:paddingBottom="@dimen/size_xx_small"
-                android:layout_marginTop="@dimen/size_medium"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_error">
+            </LinearLayout>
+        </ScrollView>
 
-                <LinearLayout
-                    android:id="@+id/linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/size_medium"
-                    android:paddingHorizontal="24dp"
-                    android:paddingBottom="@dimen/size_xxx_medium">
-                </LinearLayout>
-            </ScrollView>
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="36dp"
-                android:text="*"
-                android:textSize="@dimen/text_size_large"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="36dp"
+            android:text="*"
+            android:textSize="@dimen/text_size_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/ll_error"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/dialog_error_background_red"
-                android:drawablePadding="@dimen/size_xx_medium"
-                android:paddingHorizontal="@dimen/size_medium"
-                android:paddingVertical="@dimen/size_xx_small"
-                android:text="@string/please_fill_out_all_fields"
-                android:textSize="@dimen/text_size_standard"
-                android:visibility="gone"
-                app:drawableStartCompat="@drawable/ic_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.77"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/todo_title"
-                tools:visibility="visible" />
+        <TextView
+            android:id="@+id/ll_error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/dialog_error_background_red"
+            android:drawablePadding="@dimen/size_xx_medium"
+            android:paddingHorizontal="@dimen/size_medium"
+            android:paddingVertical="@dimen/size_xx_small"
+            android:text="@string/please_fill_out_all_fields"
+            android:textSize="@dimen/text_size_standard"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.77"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/todo_title"
+            tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/tv_add"
-                android:layout_width="@dimen/size_xxx_large"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="+"
-                android:textSize="36sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView2" />
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="@dimen/size_xxx_large"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="+"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.owl_laugh_at_wasted_time.simplenotepad.ui.castomview.ColorPickerView
         android:id="@+id/colorPicturesToDo"

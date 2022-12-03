@@ -75,7 +75,7 @@ fun createToDoAdapter(
                 listener.launchToCreateToDoFragment(it)
             }
             buttonOpenRv.onClick {
-                buttonOpenRv.animate().rotation(buttonOpenRv.rotation + 180f)
+               buttonOpenRv.animate().rotation(buttonOpenRv.rotation + 180f)
                 listener.showSubTasks(rvSubtaskList)
             }
             checkBox.onClick {

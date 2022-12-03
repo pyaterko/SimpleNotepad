@@ -30,7 +30,6 @@ import java.util.*
 
 class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListener {
 
-
     private var listToDo: List<ItemToDo>? = null
     private val binding by viewBinding(FragmentListTodoBinding::bind)
     private val viewModel by viewModels<TodoListViewModel> { viewModelFactory }
@@ -40,7 +39,6 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
         super.onAttach(context)
         component.inject(this)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -182,10 +180,6 @@ class ToDoListFragment : BaseFragment(R.layout.fragment_list_todo), OnToDoListen
             },
             { binding.recyclerViewListToDo.adapter?.notifyDataSetChanged() }
         )
-    }
-
-    companion object {
-        private const val DELETE_TO_DO = 2
     }
 
 }

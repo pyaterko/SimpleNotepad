@@ -23,7 +23,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/gray_bg">
 
             <TextView
                 android:id="@+id/textViewItemShoppingList"
@@ -38,11 +39,9 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Salmon Salad" />
 
-            <CheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/checkBoxShoppingList"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="@dimen/size_medium"
+                style="@style/CastomCheckBox"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textViewItemShoppingList"
                 app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+
+    <path
+        android:fillColor="@color/white"
+        android:fillType="evenOdd"
+        android:pathData="M10 20C4.52381 20 0 15.4762 0 10C0 4.52381 4.51613 0 9.99232 0C15.4685 0 20 4.52381 20 10C20 15.4762 15.4762 20 10 20ZM9.99994 18.5715C14.7465 18.5715 18.579 14.7466 18.5714 10C18.5637 5.25349 14.7388 1.42861 9.99226 1.42861C5.23803 1.42861 1.43619 5.25349 1.43619 10C1.43619 14.7466 5.24571 18.5715 9.99994 18.5715Z" />
+</vector>

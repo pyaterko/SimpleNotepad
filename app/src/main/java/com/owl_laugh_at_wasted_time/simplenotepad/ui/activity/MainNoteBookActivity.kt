@@ -31,13 +31,13 @@ class MainNoteBookActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-
         if (preferences(this).getBoolean(CURRENT_BOOLEAN_STATE, true)) {
             startActivity(Intent(applicationContext, InstructionActivity::class.java))
             preferences(this).edit().putBoolean(CURRENT_BOOLEAN_STATE, false).apply()
         }
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

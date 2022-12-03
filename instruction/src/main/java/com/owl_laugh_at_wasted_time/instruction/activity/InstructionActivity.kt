@@ -14,12 +14,10 @@ class InstructionActivity : AppCompatActivity() {
 
     val binding by lazy { ActivitySlideBinding.inflate(layoutInflater) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MySimpleNotepad)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         val slides = getSlides()
         setViewPager(slides)
         setButton(slides)

@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/size_max_small"
-    android:layout_marginHorizontal="@dimen/size_xx_medium">
+    android:layout_marginVertical="@dimen/size_x_small"
+    android:layout_marginHorizontal="@dimen/size_x_medium">
 
-    <CheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
+        style="@style/CastomCheckBox"
         android:id="@+id/chb_subtask"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@+id/tv_subtask"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TouchTargetSizeCheck" />
@@ -38,16 +38,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/chb_subtask"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/chb_subtask" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:background="@color/black"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
