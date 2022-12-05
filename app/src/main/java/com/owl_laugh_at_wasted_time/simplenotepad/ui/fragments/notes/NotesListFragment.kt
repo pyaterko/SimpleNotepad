@@ -4,12 +4,13 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
@@ -24,13 +25,16 @@ import com.getbase.floatingactionbutton.AddFloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.*
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorString
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ReadTask
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.callback.SwipeHelper
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnNoteListener
@@ -70,14 +74,14 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         mActionsMenu = binding.fab.fab
         setFabOnClickListener()
         setRVLaoutManager()
-        fabActionOnScroll( binding.recyclerViewListNotes,null,{
+        fabActionOnScroll(binding.recyclerViewListNotes, null, {
             mActionsMenu.isVisible = true
             collapseFab()
-        },{
+        }, {
             collapseFab()
             mActionsMenu.isVisible = false
         })
-        adapter = createNotesAdapter(requireContext(),this)
+        adapter = createNotesAdapter(requireContext(), this)
         binding.recyclerViewListNotes.adapter = adapter
         binding.recyclerViewListNotes.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
@@ -87,23 +91,31 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             adapter.submitList(it)
             listNotes = it.toList()
         }
-
-        if (preferences(requireContext()).getBoolean(
-                getString(R.string.settings_swipe_to_trash_key),
-                true
-            )
-        ){
-            val touchCallback = TouchHelperCallback(adapter) { itemNote ->
-                showDeleteAlertDialog(itemNote.id)
+        ItemTouchHelper(object : SwipeHelper(
+            requireContext(),
+            binding.recyclerViewListNotes,
+            { !preferences(requireContext()).getBoolean(CURRENT_BOOLEAN, true) }
+        ) {
+            override fun instantiateUnderlayButton(
+                viewHolder: RecyclerView.ViewHolder?,
+                underlayButtons: MutableList<UnderlayButton>?
+            ) {
+                viewHolder?.let {
+                    underlayButtons?.add(deleteButton(adapter.currentList[it.adapterPosition]))
+                    underlayButtons?.add(editorButton(adapter.currentList[it.adapterPosition]))
+                    if (preferences(requireContext()).getBoolean(
+                            getString(R.string.settings_import_data_key),
+                            true
+                        )
+                    ) {
+                        underlayButtons?.add(saveFileButton(adapter.currentList[it.adapterPosition]))
+                    }
+                }
             }
-            val touchHelper = ItemTouchHelper(touchCallback)
-            touchHelper.attachToRecyclerView(binding.recyclerViewListNotes)
-        }
-
-
+        })
         setSearch()
         setToolBarMenu(
-          {
+            {
                 val menuItemStream = it.findItem(R.id.menu_view_stream)
                 val menuItemGrid = it.findItem(R.id.menu_grid_view)
                 menuItemStream?.setVisible(true)
@@ -175,6 +187,71 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         )
     }
 
+    private fun deleteButton(note: ItemNote): SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            true,
+            "Удалить",
+            AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_baseline_delete_outline_24
+            ),
+            Color.parseColor("#ffff4444"), Color.parseColor("#ffffff")
+        ) {
+            showDeleteAlertDialog(note.id)
+        }
+    }
+
+
+    private fun editorButton(note: ItemNote): SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            true,
+            "Редактор",
+            AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_baseline_create
+            ),
+            Color.parseColor("#ff9800"), Color.parseColor("#ffffff")
+        ) {
+            val directions =
+                NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(note.id)
+            launchFragment(directions)
+        }
+    }
+
+    private fun saveFileButton(note: ItemNote): SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            true,
+            "Файл",
+            AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_file_document_black_48dp
+            ),
+            Color.parseColor("#33CAAC"), Color.parseColor("#ffffff")
+        ) {
+            if (notPermision()) {
+                requestPermision()
+            } else {
+                showActionAlertDialog(
+                    requireContext(),
+                    layoutInflater,
+                    getString(R.string.file_save),
+                    getString(R.string.empty_value),
+                    R.string.save,
+                    R.string.name_of_file,
+                    actionPB1 = { str ->
+                        if (str.isNotBlank()) {
+                            viewModel.save(
+                                requireContext(),
+                                str,
+                                "<<id:${note.id}>>\n <<dateOfCreation:${note.dateOfCreation}>>\n <<color:${note.color?.getColorString()}>>\n <<title:${note.title}>>\n ${note.text}"
+                            )
+                        }
+                    }
+                )
+            }
+            adapter.notifyItemChanged(it)
+        }
+    }
 
     private fun showNoteMenu(view: View, id: Int) {
         val popupMenu = PopupMenu(view.context, view)
@@ -183,7 +260,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         popupMenu.menu.add(0, EDITOR, Menu.NONE, view.context.getString(R.string.edit_note))
         if (preferences(requireContext()).getBoolean(
                 getString(R.string.settings_import_data_key),
-                false
+                true
             )
         ) {
             popupMenu.menu.add(
@@ -254,7 +331,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             }
             if (preferences(requireContext()).getBoolean(
                     getString(R.string.settings_fab_expansion_behavior_key),
-                    false
+                    true
                 )
             ) {
                 val directions =
@@ -345,7 +422,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         private const val EDITOR = 1
         private const val SAVE_FILE = 2
         private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
-        private const val CURRENT_BOOLEAN = "CURRENT_BOOLEAN"
+        const val CURRENT_BOOLEAN = "CURRENT_BOOLEAN"
     }
 
     override fun launchToReadFragment(itemNote: ItemNote) {

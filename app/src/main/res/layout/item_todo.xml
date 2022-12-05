@@ -60,7 +60,7 @@
             android:gravity="center"
             android:hint="@string/planned"
             android:textColor="@color/white"
-            android:textColorHint="@color/colorNotPriority"
+            android:textColorHint="@color/gray_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@+id/rv_subtask_list" />

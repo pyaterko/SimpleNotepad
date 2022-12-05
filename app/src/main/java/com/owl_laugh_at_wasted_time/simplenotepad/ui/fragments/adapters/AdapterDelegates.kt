@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Paint
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -21,6 +22,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemNoteBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemSubtaskBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemTodoBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment
 
 private fun createSubTaskAdapter(listener: OnToDoListener) =
     simpleAdapter<SubTaskItem, ItemSubtaskBinding> {
@@ -75,7 +77,7 @@ fun createToDoAdapter(
                 listener.launchToCreateToDoFragment(it)
             }
             buttonOpenRv.onClick {
-               buttonOpenRv.animate().rotation(buttonOpenRv.rotation + 180f)
+                buttonOpenRv.animate().rotation(buttonOpenRv.rotation + 180f)
                 listener.showSubTasks(rvSubtaskList)
             }
             checkBox.onClick {
@@ -93,6 +95,8 @@ fun createNotesAdapter(context: Context, listener: OnNoteListener) =
                 context.getString(R.string.settings_prettified_dates_key),
                 false
             )
+            imageViewMoreVert.isVisible =
+                preferences(context).getBoolean(NotesListFragment.CURRENT_BOOLEAN, true)
             itemFon.setBackgroundColor(item.color.getColorDrawable(context))
             textViewTitle.text = item.title
             textViewDescription.text = item.text
