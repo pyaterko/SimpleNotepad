@@ -18,10 +18,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/size_xx_large"
             android:orientation="vertical"
             android:padding="@dimen/size_x_medium"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/note_title"
@@ -50,14 +50,35 @@
         android:layout_gravity="top"
         android:layout_marginTop="@dimen/size_xx_small" />
 
+
+    <TextView
+        android:id="@+id/tv_note_create_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_x_medium"
+        android:layout_marginTop="@dimen/size_xx_medium"
+        android:text="@string/no_category"
+        app:drawableEndCompat="@drawable/ic_expand_more_24"
+        tools:listitem="@layout/item_category" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_note_create_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_x_medium"
+        android:layout_marginTop="@dimen/size_xx_medium"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:visibility="gone"
+        tools:listitem="@layout/item_category" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/indicator_color"
         android:layout_width="@dimen/size_large"
         android:layout_height="@dimen/size_large"
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/size_medium"
-        android:layout_marginEnd="@dimen/size_medium" />
-
+        android:layout_marginEnd="@dimen/size_medium"
+        tools:ignore="ContentDescription" />
 
 </FrameLayout>
 

@@ -1,6 +1,7 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import android.widget.TextView
@@ -10,18 +11,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.elveum.elementadapter.SimpleBindingAdapter
 import com.elveum.elementadapter.simpleAdapter
-import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
-import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
-import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
+import com.owl_laugh_at_wasted_time.domain.entity.*
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.toDateString
 import com.owl_laugh_at_wasted_time.simplenotepad.R
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemNoteBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemShoppingBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemSubtaskBinding
-import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ItemTodoBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.databinding.*
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment
 
 private fun createSubTaskAdapter(listener: OnToDoListener) =
@@ -82,6 +77,40 @@ fun createToDoAdapter(
             }
             checkBox.onClick {
                 listener.markAsDoneToDo(it)
+            }
+        }
+    }
+
+fun createEditNotesCategoryAdapter(listener: OnClickCategory) =
+    simpleAdapter<ItemCategory, ItemCategoryBinding> {
+        areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
+        bind { item ->
+            tvCategory.text = item.name
+        }
+       listeners {
+           root.onClick {
+               listener.onClickCategoryItem(it)
+           }
+       }
+    }
+
+fun createListNotesCategoryAdapter(listener: OnClickCategory) =
+    simpleAdapter<ItemCategory, ItemCategoryListNotesBinding> {
+        areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
+        bind { item ->
+            if (item.state){
+                tvListNotesCategory.setBackgroundColor( Color.parseColor("#00245D"))
+                tvListNotesCategory.setTextColor( Color.parseColor("#e2e2e2"))
+
+            }else{
+                tvListNotesCategory.setBackgroundColor( Color.parseColor("#e2e2e2"))
+                tvListNotesCategory.setTextColor( Color.parseColor("#00245D"))
+            }
+            tvListNotesCategory.text = item.name
+        }
+        listeners {
+            root.onClick {
+                listener.onClickCategoryItem(it)
             }
         }
     }
@@ -172,4 +201,8 @@ interface OnNoteListener {
     fun launchToReadFragment(itemNote: ItemNote)
     fun launchToCreateNotesFragment(itemNote: ItemNote)
     fun showMenu(view: View, itemNote: ItemNote)
+}
+
+interface OnClickCategory {
+    fun onClickCategoryItem(item: ItemCategory)
 }

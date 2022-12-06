@@ -54,6 +54,7 @@
     <string name="settings_add_photo_key">settings_add_photo_key</string>
     <string name="share_note">Поделиться заметкой</string>
     <string name="menu_alarm_title">сигнал</string>
+    <string name="no_category">без категории</string>
 
 
 </resources>

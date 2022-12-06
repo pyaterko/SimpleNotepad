@@ -60,5 +60,6 @@
     <string name="settings_import_data_key">settings_import_data</string>
     <string name="menu_alarm_title">сигнал</string>
     <string name="settings_fab_expansion_behavior_key">settings_fab_expansion_behavior</string>
+    <string name="no_category">no category</string>
 
 </resources>

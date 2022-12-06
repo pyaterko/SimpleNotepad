@@ -1,0 +1,25 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/size_max_small"
+    android:padding="@dimen/size_small"
+    app:cardCornerRadius="@dimen/size_xx_large">
+
+    <TextView
+        android:id="@+id/tv__list_notes_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/size_medium"
+        android:paddingBottom="@dimen/size_xxx_small"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        tools:background="@color/color_blue"
+        tools:text="Salmon Salad" />
+
+</androidx.cardview.widget.CardView>
+
+
+
+

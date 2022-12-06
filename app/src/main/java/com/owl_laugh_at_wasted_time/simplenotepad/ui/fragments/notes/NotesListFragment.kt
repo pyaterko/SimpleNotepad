@@ -24,6 +24,7 @@ import com.elveum.elementadapter.SimpleBindingAdapter
 import com.getbase.floatingactionbutton.AddFloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.material.tabs.TabLayout
+import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorString
@@ -37,18 +38,22 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ReadTask
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.callback.SwipeHelper
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnClickCategory
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnNoteListener
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createListNotesCategoryAdapter
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createNotesAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 import java.io.File
 
 
-class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteListener {
+class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteListener,
+    OnClickCategory {
 
     private lateinit var listNotes: List<ItemNote>
     private val binding by viewBinding(FragmentListNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
     private lateinit var adapter: SimpleBindingAdapter<ItemNote>
+    private lateinit var adapterCategory: SimpleBindingAdapter<ItemCategory>
     private lateinit var mActionsMenu: FloatingActionsMenu
 
     override fun onAttach(context: Context) {
@@ -81,11 +86,17 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             collapseFab()
             mActionsMenu.isVisible = false
         })
+
         adapter = createNotesAdapter(requireContext(), this)
+        adapterCategory = createListNotesCategoryAdapter(this)
+        binding.rvListNotesCategory.adapter = adapterCategory
         binding.recyclerViewListNotes.adapter = adapter
         binding.recyclerViewListNotes.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
         binding.recyclerViewListNotes.addItemDecoration(dividerItemDecoration)
+        viewModel.categoryList.observe(viewLifecycleOwner) {
+            adapterCategory.submitList(it)
+        }
         viewModel.listNotes.collectWhileStarted {
             binding.noDataImageView.isVisible = it.size == 0
             adapter.submitList(it)
@@ -446,6 +457,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     override fun showMenu(view: View, itemNote: ItemNote) {
         collapseFab()
         showNoteMenu(view, itemNote.id)
+    }
+
+    override fun onClickCategoryItem(item: ItemCategory) {
+        viewModel.updateCategory(item)
     }
 
 }

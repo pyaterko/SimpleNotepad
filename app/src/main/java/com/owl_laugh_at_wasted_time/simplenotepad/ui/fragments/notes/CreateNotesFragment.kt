@@ -6,10 +6,12 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
+import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -17,9 +19,11 @@ import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateNote
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnClickCategory
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createEditNotesCategoryAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 
-class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
+class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClickCategory {
 
     private var note = ItemNote()
     private val binding by viewBinding(FragmentCreateNotesBinding::bind)
@@ -33,6 +37,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val categoryAdapter = createEditNotesCategoryAdapter(this)
         binding.noteTitle.requestFocus()
         showKeyboard(binding.noteTitle)
         launchScope {
@@ -42,6 +47,18 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
             }
             setData(binding.noteTitle, binding.noteText)
         }
+        binding.tvNoteCreateCategory.setOnClickListener {
+            binding.rvNoteCreateCategory.isVisible = true
+        }
+        binding.rvNoteCreateCategory.adapter = categoryAdapter
+        categoryAdapter.submitList(listOf(
+            ItemCategory(0,"rhdfhd"),
+            ItemCategory(2,"pom;'"),
+            ItemCategory(3,"yrsfk"),
+            ItemCategory(4,"pouyryvk"),
+            ItemCategory(5,"kjugtyfyu"),
+            ItemCategory(6,"iouiyguyi"),
+        ))
 
         binding.colorPicturesNote.onColorClickListener = {
             note.color = it
@@ -53,10 +70,13 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
                 )
             )
             closePalette()
+            binding.tvNoteCreateCategory.isVisible=true
         }
 
         binding.indicatorColor.setOnClickListener {
             openPalette()
+            binding.tvNoteCreateCategory.isVisible=false
+            binding.rvNoteCreateCategory.isVisible=false
         }
         setToolBarMenu(
             blockCreateMenu = {
@@ -126,6 +146,11 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes) {
 
     private fun setColorInIndicator(color: Int) {
         binding.indicatorColor.setBackgroundTintList(ColorStateList.valueOf(color))
+    }
+
+    override fun onClickCategoryItem(item: ItemCategory) {
+        binding.tvNoteCreateCategory.text = item.name
+        binding.rvNoteCreateCategory.isVisible=false
     }
 
 }

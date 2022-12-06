@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white_pressed"
+    android:padding="@dimen/size_small">
+
+    <TextView
+        android:id="@+id/tv_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_xx_small"
+        android:layout_marginBottom="@dimen/size_xxx_small"
+        android:textSize="18sp"
+        tools:text="Salmon Salad" />
+
+</FrameLayout>
+
+
+
+

@@ -7,8 +7,11 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
@@ -22,9 +25,17 @@ import javax.inject.Inject
 
 class NotesListViewModel @Inject constructor(
     private val repositoryNote: NoteRepository,
+    private val categorys: Categorys
 ) : BaseViewModel() {
 
     val listNotes = repositoryNote.getLiveDate()
+
+    private var _categoryList = MutableLiveData<List<ItemCategory>>()
+    val categoryList: LiveData<List<ItemCategory>> = _categoryList
+
+    init {
+        updateCategory(  ItemCategory(0, "all", false))
+    }
 
 
     suspend fun getNoteById(noteId: Int) =
@@ -150,6 +161,10 @@ class NotesListViewModel @Inject constructor(
     }
 
     override fun handleError(throwable: Throwable) { }
+
+    fun updateCategory(categoryItem: ItemCategory) {
+        _categoryList.value = categorys.updateCategory(categoryItem)
+    }
 
 }
 
