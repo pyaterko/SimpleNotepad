@@ -13,8 +13,8 @@ class ItemNoteListMapper @Inject constructor() {
         text = item.text,
         color = item.color,
         dateOfCreation = item.dateOfCreation,
-
-        )
+        category = item.category
+    )
 
     fun mapDbModelToEntity(itemDbModel: ItemNoteDbModel) = ItemNote(
         id = itemDbModel.id,
@@ -22,6 +22,7 @@ class ItemNoteListMapper @Inject constructor() {
         text = itemDbModel.text,
         color = itemDbModel.color,
         dateOfCreation = itemDbModel.dateOfCreation,
+        category = itemDbModel.category
     )
 
     fun mapListDbModelToListEntity(list: List<ItemNoteDbModel>) = list.map {

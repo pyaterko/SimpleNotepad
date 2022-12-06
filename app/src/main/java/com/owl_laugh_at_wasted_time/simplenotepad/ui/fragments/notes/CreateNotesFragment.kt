@@ -13,7 +13,9 @@ import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
+import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
 import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
+import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
@@ -21,13 +23,14 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnClickCategory
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createEditNotesCategoryAdapter
+import com.owl_laugh_at_wasted_time.viewmodel.notes.CreateNoteViewModel
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 
 class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClickCategory {
 
     private var note = ItemNote()
     private val binding by viewBinding(FragmentCreateNotesBinding::bind)
-    private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
+    private val viewModel by viewModels<CreateNoteViewModel> { viewModelFactory }
     private val args: CreateNotesFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
@@ -38,6 +41,9 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val categoryAdapter = createEditNotesCategoryAdapter(this)
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner){
+            categoryAdapter.submitList(it.drop(1))
+        }
         binding.noteTitle.requestFocus()
         showKeyboard(binding.noteTitle)
         launchScope {
@@ -48,18 +54,9 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
             setData(binding.noteTitle, binding.noteText)
         }
         binding.tvNoteCreateCategory.setOnClickListener {
-            binding.rvNoteCreateCategory.isVisible = true
+            binding.llCategory.isVisible = true
         }
         binding.rvNoteCreateCategory.adapter = categoryAdapter
-        categoryAdapter.submitList(listOf(
-            ItemCategory(0,"rhdfhd"),
-            ItemCategory(2,"pom;'"),
-            ItemCategory(3,"yrsfk"),
-            ItemCategory(4,"pouyryvk"),
-            ItemCategory(5,"kjugtyfyu"),
-            ItemCategory(6,"iouiyguyi"),
-        ))
-
         binding.colorPicturesNote.onColorClickListener = {
             note.color = it
             binding.indicatorColor.setBackgroundTintList(
@@ -70,13 +67,13 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
                 )
             )
             closePalette()
-            binding.tvNoteCreateCategory.isVisible=true
+            binding.tvNoteCreateCategory.isVisible = true
         }
 
         binding.indicatorColor.setOnClickListener {
             openPalette()
-            binding.tvNoteCreateCategory.isVisible=false
-            binding.rvNoteCreateCategory.isVisible=false
+            binding.tvNoteCreateCategory.isVisible = false
+            binding.llCategory.isVisible = false
         }
         setToolBarMenu(
             blockCreateMenu = {
@@ -114,6 +111,22 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
                     }
                 }
             })
+
+        binding.tvAddCategory.setOnClickListener {
+            showActionAlertDialog(
+                requireContext(),
+                layoutInflater,
+                getString(R.string.add_category),
+                getString(R.string.empty_value),
+                R.string.action_confirm,
+                R.string.name_of,
+                actionPB1 = {
+                    if (it.isNotBlank()) {
+                        viewModel.addCategory(it)
+                    }
+                }
+            )
+        }
     }
 
     override fun onStart() {
@@ -150,7 +163,12 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
 
     override fun onClickCategoryItem(item: ItemCategory) {
         binding.tvNoteCreateCategory.text = item.name
-        binding.rvNoteCreateCategory.isVisible=false
+        binding.llCategory.isVisible = false
+        note.category = item.name
+    }
+
+    override fun deleteCategory(item: ItemCategory) {
+       viewModel.deleteCategory(item.id)
     }
 
 }

@@ -28,6 +28,7 @@
     <string name="successfully_added">Successfully added!</string>
     <string name="volume_setup">Schedule a Purchase</string>
     <string name="name_of_product">Name of product</string>
+    <string name="name_of">name</string>
     <string name="default_alert_shop">Remove a product from the list?</string>
 
     <string name="schedule_an_event">Schedule an event</string>
@@ -61,5 +62,6 @@
     <string name="menu_alarm_title">сигнал</string>
     <string name="settings_fab_expansion_behavior_key">settings_fab_expansion_behavior</string>
     <string name="no_category">no category</string>
+    <string name="add_category">Add category</string>
 
 </resources>

@@ -23,7 +23,7 @@
             android:ellipsize="end"
             android:layout_marginStart="@dimen/size_x_medium"
             android:lines="1"
-            android:padding="@dimen/size_xx_small"
+            android:padding="@dimen/size_x_small"
             android:textSize="@dimen/text_size_standard_header"
             android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/imageViewMoreVert"
@@ -37,7 +37,7 @@
             android:layout_marginStart="@dimen/size_x_medium"
             android:textColor="@color/white"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
@@ -46,12 +46,11 @@
             android:id="@+id/textViewNameDayOfWeek"
             android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_xxx_small"
-            android:layout_marginTop="@dimen/size_xx_small"
+
+            android:layout_marginTop="@dimen/size_max_small"
             android:gravity="center"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.055"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 

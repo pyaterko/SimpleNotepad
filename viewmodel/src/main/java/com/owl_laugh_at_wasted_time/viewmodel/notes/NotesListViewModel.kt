@@ -7,16 +7,15 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
+import com.owl_laugh_at_wasted_time.domain.repository.CategorysRepository
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
+import com.owl_laugh_at_wasted_time.domain.repository.UiActions
 import com.owl_laugh_at_wasted_time.viewmodel.R
-import com.owl_laugh_at_wasted_time.viewmodel.base.BaseViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.*
 import java.util.regex.Pattern
@@ -24,18 +23,27 @@ import javax.inject.Inject
 
 
 class NotesListViewModel @Inject constructor(
+    private val uiActions: UiActions,
     private val repositoryNote: NoteRepository,
-    private val categorys: Categorys
-) : BaseViewModel() {
+    private val categorysRepository: CategorysRepository
+) : ViewModel() {
 
     val listNotes = repositoryNote.getLiveDate()
+    val categoriesLiveData = categorysRepository.getAllData()
 
-    private var _categoryList = MutableLiveData<List<ItemCategory>>()
-    val categoryList: LiveData<List<ItemCategory>> = _categoryList
 
     init {
-        updateCategory(  ItemCategory(0, "all", false))
+        if (uiActions.isPopulateInitialData()) {
+            viewModelScope.launch {
+                delay(1000)
+                categorysRepository.populateInitialData()
+            }
+            uiActions.notPopulateInitialData()
+        }
     }
+
+    fun listCategorys(category: String) =
+        repositoryNote.getItemsByCategory(category)
 
 
     suspend fun getNoteById(noteId: Int) =
@@ -43,16 +51,16 @@ class NotesListViewModel @Inject constructor(
 
 
     suspend fun addItemNote(item: ItemNote) {
-            repositoryNote.add(item)
+        repositoryNote.add(item)
     }
 
-    suspend fun deleteNote(itemId:Int) {
+    suspend fun deleteNote(itemId: Int) {
         repositoryNote.delete(itemId)
     }
 
 
     fun save(context: Context, fileName: String, text: String) {
-        viewModelScopeCoroutine.launch {
+        viewModelScope.launch {
             saveFile(context, fileName, text)
         }
     }
@@ -81,8 +89,8 @@ class NotesListViewModel @Inject constructor(
             outputStream?.write(bytes)
             outputStream?.close()
             Toast.makeText(
-               context,
-                "${ context.getString(R.string.success_save)} $fileName",
+                context,
+                "${context.getString(R.string.success_save)} $fileName",
                 Toast.LENGTH_SHORT
             ).show()
         } catch (e: Exception) {
@@ -160,11 +168,6 @@ class NotesListViewModel @Inject constructor(
         return title
     }
 
-    override fun handleError(throwable: Throwable) { }
-
-    fun updateCategory(categoryItem: ItemCategory) {
-        _categoryList.value = categorys.updateCategory(categoryItem)
-    }
 
 }
 

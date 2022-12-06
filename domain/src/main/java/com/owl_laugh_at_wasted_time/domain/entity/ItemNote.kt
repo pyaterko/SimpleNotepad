@@ -16,4 +16,5 @@ data class ItemNote(
         DATE_TIME_FORMAT,
         Locale.getDefault()
     ).format(Date()),
+    var category:String=""
 )

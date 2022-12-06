@@ -43,6 +43,7 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnNoteLi
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createListNotesCategoryAdapter
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createNotesAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
+import kotlinx.coroutines.delay
 import java.io.File
 
 
@@ -50,6 +51,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     OnClickCategory {
 
     private lateinit var listNotes: List<ItemNote>
+    private var categoriesList: MutableList<ItemCategory>? =null
     private val binding by viewBinding(FragmentListNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
     private lateinit var adapter: SimpleBindingAdapter<ItemNote>
@@ -94,8 +96,12 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         binding.recyclerViewListNotes.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
         binding.recyclerViewListNotes.addItemDecoration(dividerItemDecoration)
-        viewModel.categoryList.observe(viewLifecycleOwner) {
-            adapterCategory.submitList(it)
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner) { categories ->
+            categoriesList= mutableListOf()
+            for ((index, element) in categories.withIndex()) {
+                    categoriesList?.add(element.copy(id = index))
+            }
+            adapterCategory.submitList( updateCategory(0))
         }
         viewModel.listNotes.collectWhileStarted {
             binding.noDataImageView.isVisible = it.size == 0
@@ -342,7 +348,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             }
             if (preferences(requireContext()).getBoolean(
                     getString(R.string.settings_fab_expansion_behavior_key),
-                    true
+                    false
                 )
             ) {
                 val directions =
@@ -365,7 +371,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
 
         if (preferences(requireContext()).getBoolean(
                 getString(R.string.settings_import_data_key),
-                false
+                true
             )
         ) {
             binding.fab.fabRemoteFromFile.visibility = View.VISIBLE
@@ -405,6 +411,23 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         intent.type = TEXT_WILD
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         startActivityForResult(intent, OPEN_DOCUMENT)
+    }
+
+    private fun updateCategory(index:Int): List<ItemCategory> {
+        val list:MutableList<ItemCategory> = mutableListOf()
+        for ( element in categoriesList!!) {
+            list.add(element.copy())
+        }
+        if (list.size !=0){
+            list[index].state = true
+        }
+
+        return list.toList()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        adapterCategory.submitList(emptyList())
     }
 
     @Deprecated("Deprecated in Java")
@@ -460,7 +483,20 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     }
 
     override fun onClickCategoryItem(item: ItemCategory) {
-        viewModel.updateCategory(item)
+        adapterCategory.submitList(updateCategory(item.id))
+       adapterCategory.notifyDataSetChanged()
+        viewModel.listCategorys(item.name).collectWhileStarted {
+            if (item.name!="Все"){
+                adapter.submitList(it.filter {
+                    it.category == item.name
+                })
+            }else{
+                adapter.submitList(it)
+            }
+
+        }
     }
+
+    override fun deleteCategory(item: ItemCategory) {}
 
 }

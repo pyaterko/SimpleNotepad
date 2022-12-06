@@ -84,27 +84,35 @@ fun createToDoAdapter(
 fun createEditNotesCategoryAdapter(listener: OnClickCategory) =
     simpleAdapter<ItemCategory, ItemCategoryBinding> {
         areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
+
         bind { item ->
+            if (item.id < 2) {
+                vDelete.isVisible = false
+            }
             tvCategory.text = item.name
         }
-       listeners {
-           root.onClick {
-               listener.onClickCategoryItem(it)
-           }
-       }
+        listeners {
+            root.onClick {
+                listener.onClickCategoryItem(it)
+            }
+            vDelete.onClick {
+                listener.deleteCategory(it)
+            }
+        }
     }
 
 fun createListNotesCategoryAdapter(listener: OnClickCategory) =
     simpleAdapter<ItemCategory, ItemCategoryListNotesBinding> {
         areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
+        areContentsSame = { oldItem, newItem -> oldItem == newItem }
         bind { item ->
-            if (item.state){
-                tvListNotesCategory.setBackgroundColor( Color.parseColor("#00245D"))
-                tvListNotesCategory.setTextColor( Color.parseColor("#e2e2e2"))
+            if (item.state) {
+                tvListNotesCategory.setBackgroundColor(Color.parseColor("#00245D"))
+                tvListNotesCategory.setTextColor(Color.parseColor("#e2e2e2"))
 
-            }else{
-                tvListNotesCategory.setBackgroundColor( Color.parseColor("#e2e2e2"))
-                tvListNotesCategory.setTextColor( Color.parseColor("#00245D"))
+            } else {
+                tvListNotesCategory.setBackgroundColor(Color.parseColor("#e2e2e2"))
+                tvListNotesCategory.setTextColor(Color.parseColor("#00245D"))
             }
             tvListNotesCategory.text = item.name
         }
@@ -125,6 +133,8 @@ fun createNotesAdapter(context: Context, listener: OnNoteListener) =
                 false
             )
             imageViewMoreVert.isVisible =
+                preferences(context).getBoolean(NotesListFragment.CURRENT_BOOLEAN, true)
+            textViewDescription.isVisible =
                 preferences(context).getBoolean(NotesListFragment.CURRENT_BOOLEAN, true)
             itemFon.setBackgroundColor(item.color.getColorDrawable(context))
             textViewTitle.text = item.title
@@ -205,4 +215,6 @@ interface OnNoteListener {
 
 interface OnClickCategory {
     fun onClickCategoryItem(item: ItemCategory)
+    fun deleteCategory(item: ItemCategory)
+
 }

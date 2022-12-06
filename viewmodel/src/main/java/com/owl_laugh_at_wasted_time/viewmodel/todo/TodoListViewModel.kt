@@ -1,11 +1,11 @@
 package com.owl_laugh_at_wasted_time.viewmodel.todo
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
 import com.owl_laugh_at_wasted_time.domain.repository.SubTaskRepository
 import com.owl_laugh_at_wasted_time.domain.repository.ToDoRepository
-import com.owl_laugh_at_wasted_time.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class TodoListViewModel @Inject constructor(
     private val toDoRepository: ToDoRepository,
     private val subTaskRepository: SubTaskRepository
-) : BaseViewModel() {
+) : ViewModel() {
 
     val liveData = toDoRepository.getAllDate()
 
@@ -22,25 +22,25 @@ class TodoListViewModel @Inject constructor(
 
 
     fun addSubTask(item: SubTaskItem) {
-        viewModelScopeCoroutine.launch {
+        viewModelScope.launch {
             subTaskRepository.add(item)
         }
     }
 
     fun deleteSubTask(itemId: UUID) {
-        viewModelScopeCoroutine.launch {
+        viewModelScope.launch {
             subTaskRepository.delete(itemId)
         }
     }
 
     fun updateDoneSubTask(id: String, done: Boolean) {
-        viewModelScopeCoroutine.launch {
+        viewModelScope.launch {
             subTaskRepository.updateDone(id, done)
         }
     }
 
     fun deleteItemById(itemId: String) {
-        viewModelScopeCoroutine.launch {
+        viewModelScope.launch {
             subTaskRepository.deleteItemById(itemId)
         }
     }
@@ -49,7 +49,7 @@ class TodoListViewModel @Inject constructor(
         toDoRepository.getById(noteId)
 
     fun addToDo(item: ItemToDo) {
-        viewModelScopeCoroutine.launch {
+        viewModelScope.launch {
             toDoRepository.add(item)
         }
     }
@@ -61,5 +61,4 @@ class TodoListViewModel @Inject constructor(
 
     }
 
-    override fun handleError(throwable: Throwable) {}
 }

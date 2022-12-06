@@ -19,7 +19,7 @@ import com.owl_laugh_at_wasted_time.data.entity.SubTaskItemDbModel
         ItemToDoDbModel::class,
         SubTaskItemDbModel::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class NotePadDataBase : RoomDatabase() {

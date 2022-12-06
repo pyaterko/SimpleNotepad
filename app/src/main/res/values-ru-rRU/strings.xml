@@ -33,6 +33,8 @@
     <string name="undefined_error">Неопределенная ошибка</string>
     <string name="create_data">добавлено</string>
     <string name="planned">Выполнить до</string>
+    <string name="add_category">Добавить категорию</string>
+    <string name="name_of">название</string>
 
 
     <string name="share">Поделиться</string>

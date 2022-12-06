@@ -1,6 +1,7 @@
 package com.owl_laugh_at_wasted_time.viewmodel.di
 
 import androidx.lifecycle.ViewModel
+import com.owl_laugh_at_wasted_time.viewmodel.notes.CreateNoteViewModel
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 import com.owl_laugh_at_wasted_time.viewmodel.shopping.ShoppingListViewModel
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
@@ -25,4 +26,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(TodoListViewModel::class)
     fun bindTodoListViewModel(viewModel: TodoListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CreateNoteViewModel::class)
+    fun bindCreateNoteViewModel(viewModel: CreateNoteViewModel): ViewModel
 }

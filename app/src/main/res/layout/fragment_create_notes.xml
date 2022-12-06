@@ -61,15 +61,35 @@
         app:drawableEndCompat="@drawable/ic_expand_more_24"
         tools:listitem="@layout/item_category" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_note_create_category"
+    <LinearLayout
+        android:id="@+id/ll_category"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_marginStart="@dimen/size_x_medium"
         android:layout_marginTop="@dimen/size_xx_medium"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:visibility="gone"
-        tools:listitem="@layout/item_category" />
+        android:orientation="vertical"
+       android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_add_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_category"
+            android:background="@color/white_pressed"
+            android:padding="@dimen/size_xx_small"
+            app:drawableEndCompat="@drawable/ic_baseline_playlist_add_24"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_note_create_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white_pressed"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_category" />
+    </LinearLayout>
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/indicator_color"
