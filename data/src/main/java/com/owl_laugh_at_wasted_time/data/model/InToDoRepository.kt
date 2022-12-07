@@ -6,8 +6,6 @@ import com.owl_laugh_at_wasted_time.data.dao.ItemToDoDao
 import com.owl_laugh_at_wasted_time.data.entity.ItemToDoDbModel
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.repository.ToDoRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import java.util.*
 import javax.inject.Inject
 
@@ -16,10 +14,10 @@ class InToDoRepository @Inject constructor(
     private val itemToDoDao: ItemToDoDao
 ) : ToDoRepository {
 
-    override fun getAllDate(): LiveData<List<ItemToDo>> =Transformations.map(
+    override fun getAllDate(): LiveData<List<ItemToDo>> = Transformations.map(
         itemToDoDao.getAllData()
-    ){
-     it.map { itenDbModel -> itenDbModel.toItemToDo() }
+    ) {
+        it.map { itemDbModel -> itemDbModel.toItemToDo() }
     }
 
     override suspend fun add(item: ItemToDo) {

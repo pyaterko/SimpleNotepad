@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.elveum.elementadapter.SimpleBindingAdapter
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.displayAConfirmationDialog
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.preferences
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentShoppingListBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.callback.TouchHelperCallback
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnShoppingListener
@@ -61,7 +61,7 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list), OnSh
                 getString(R.string.settings_swipe_to_trash_key),
                 true
             )
-        ){
+        ) {
             val touchCallback = TouchHelperCallback(adapter) { item ->
                 showDeleteAlertDialog(item)
             }
@@ -75,13 +75,13 @@ class ShoppingListFragment : BaseFragment(R.layout.fragment_shopping_list), OnSh
             null,
             null
         )
-        viewModel.shoppingList.collectWhileStarted {
-            if (it.isEmpty()) {
+        viewModel.shoppingList.collectWhileStarted { list ->
+            if (list.isEmpty()) {
                 binding.noDataImageView.visibility = View.VISIBLE
             } else {
                 binding.noDataImageView.visibility = View.GONE
             }
-            adapter.submitList(it.sortedBy { it.done })
+            adapter.submitList(list.sortedBy { it.done })
         }
 
         binding.buttonFabShoppingList.setOnClickListener {

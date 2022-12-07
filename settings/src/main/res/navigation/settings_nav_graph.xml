@@ -24,11 +24,11 @@
     </fragment>
     <fragment
         android:id="@+id/settingsInterfase"
-        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsInterfase"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsInterface"
         android:label="@string/settings_screen_interface" />
     <fragment
         android:id="@+id/settingsBehavuors"
-        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsBehavuors"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.SettingsBehaviors"
         android:label="@string/settings_screen_behaviors" />
     <fragment
         android:id="@+id/settingsData"
@@ -36,7 +36,7 @@
         android:label="@string/settings_screen_data" />
     <fragment
         android:id="@+id/chengelogFragment"
-        android:name="com.owl_laugh_at_wasted_time.settings.fragments.ChengelogFragment"
+        android:name="com.owl_laugh_at_wasted_time.settings.fragments.ChangelogFragment"
         android:label="@string/settings_changelog"
         tools:layout="@layout/fragment_chengelog" />
 </navigation>

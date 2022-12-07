@@ -1,4 +1,4 @@
-package com.owl_laugh_at_wasted_time.simplenotepad.ui.base
+package com.owl_laugh_at_wasted_time.simplenotepad.ui.base.callback
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -13,8 +13,8 @@ import com.owl_laugh_at_wasted_time.simplenotepad.R
 import kotlin.math.absoluteValue
 
 class TouchHelperCallback<T>(
-    val adapter: SimpleBindingAdapter<T>,
-    val swapeListener: (T) -> Unit
+    private val adapter: SimpleBindingAdapter<T>,
+    private val swipeListener: (T) -> Unit
 ) : ItemTouchHelper.Callback() {
     private val bgRect = RectF()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -40,7 +40,7 @@ class TouchHelperCallback<T>(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        swapeListener.invoke(adapter.currentList[viewHolder.adapterPosition])
+        swipeListener.invoke(adapter.currentList[viewHolder.adapterPosition])
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {

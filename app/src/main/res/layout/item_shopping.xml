@@ -42,7 +42,7 @@
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/checkBoxShoppingList"
-                style="@style/CastomCheckBox"
+                style="@style/CustomCheckBox"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textViewItemShoppingList"
                 app:layout_constraintStart_toStartOf="parent"
@@ -65,10 +65,11 @@
         app:layout_constraintTop_toTopOf="parent" >
 
         <ImageView
-            android:id="@+id/ivFoto"
+            android:id="@+id/ivPhoto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
 
     </androidx.cardview.widget.CardView>
 

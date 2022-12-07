@@ -30,7 +30,6 @@ import com.owl_laugh_at_wasted_time.domain.TIME_STRING_DAY
 import com.owl_laugh_at_wasted_time.domain.TIME_STRING_MONTH
 import com.owl_laugh_at_wasted_time.domain.TIME_STRING_YEAR
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.launchAndRepeatOnStart
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.notification.NotificationHelper
@@ -100,19 +99,19 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
 
     protected fun deleteNotification(itemId: Int, blockTwo: () -> Unit) {
         val service = Intent(requireContext(), NotificationHelper::class.java)
-        service.setAction("ACTION_STOP_FOREGROUND_SERVICE")
+        service.action = "ACTION_STOP_FOREGROUND_SERVICE"
         service.putExtra("itemId", itemId.hashCode())
         activity?.startService(service)
         blockTwo.invoke()
     }
 
-    protected fun setDateOfComplection(itemToDo: ItemToDo, add: (ItemToDo) -> Unit) {
+    protected fun setDateOfCompletion(itemToDo: ItemToDo, add: (ItemToDo) -> Unit) {
         val dateRangePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Выберите дату для напоминания")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build()
-        dateRangePicker.show(parentFragmentManager, "TAGTAG")
+        dateRangePicker.show(parentFragmentManager, "TAGGING")
         dateRangePicker.addOnPositiveButtonClickListener {
             val materialTimePicker = MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
@@ -155,22 +154,12 @@ open class BaseFragment(layout: Int) : Fragment(layout) {
 
     protected fun addNotification(arrayList: ArrayList<String>, itemToDo: ItemToDo) {
         val service = Intent(requireContext(), NotificationHelper::class.java)
-        service.setAction("ACTION_START_FOREGROUND_SERVICE")
+        service.action = "ACTION_START_FOREGROUND_SERVICE"
         service.putExtra("itemId", itemToDo.id.hashCode())
         service.putExtra("itemTitle", itemToDo.title)
         service.putStringArrayListExtra("array", arrayList)
         service.putExtra("data", itemToDo.dateOfCreation)
         activity?.startService(service)
-    }
-
-    protected fun startNotificationService(arrayList: ArrayList<String>, itemToDo: ItemToDo) {
-        val service = Intent(requireContext(), NotificationHelper::class.java)
-        service.setAction("ACTION_START_FOREGROUND_SERVICE")
-        service.putExtra("itemId", itemToDo.id.hashCode())
-        service.putExtra("itemTitle", itemToDo.title)
-        service.putStringArrayListExtra("array", arrayList)
-        service.putExtra("data", itemToDo.dateOfCreation)
-        activity?.startForegroundService(service)
     }
 
     private fun addEvent(title: String, begin: Long) {

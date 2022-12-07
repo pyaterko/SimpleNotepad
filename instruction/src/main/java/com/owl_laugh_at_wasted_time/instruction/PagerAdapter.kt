@@ -1,4 +1,4 @@
-package com.example.viewpagerexample
+package com.owl_laugh_at_wasted_time.instruction
 
 import android.content.Context
 import android.graphics.Color
@@ -11,7 +11,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.owl_laugh_at_wasted_time.instruction.databinding.PageLayoutBinding
-import com.owl_laugh_at_wasted_time.instruction.Slide
 
 class DiffCallBack(
     private val oldList: List<Slide>,
@@ -29,7 +28,7 @@ class DiffCallBack(
 
 }
 
-class PagerAdapter() :
+class PagerAdapter :
     RecyclerView.Adapter<PagerAdapter.PageHolder>() {
 
     var words: List<Slide> = emptyList()
@@ -60,7 +59,7 @@ class PagerAdapter() :
           view.apply {
               textViewTitle.text=slide.title
               textViewDescriptor.text=slide.description
-              card.setBackgroundColor(Color.parseColor(slide.backgraund))
+              card.setBackgroundColor(Color.parseColor(slide.background))
                   Glide.with(imageView)
                       .load(slide.slide)
                       .transform(

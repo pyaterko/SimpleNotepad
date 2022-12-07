@@ -4,7 +4,6 @@ import com.owl_laugh_at_wasted_time.data.dao.ItemNoteDao
 import com.owl_laugh_at_wasted_time.data.mappers.ItemNoteListMapper
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -20,10 +19,11 @@ class InNoteRepository @Inject constructor(
         list.map { mapper.mapListDbModelToListEntity(it) }
     }
 
-    override fun getItemsByCategory(category: String)=runBlocking {
-        val list = itemNoteListDao.getAllData()
-        list.map { mapper.mapListDbModelToListEntity(it) }
-    }
+
+    override suspend fun getItemsByCategory(category: String) =
+        itemNoteListDao.getItemsByCategory(category)
+            .map { itemNoteDbModel -> mapper.mapDbModelToEntity(itemNoteDbModel) }
+
 
     override suspend fun add(item: ItemNote) {
         itemNoteListDao.add(mapper.mapEntityToDbModel(item))

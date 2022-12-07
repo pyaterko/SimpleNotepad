@@ -30,7 +30,7 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    fun bindCategorysRepository(impl: InCategories): CategorysRepository
+    fun bindCategoriesRepository(impl: InCategories): CategoriesRepository
 
     @Singleton
     @Binds

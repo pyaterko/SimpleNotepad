@@ -12,7 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.instruction.activity.InstructionActivity
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.preferences
 import com.owl_laugh_at_wasted_time.simplenotepad.Initializer
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.ActivityMainBinding

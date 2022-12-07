@@ -5,15 +5,12 @@ import androidx.lifecycle.Transformations
 import com.owl_laugh_at_wasted_time.data.dao.CategoriesDao
 import com.owl_laugh_at_wasted_time.data.entity.ItemCategoriesDbModel
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
-import com.owl_laugh_at_wasted_time.domain.repository.CategorysRepository
-import com.owl_laugh_at_wasted_time.domain.repository.UiActions
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.owl_laugh_at_wasted_time.domain.repository.CategoriesRepository
 import javax.inject.Inject
 
 class InCategories @Inject constructor(
     private val categoriesDao: CategoriesDao
-) : CategorysRepository {
+) : CategoriesRepository {
 
 
     override suspend fun updateCategory(categoryItem: ItemCategory,list: List<ItemCategory>): List<ItemCategory> {
@@ -28,7 +25,7 @@ class InCategories @Inject constructor(
     override fun getAllData(): LiveData<List<ItemCategory>> = Transformations.map(
    categoriesDao.getAllData()
     ){
-        it.map { itenDbModel -> itenDbModel.toItemCategory() }
+        it.map { itemDbModel -> itemDbModel.toItemCategory() }
     }
 
     override suspend fun populateInitialData() {

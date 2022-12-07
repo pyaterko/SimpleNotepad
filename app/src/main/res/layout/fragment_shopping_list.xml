@@ -24,7 +24,6 @@
         android:id="@+id/no_data_imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:contentDescription="no data"
         android:src="@drawable/ic_no_data"
         android:visibility="gone"
         android:layout_gravity="center"
@@ -32,7 +31,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+        tools:ignore="ContentDescription" />
 
 
 
@@ -46,6 +46,7 @@
         android:layout_marginBottom="@dimen/size_xx_medium"
         app:srcCompat="@android:drawable/ic_input_add"
         app:layout_behavior=".ui.base.behaviors.FabBehavior"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        tools:ignore="ContentDescription" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

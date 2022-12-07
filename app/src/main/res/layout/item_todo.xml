@@ -52,7 +52,7 @@
             app:layout_constraintTop_toBottomOf="@+id/rv_subtask_list" />
 
         <TextView
-            android:id="@+id/iventDayOfWeek"
+            android:id="@+id/eventDayOfWeek"
             android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_xxx_small"
@@ -76,7 +76,7 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/checkBox"
-            style="@style/CastomCheckBoxToDo"
+            style="@style/CustomCheckBoxToDo"
             app:layout_constraintEnd_toStartOf="@+id/textTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -95,7 +95,6 @@
             android:id="@+id/tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/checkBox"
             app:layout_constraintEnd_toStartOf="@+id/button_open_rv"

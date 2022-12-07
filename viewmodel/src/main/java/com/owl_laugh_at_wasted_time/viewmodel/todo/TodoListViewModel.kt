@@ -20,7 +20,6 @@ class TodoListViewModel @Inject constructor(
 
     fun flowSubTask(itemId: UUID) = subTaskRepository.getById(itemId)
 
-
     fun addSubTask(item: SubTaskItem) {
         viewModelScope.launch {
             subTaskRepository.add(item)
@@ -30,12 +29,6 @@ class TodoListViewModel @Inject constructor(
     fun deleteSubTask(itemId: UUID) {
         viewModelScope.launch {
             subTaskRepository.delete(itemId)
-        }
-    }
-
-    fun updateDoneSubTask(id: String, done: Boolean) {
-        viewModelScope.launch {
-            subTaskRepository.updateDone(id, done)
         }
     }
 
@@ -58,7 +51,6 @@ class TodoListViewModel @Inject constructor(
         viewModelScope.launch {
             toDoRepository.delete(itemId)
         }
-
     }
 
 }

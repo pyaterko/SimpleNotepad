@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.owl_laugh_at_wasted_time.settings.R
 import com.owl_laugh_at_wasted_time.settings.databinding.FragmentChengelogBinding
 
-class ChengelogFragment : Fragment(R.layout.fragment_chengelog) {
+class ChangelogFragment : Fragment(R.layout.fragment_chengelog) {
 
     private var _binding: FragmentChengelogBinding? = null
     private val binding get() = _binding!!
@@ -17,8 +17,8 @@ class ChengelogFragment : Fragment(R.layout.fragment_chengelog) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding=FragmentChengelogBinding.inflate(inflater,container,false)
+    ): View {
+        _binding = FragmentChengelogBinding.inflate(inflater, container, false)
         return binding.root
     }
 

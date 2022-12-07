@@ -10,7 +10,7 @@
         android:id="@+id/text_read"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/size_x_medium"
+        android:textSize="16sp"
         android:layout_marginStart="@dimen/size_xx_medium"
         android:layout_marginTop="@dimen/size_xx_medium"
         android:layout_marginEnd="@dimen/size_xxx_small"

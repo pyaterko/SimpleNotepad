@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.LinearInterpolator
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -50,7 +49,7 @@ class FabBehavior(context: Context, attributeSet: AttributeSet) :
 //            child.animate().translationY(0F).setInterpolator(LinearInterpolator()).start()
 //        }
 
-              // исчезает
+        // исчезает
         if (dyConsumed > 0 && child.visibility == View.VISIBLE) {
             child.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
 

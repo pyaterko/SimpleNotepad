@@ -1,9 +1,11 @@
-package com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain
+package com.owl_laugh_at_wasted_time.simplenotepad.ui.base
 
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Build
+import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -11,8 +13,6 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.CycleInterpolator
 import android.view.animation.TranslateAnimation
-import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -26,7 +26,6 @@ import com.owl_laugh_at_wasted_time.domain.DATE_FORMAT_OUT
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.DialogShoppingListBinding
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,17 +48,24 @@ fun View.shakeAndVibrate() {
     shake.duration = 550
     shake.interpolator = CycleInterpolator(5F)
     startAnimation(shake)
-    vibe?.vibrate(100)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        vibe?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+    } else {
+        @Suppress("DEPRECATION")
+        vibe?.vibrate(100)
+    }
+//    vibe?.vibrate(100)
 }
 
-fun preferences(context: Context) =
+
+fun preferences(context: Context): SharedPreferences =
     PreferenceManager.getDefaultSharedPreferences(context)
 
 fun toDateString(value: String): String =
     try {
         SimpleDateFormat(DATE_FORMAT_IN, Locale.getDefault())
             .parse(value).let { date ->
-                SimpleDateFormat(DATE_FORMAT_OUT, Locale.getDefault()).format(date)
+                SimpleDateFormat(DATE_FORMAT_OUT, Locale.getDefault()).format(date!!)
             }
     } catch (err: Exception) {
         ""
@@ -124,7 +130,7 @@ fun displayAConfirmationDialog(
         val lp = it.attributes
         it.setGravity(Gravity.BOTTOM)
         lp.y = 200
-        it.setBackgroundDrawableResource(R.drawable.backgraund_selected)
+        it.setBackgroundDrawableResource(R.drawable.background_selected)
     }
 }
 

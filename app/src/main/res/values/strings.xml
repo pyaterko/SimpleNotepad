@@ -63,5 +63,8 @@
     <string name="settings_fab_expansion_behavior_key">settings_fab_expansion_behavior</string>
     <string name="no_category">no category</string>
     <string name="add_category">Add category</string>
+    <string name="subtask">Subtask</string>
+    <string name="error_star">*</string>
+    <string name="add_plus">+</string>
 
 </resources>

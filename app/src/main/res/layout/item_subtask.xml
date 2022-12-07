@@ -7,7 +7,7 @@
     android:layout_marginHorizontal="@dimen/size_x_medium">
 
     <androidx.appcompat.widget.AppCompatCheckBox
-        style="@style/CastomCheckBox"
+        style="@style/CustomCheckBox"
         android:id="@+id/chb_subtask"
         app:layout_constraintEnd_toStartOf="@+id/tv_subtask"
         app:layout_constraintBottom_toBottomOf="parent"

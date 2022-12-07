@@ -14,7 +14,7 @@
         android:layout_height="@dimen/size_xx_large"
         android:layout_marginHorizontal="@dimen/size_xxx_large"
         android:layout_marginVertical="@dimen/size_max_small"
-        android:background="@drawable/backgraund_selected" />
+        android:background="@drawable/background_selected" />
 
     <ImageView
         android:id="@+id/no_data_imageView"

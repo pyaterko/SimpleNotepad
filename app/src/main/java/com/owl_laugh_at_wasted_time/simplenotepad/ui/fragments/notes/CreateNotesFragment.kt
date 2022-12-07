@@ -13,9 +13,8 @@ import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.domain.entity.ShoppingListItem
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorDrawable
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
@@ -24,7 +23,6 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnClickCategory
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createEditNotesCategoryAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.notes.CreateNoteViewModel
-import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
 
 class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClickCategory {
 
@@ -59,11 +57,9 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
         binding.rvNoteCreateCategory.adapter = categoryAdapter
         binding.colorPicturesNote.onColorClickListener = {
             note.color = it
-            binding.indicatorColor.setBackgroundTintList(
-                ColorStateList.valueOf(
-                    it.getColorDrawable(
-                        requireContext()
-                    )
+            binding.indicatorColor.backgroundTintList = ColorStateList.valueOf(
+                it.getColorDrawable(
+                    requireContext()
                 )
             )
             closePalette()
@@ -78,9 +74,9 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
         setToolBarMenu(
             blockCreateMenu = {
                 val menuItemShare = it.findItem(R.id.menu_share)
-                menuItemShare.setVisible(true)
+                menuItemShare.isVisible = true
                 val menuItemSave = it.findItem(R.id.menu_save)
-                menuItemSave.setVisible(true)
+                menuItemSave.isVisible = true
             },
             blockMenuItemSelected = {
                 when (it.itemId) {
@@ -158,7 +154,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
     }
 
     private fun setColorInIndicator(color: Int) {
-        binding.indicatorColor.setBackgroundTintList(ColorStateList.valueOf(color))
+        binding.indicatorColor.backgroundTintList = ColorStateList.valueOf(color)
     }
 
     override fun onClickCategoryItem(item: ItemCategory) {

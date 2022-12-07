@@ -16,7 +16,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/size_x_medium"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/size_x_medium"
                 android:background="@android:color/transparent"
-                android:hint="@string/description" />
+                android:hint="@string/description"
+                tools:ignore="Autofill,TextFields" />
         </LinearLayout>
 
     </ScrollView>

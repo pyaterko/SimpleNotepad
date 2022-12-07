@@ -21,7 +21,7 @@
     <style name="NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     </style>
 
-    <style name="CastomCheckBox">
+    <style name="CustomCheckBox">
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_marginEnd">8dp</item>
@@ -31,7 +31,7 @@
         <item name="android:scaleY">1.1</item>
     </style>
 
-    <style name="CastomCheckBoxToDo">
+    <style name="CustomCheckBoxToDo">
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_marginEnd">8dp</item>

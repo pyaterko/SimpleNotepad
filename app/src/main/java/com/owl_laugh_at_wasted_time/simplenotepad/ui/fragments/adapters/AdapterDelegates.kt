@@ -1,7 +1,6 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import android.widget.TextView
@@ -12,11 +11,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.elveum.elementadapter.SimpleBindingAdapter
 import com.elveum.elementadapter.simpleAdapter
 import com.owl_laugh_at_wasted_time.domain.entity.*
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.toDateString
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.*
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorDrawable
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.preferences
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.toDateString
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes.NotesListFragment
 
 private fun createSubTaskAdapter(listener: OnToDoListener) =
@@ -38,7 +37,6 @@ private fun createSubTaskAdapter(listener: OnToDoListener) =
         }
     }
 
-
 fun createToDoAdapter(
     context: Context,
     listener: OnToDoListener
@@ -55,15 +53,15 @@ fun createToDoAdapter(
                 context.getString(R.string.settings_prettified_dates_key),
                 false
             )
-            itemFon.setBackgroundColor(item.color?.getColorDrawable(context))
+            itemFon.setBackgroundColor(item.color.getColorDrawable(context))
             textTitle.text = item.title
             checkBox.isChecked = item.done
             if (!format) {
                 textViewNameDayOfWeek.text = toDateString(item.dateOfCreation)
-                iventDayOfWeek.text = toDateString(item.data)
+                eventDayOfWeek.text = toDateString(item.data)
             } else {
                 textViewNameDayOfWeek.text = item.dateOfCreation
-                iventDayOfWeek.text = item.data
+                eventDayOfWeek.text = item.data
             }
 
         }
@@ -89,9 +87,9 @@ fun createEditNotesCategoryAdapter(listener: OnClickCategory) =
             if (item.id < 2) {
                 vDelete.isVisible = false
             }
-            if (item.name=="Все"){
+            if (item.name == "Все") {
                 tvCategory.text = "без категории"
-            }else{
+            } else {
                 tvCategory.text = item.name
             }
 
@@ -112,12 +110,12 @@ fun createListNotesCategoryAdapter(listener: OnClickCategory) =
         areContentsSame = { oldItem, newItem -> oldItem == newItem }
         bind { item ->
             if (item.state) {
-                tvListNotesCategory.setBackgroundColor(Color.parseColor("#00245D"))
-                tvListNotesCategory.setTextColor(Color.parseColor("#e2e2e2"))
+                tvListNotesCategory.setBackgroundColor(0xFF00245D.toInt())
+                tvListNotesCategory.setTextColor(0xFFE2E2E2.toInt())
 
             } else {
-                tvListNotesCategory.setBackgroundColor(Color.parseColor("#e2e2e2"))
-                tvListNotesCategory.setTextColor(Color.parseColor("#00245D"))
+                tvListNotesCategory.setBackgroundColor(0xFFE2E2E2.toInt())
+                tvListNotesCategory.setTextColor(0xFF00245D.toInt())
             }
             tvListNotesCategory.text = item.name
         }
@@ -171,12 +169,12 @@ fun createSoppingAdapter(listener: OnShoppingListener) =
         areContentsSame = { oldItem, newItem -> oldItem == newItem }
         bind { item ->
             textViewItemShoppingList.showStrikeThrough(item.done)
-            Glide.with(ivFoto)
+            Glide.with(ivPhoto)
                 .load("https://loremflickr.com/320/240/${item.text}")
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.macronutrientes)
                 .error(R.drawable.macronutrientes)
-                .into(ivFoto)
+                .into(ivPhoto)
             textViewItemShoppingList.text = item.text
             checkBoxShoppingList.isChecked = item.done
 

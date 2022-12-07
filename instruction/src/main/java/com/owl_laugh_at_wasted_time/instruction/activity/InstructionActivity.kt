@@ -2,12 +2,12 @@ package com.owl_laugh_at_wasted_time.instruction.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.viewpagerexample.PagerAdapter
+import com.owl_laugh_at_wasted_time.instruction.PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.owl_laugh_at_wasted_time.instruction.R
 import com.owl_laugh_at_wasted_time.instruction.databinding.ActivitySlideBinding
-import com.owl_laugh_at_wasted_time.instruction.intro.BottomButtonAction
+import com.owl_laugh_at_wasted_time.instruction.BottomButtonAction
 import com.owl_laugh_at_wasted_time.instruction.Slide
 
 class InstructionActivity : AppCompatActivity() {
@@ -31,7 +31,7 @@ class InstructionActivity : AppCompatActivity() {
     }
 
     private fun getSlides(): ArrayList<Slide> {
-        val words = arrayListOf(
+        return arrayListOf(
             Slide(
                 getString(R.string.app_name),
                 "#FFFFFFFF",
@@ -46,7 +46,7 @@ class InstructionActivity : AppCompatActivity() {
             ),
             Slide(
                 getString(R.string.app_name),
-                "#33CAAC",
+                "#FF47EB7C",
                 R.drawable.slide3,
                 getString(R.string.tour_listactivity_tag_detail)
             ),
@@ -69,7 +69,6 @@ class InstructionActivity : AppCompatActivity() {
                 getString(R.string.tour_community)
             )
         )
-        return words
     }
 
     private fun setButton(words: ArrayList<Slide>) {
@@ -80,18 +79,22 @@ class InstructionActivity : AppCompatActivity() {
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    if (tab?.position == words.size - 1) {
-                        binding.bottomButton.setPositiveButtonText("ГОТОВО")
-                        binding.bottomButton.hideNegativeButton()
-                        binding.bottomButton.setListener { action ->
-                            if (action == BottomButtonAction.POSITIVE) { finish() }
+                    when (tab?.position) {
+                        words.size - 1 -> {
+                            binding.bottomButton.setPositiveButtonText("ГОТОВО")
+                            binding.bottomButton.hideNegativeButton()
+                            binding.bottomButton.setListener { action ->
+                                if (action == BottomButtonAction.POSITIVE) { finish() }
+                            }
                         }
-                    } else if (tab?.position == 0) {
-                        binding.bottomButton.hideNegativeButton()
-                    } else {
-                        binding.bottomButton.showNegativeButton()
-                        binding.bottomButton.setPositiveButtonText("ДАЛЕЕ")
-                        binding.bottomButton.setNegativeButtonText("НАЗАД")
+                        0 -> {
+                            binding.bottomButton.hideNegativeButton()
+                        }
+                        else -> {
+                            binding.bottomButton.showNegativeButton()
+                            binding.bottomButton.setPositiveButtonText("ДАЛЕЕ")
+                            binding.bottomButton.setNegativeButtonText("НАЗАД")
+                        }
                     }
                 }
             })
@@ -104,13 +107,13 @@ class InstructionActivity : AppCompatActivity() {
         pagerAdapter.words = words
         binding.pager.adapter = pagerAdapter
         binding.pager.isUserInputEnabled = false
-        TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
+        TabLayoutMediator(binding.tabLayout, binding.pager) { tab, _ ->
             tab.view.isClickable = false
         }.attach()
     }
 
 
     private fun getItem(i: Int): Int {
-        return binding.pager.getCurrentItem() + i
+        return binding.pager.currentItem + i
     }
 }

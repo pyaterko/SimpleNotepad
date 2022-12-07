@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
 class ReadTask(editor: MainNoteBookActivity, private val block: (str: String) -> Unit) :
     AsyncTask<Uri?, Void?, CharSequence>() {
     private val editorWeakReference: WeakReference<MainNoteBookActivity>
-    val s = "UTF-8"
+    private val s = "UTF-8"
     private var match = s
 
     @Deprecated("Deprecated in Java")
@@ -36,10 +36,10 @@ class ReadTask(editor: MainNoteBookActivity, private val block: (str: String) ->
 
         try {
             BufferedInputStream(
-                editor.getContentResolver().openInputStream(uris[0]!!)
+                editor.contentResolver.openInputStream(uris[0]!!)
             ).use { `in` ->
 
-                var reader: BufferedReader? = null
+                val reader: BufferedReader?
                 reader =
                     BufferedReader(InputStreamReader(`in`, match))
                 var line: String?

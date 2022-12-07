@@ -8,17 +8,17 @@ import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.preferences
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import java.util.*
 
 
-class NotificationHelper() : Service() {
+class NotificationHelper : Service() {
 
     private var notificationManager: NotificationManager? = null
     private var pendingIntent: PendingIntent? = null
-    private val listOfRunningNotifikation: TreeSet<Int> = TreeSet()
+    private val listOfRunningNotification: TreeSet<Int> = TreeSet()
 
     override fun onCreate() {
         super.onCreate()
@@ -38,14 +38,10 @@ class NotificationHelper() : Service() {
             when (action) {
                 "ACTION_STOP_FOREGROUND_SERVICE" -> {
                     deleteNotification(id!!)
-                    listOfRunningNotifikation.remove(id)
-//                    if (listOfRunningNotifikation.size == 0) {
-//                        stopForeground(true)
-//                        stopSelf()
-//                    }
+                    listOfRunningNotification.remove(id)
                 }
                 "ACTION_START_FOREGROUND_SERVICE" -> {
-                    listOfRunningNotifikation.add(id!!)
+                    listOfRunningNotification.add(id!!)
                     createNotification(id, title!!, data!!, array!!)
                 }
             }
@@ -91,7 +87,7 @@ class NotificationHelper() : Service() {
                 .setStyle(inboxStyle)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .build()
-            if (listOfRunningNotifikation.size == 1) {
+            if (listOfRunningNotification.size == 1) {
                 notificationManager?.notify(id, notification)
           //      startForeground(id, notification)
             } else {
@@ -105,18 +101,19 @@ class NotificationHelper() : Service() {
     private fun createNotificationChannel(): String {
         val channelId = "CHANNEL_ID"
         val channelName = "Notepad Reminder Background Service"
-        val chan = NotificationChannel(
+        val chain = NotificationChannel(
             channelId,
-            channelName, NotificationManager.IMPORTANCE_DEFAULT
+            channelName,
+            NotificationManager.IMPORTANCE_DEFAULT
         )
-        chan.lightColor = Color.BLUE
-        chan.importance = NotificationManager.IMPORTANCE_MIN
-        chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
-        notificationManager?.createNotificationChannel(chan)
+        chain.lightColor = Color.BLUE
+        chain.importance = NotificationManager.IMPORTANCE_MIN
+        chain.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+        notificationManager?.createNotificationChannel(chain)
         return channelId
     }
 
-    fun deleteNotification(id: Int) {
+    private fun deleteNotification(id: Int) {
         notificationManager?.cancel(id)
     }
 

@@ -5,7 +5,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.owl_laugh_at_wasted_time.settings.R
 
 
-class SettingsBehavuors : PreferenceFragmentCompat() {
+class SettingsBehaviors : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_behaviors, rootKey)

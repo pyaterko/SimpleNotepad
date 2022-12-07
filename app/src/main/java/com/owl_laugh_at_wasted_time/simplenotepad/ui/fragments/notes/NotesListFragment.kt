@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -26,10 +25,10 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorString
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.showActionAlertDialog
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.displayAConfirmationDialog
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorString
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.preferences
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
@@ -43,7 +42,6 @@ import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnNoteLi
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createListNotesCategoryAdapter
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createNotesAdapter
 import com.owl_laugh_at_wasted_time.viewmodel.notes.NotesListViewModel
-import kotlinx.coroutines.delay
 import java.io.File
 
 
@@ -51,7 +49,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     OnClickCategory {
 
     private lateinit var listNotes: List<ItemNote>
-    private var categoriesList: MutableList<ItemCategory>? =null
+    private var categoriesList: MutableList<ItemCategory>? = null
     private val binding by viewBinding(FragmentListNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
     private lateinit var adapter: SimpleBindingAdapter<ItemNote>
@@ -80,7 +78,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         super.onViewCreated(view, savedInstanceState)
         mActionsMenu = binding.fab.fab
         setFabOnClickListener()
-        setRVLaoutManager()
+        setRVLayoutManager()
         fabActionOnScroll(binding.recyclerViewListNotes, null, {
             mActionsMenu.isVisible = true
             collapseFab()
@@ -88,7 +86,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             collapseFab()
             mActionsMenu.isVisible = false
         })
-
         adapter = createNotesAdapter(requireContext(), this)
         adapterCategory = createListNotesCategoryAdapter(this)
         binding.rvListNotesCategory.adapter = adapterCategory
@@ -96,12 +93,47 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         binding.recyclerViewListNotes.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
         binding.recyclerViewListNotes.addItemDecoration(dividerItemDecoration)
+        instantiateUnderlayButtons()
+        setSearch()
+        initToolBarMenu()
+    }
 
-        viewModel.listNotes.collectWhileStarted {
-            adapter.submitList(it)
-            listNotes = it.toList()
-            binding.noDataImageView.isVisible = it.size == 0
+    override fun onResume() {
+        super.onResume()
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner) { categories ->
+            categoriesList = mutableListOf()
+            for ((index, element) in categories.withIndex()) {
+                categoriesList?.add(element.copy(id = index))
+            }
+            adapterCategory.submitList(updateCategory(0))
         }
+        getAllListNotes()
+    }
+
+    private fun initToolBarMenu() {
+        setToolBarMenu(
+            {
+                val menuItemStream = it.findItem(R.id.menu_view_stream)
+                val menuItemGrid = it.findItem(R.id.menu_grid_view)
+                menuItemStream?.isVisible = true
+                menuItemGrid?.isVisible = true
+            }, {
+                when (it.itemId) {
+                    R.id.menu_view_stream -> {
+                        preferences(requireContext()).edit()
+                            .putBoolean(CURRENT_BOOLEAN, false).apply()
+                        setRVLayoutManager()
+                    }
+                    R.id.menu_grid_view -> {
+                        preferences(requireContext()).edit()
+                            .putBoolean(CURRENT_BOOLEAN, true).apply()
+                        setRVLayoutManager()
+                    }
+                }
+            })
+    }
+
+    private fun instantiateUnderlayButtons() {
         ItemTouchHelper(object : SwipeHelper(
             requireContext(),
             binding.recyclerViewListNotes,
@@ -124,42 +156,83 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                 }
             }
         })
-        setSearch()
-        setToolBarMenu(
-            {
-                val menuItemStream = it.findItem(R.id.menu_view_stream)
-                val menuItemGrid = it.findItem(R.id.menu_grid_view)
-                menuItemStream?.setVisible(true)
-                menuItemGrid?.setVisible(true)
-            }, {
-                when (it.itemId) {
-                    R.id.menu_view_stream -> {
-                        preferences(requireContext()).edit()
-                            .putBoolean(CURRENT_BOOLEAN, false).apply()
-                        setRVLaoutManager()
-                    }
-                    R.id.menu_grid_view -> {
-                        preferences(requireContext()).edit()
-                            .putBoolean(CURRENT_BOOLEAN, true).apply()
-                        setRVLaoutManager()
-                    }
-                }
-            })
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.categoriesLiveData.observe(viewLifecycleOwner) { categories ->
-            categoriesList= mutableListOf()
-            for ((index, element) in categories.withIndex()) {
-                categoriesList?.add(element.copy(id = index))
-            }
-            adapterCategory.submitList( updateCategory(0))
+    private fun deleteButton(note: ItemNote): SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            true,
+            "Удалить",
+            AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_baseline_delete_outline_24
+            ),
+            0xFFFF4444.toInt(), 0xFFFFFFFF.toInt()
+        ) {
+            showDeleteAlertDialog(note.id)
         }
-
     }
 
-    private fun setRVLaoutManager() {
+
+    private fun editorButton(note: ItemNote): SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            true,
+            "Редактор",
+            AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_baseline_create
+            ),
+            0xFFFF9800.toInt(), 0xFFFFFFFF.toInt()
+        ) {
+            val directions =
+                NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(note.id)
+            launchFragment(directions)
+        }
+    }
+
+    private fun saveFileButton(note: ItemNote): SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            true,
+            "Файл",
+            AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_file_document_black_48dp
+            ),
+            0xFF33CAAC.toInt(), 0xFFFFFFFF.toInt()
+        ) {
+            if (notPermission()) {
+                requestPermission()
+            } else {
+                showActionAlertDialog(
+                    requireContext(),
+                    layoutInflater,
+                    getString(R.string.file_save),
+                    getString(R.string.empty_value),
+                    R.string.save,
+                    R.string.name_of_file,
+                    actionPB1 = { str ->
+                        if (str.isNotBlank()) {
+                            viewModel.save(
+                                requireContext(),
+                                str,
+                                "<<id:${note.id}>>\n <<dateOfCreation:${note.dateOfCreation}>>\n <<color:${note.color.getColorString()}>>\n <<title:${note.title}>>\n ${note.text}"
+                            )
+                        }
+                    }
+                )
+            }
+            adapter.notifyItemChanged(it)
+        }
+    }
+
+    private fun getAllListNotes() {
+        viewModel.listNotes.collectWhileStarted {
+            adapter.submitList(it)
+            listNotes = it.toList()
+            binding.noDataImageView.isVisible = it.isEmpty()
+        }
+    }
+
+    private fun setRVLayoutManager() {
         if (preferences(requireContext()).getBoolean(CURRENT_BOOLEAN, true)) {
             binding.recyclerViewListNotes.layoutManager =
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -192,7 +265,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         itemId: Int = 0,
         view: View? = null
     ) {
-        var note: ItemNote? = null
+        val note: ItemNote?
         val id = if (view == null) {
             itemId
         } else {
@@ -208,72 +281,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                 binding.recyclerViewListNotes.adapter?.notifyDataSetChanged()
             }
         )
-    }
-
-    private fun deleteButton(note: ItemNote): SwipeHelper.UnderlayButton {
-        return SwipeHelper.UnderlayButton(
-            true,
-            "Удалить",
-            AppCompatResources.getDrawable(
-                requireContext(),
-                R.drawable.ic_baseline_delete_outline_24
-            ),
-            Color.parseColor("#ffff4444"), Color.parseColor("#ffffff")
-        ) {
-            showDeleteAlertDialog(note.id)
-        }
-    }
-
-
-    private fun editorButton(note: ItemNote): SwipeHelper.UnderlayButton {
-        return SwipeHelper.UnderlayButton(
-            true,
-            "Редактор",
-            AppCompatResources.getDrawable(
-                requireContext(),
-                R.drawable.ic_baseline_create
-            ),
-            Color.parseColor("#ff9800"), Color.parseColor("#ffffff")
-        ) {
-            val directions =
-                NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(note.id)
-            launchFragment(directions)
-        }
-    }
-
-    private fun saveFileButton(note: ItemNote): SwipeHelper.UnderlayButton {
-        return SwipeHelper.UnderlayButton(
-            true,
-            "Файл",
-            AppCompatResources.getDrawable(
-                requireContext(),
-                R.drawable.ic_file_document_black_48dp
-            ),
-            Color.parseColor("#33CAAC"), Color.parseColor("#ffffff")
-        ) {
-            if (notPermision()) {
-                requestPermision()
-            } else {
-                showActionAlertDialog(
-                    requireContext(),
-                    layoutInflater,
-                    getString(R.string.file_save),
-                    getString(R.string.empty_value),
-                    R.string.save,
-                    R.string.name_of_file,
-                    actionPB1 = { str ->
-                        if (str.isNotBlank()) {
-                            viewModel.save(
-                                requireContext(),
-                                str,
-                                "<<id:${note.id}>>\n <<dateOfCreation:${note.dateOfCreation}>>\n <<color:${note.color?.getColorString()}>>\n <<title:${note.title}>>\n ${note.text}"
-                            )
-                        }
-                    }
-                )
-            }
-            adapter.notifyItemChanged(it)
-        }
     }
 
     private fun showNoteMenu(view: View, id: Int) {
@@ -304,8 +311,8 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                     launchFragment(directions)
                 }
                 SAVE_FILE -> {
-                    if (notPermision()) {
-                        requestPermision()
+                    if (notPermission()) {
+                        requestPermission()
                     } else {
                         showActionAlertDialog(
                             requireContext(),
@@ -319,7 +326,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                                     viewModel.save(
                                         requireContext(),
                                         str,
-                                        "<<id:${note.id}>>\n <<dateOfCreation:${note.dateOfCreation}>>\n <<color:${note.color?.getColorString()}>>\n <<title:${note.title}>>\n ${note.text}"
+                                        "<<id:${note.id}>>\n <<dateOfCreation:${note.dateOfCreation}>>\n <<color:${note.color.getColorString()}>>\n <<title:${note.title}>>\n ${note.text}"
                                     )
                                 }
                             }
@@ -392,12 +399,12 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
 
     private fun collapseFab() {
         val mActionsMenu = binding.fab.fab
-        if (mActionsMenu.isExpanded()) {
-            mActionsMenu.collapse();
+        if (mActionsMenu.isExpanded) {
+            mActionsMenu.collapse()
         }
     }
 
-    private fun requestPermision() {
+    private fun requestPermission() {
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -405,7 +412,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         )
     }
 
-    private fun notPermision() = ActivityCompat.checkSelfPermission(
+    private fun notPermission() = ActivityCompat.checkSelfPermission(
         requireContext(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     ) != PackageManager.PERMISSION_GRANTED
@@ -419,21 +426,15 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         startActivityForResult(intent, OPEN_DOCUMENT)
     }
 
-    private fun updateCategory(index:Int): List<ItemCategory> {
-        val list:MutableList<ItemCategory> = mutableListOf()
-        for ( element in categoriesList!!) {
+    private fun updateCategory(index: Int): List<ItemCategory> {
+        val list: MutableList<ItemCategory> = mutableListOf()
+        for (element in categoriesList!!) {
             list.add(element.copy())
         }
-        if (list.size !=0){
+        if (list.size != 0) {
             list[index].state = true
         }
-
         return list.toList()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        adapterCategory.submitList(emptyList())
     }
 
     @Deprecated("Deprecated in Java")
@@ -444,25 +445,14 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         when (requestCode) {
             OPEN_DOCUMENT -> {
                 val content = data?.data
-                content?.let {
+                content?.let { uri ->
                     val read = ReadTask(activity as MainNoteBookActivity) {
                         viewModel.restoreNote(it, "")
                     }
-                    read.execute(it)
+                    read.execute(uri)
                 }
             }
         }
-    }
-
-
-    companion object {
-        private const val TEXT_WILD = "text/*"
-        private const val OPEN_DOCUMENT = 1
-        private const val DELETE = 0
-        private const val EDITOR = 1
-        private const val SAVE_FILE = 2
-        private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
-        const val CURRENT_BOOLEAN = "CURRENT_BOOLEAN"
     }
 
     override fun launchToReadFragment(itemNote: ItemNote) {
@@ -490,20 +480,28 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
 
     override fun onClickCategoryItem(item: ItemCategory) {
         adapterCategory.submitList(updateCategory(item.id))
-       adapterCategory.notifyDataSetChanged()
-        viewModel.listCategorys(item.name).collectWhileStarted {
-            if (item.name!="Все"){
-                val list=it.filter { it.category == item.name }
+        adapterCategory.notifyDataSetChanged()
+        if (item.name == "Все") {
+            getAllListNotes()
+        } else {
+            launchScope {
+                val list = viewModel.listCategories(item.name)
                 adapter.submitList(list)
-                binding.noDataImageView.isVisible = list.size == 0
-            }else{
-                adapter.submitList(it)
-                binding.noDataImageView.isVisible = it.size == 0
+                binding.noDataImageView.isVisible = list.isEmpty()
             }
-
         }
+
     }
 
     override fun deleteCategory(item: ItemCategory) {}
 
+    companion object {
+        private const val TEXT_WILD = "text/*"
+        private const val OPEN_DOCUMENT = 1
+        private const val DELETE = 0
+        private const val EDITOR = 1
+        private const val SAVE_FILE = 2
+        private const val REQUEST_WRITE_EXTERNAL_PERMISSION = 2
+        const val CURRENT_BOOLEAN = "CURRENT_BOOLEAN"
+    }
 }

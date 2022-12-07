@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <com.owl_laugh_at_wasted_time.instruction.intro.BottomButtonsView
+    <com.owl_laugh_at_wasted_time.instruction.BottomButtonsView
         android:id="@+id/bottomButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -12,7 +12,7 @@ class ShoppingListMapper @Inject constructor() {
         done = item.done
     )
 
-    fun mapDbModelToEntity(itemDbModel: ShoppingListItemDbModel) = ShoppingListItem(
+   private fun mapDbModelToEntity(itemDbModel: ShoppingListItemDbModel) = ShoppingListItem(
         id = itemDbModel.id,
         text = itemDbModel.text,
         done = itemDbModel.done

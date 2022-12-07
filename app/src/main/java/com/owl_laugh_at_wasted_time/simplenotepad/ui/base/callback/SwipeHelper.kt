@@ -41,7 +41,7 @@ abstract class SwipeHelper(
     private val gestureDetector = GestureDetector(context, gestureListener)
 
     @SuppressLint("ClickableViewAccessibility")
-    private val onTouchListener = OnTouchListener { view, e ->
+    private val onTouchListener = OnTouchListener { _, e ->
         if (swipedPos < 0) return@OnTouchListener false
         val point = Point(e.rawX.toInt(), e.rawY.toInt())
         val swipedViewHolder = recyclerView.findViewHolderForAdapterPosition(swipedPos)
@@ -193,7 +193,7 @@ abstract class SwipeHelper(
         private val animate: Boolean,
         private val text: String,
         private val imageResId: Drawable?,
-        private val buttonBackgroundcolor: Int,
+        private val buttonBackgrounder: Int,
         private val textColor: Int,
         private val clickListener: (Int) -> Unit
     ) {
@@ -211,7 +211,7 @@ abstract class SwipeHelper(
         fun onDraw(canvas: Canvas, rect: RectF, pos: Int) {
             val p = Paint()
             // Draw background
-            p.color = buttonBackgroundcolor
+            p.color = buttonBackgrounder
             canvas.drawRect(rect, p)
             if (!animate) {
                 // Draw Text
@@ -241,10 +241,16 @@ abstract class SwipeHelper(
                 val textPaint = TextPaint()
                 textPaint.textSize = 40f
                 textPaint.color = textColor
-                val sl = StaticLayout(
-                    text, textPaint, rect.width().toInt(),
-                    Layout.Alignment.ALIGN_CENTER, 1f, 1f, false
+                val sb = StaticLayout.Builder.obtain(
+                    text,
+                    0,
+                    text.length,
+                    textPaint,
+                    rect.width().toInt()
                 )
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false)
+                val sl = sb.build()
                 if (imageResId != null) {
                     imageResId.setBounds(
                         (rect.left + 50).toInt(),

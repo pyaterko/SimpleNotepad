@@ -57,6 +57,9 @@
     <string name="share_note">Поделиться заметкой</string>
     <string name="menu_alarm_title">сигнал</string>
     <string name="no_category">без категории</string>
+    <string name="subtask">Подзадача</string>
+    <string name="error_star">*</string>
+    <string name="add_plus">+</string>
 
 
 </resources>

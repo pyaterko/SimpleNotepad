@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:background="@drawable/backgraund_selected"
+        android:background="@drawable/background_selected"
         android:imeOptions="actionDone"
         android:paddingHorizontal="@dimen/zero"
         android:selectAllOnFocus="true"

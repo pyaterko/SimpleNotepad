@@ -7,7 +7,7 @@ import java.util.*
 
 @Entity(tableName = "subtask_table")
 data class SubTaskItemDbModel(
-    @PrimaryKey()
+    @PrimaryKey
     val id: String,
     val idParent: UUID,
     var done: Boolean

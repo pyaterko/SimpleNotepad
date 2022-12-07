@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.elveum.elementadapter.SimpleBindingAdapter
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.preferences
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.displayAConfirmationDialog
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.preferences
 import com.owl_laugh_at_wasted_time.settings.activity.SettingsActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListTodoBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.TouchHelperCallback
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.callback.TouchHelperCallback
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnToDoListener

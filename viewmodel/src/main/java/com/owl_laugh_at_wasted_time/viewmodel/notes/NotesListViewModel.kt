@@ -5,22 +5,17 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.domain.repository.CategorysRepository
+import com.owl_laugh_at_wasted_time.domain.repository.CategoriesRepository
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
 import com.owl_laugh_at_wasted_time.domain.repository.UiActions
 import com.owl_laugh_at_wasted_time.viewmodel.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -29,30 +24,32 @@ import javax.inject.Inject
 
 
 class NotesListViewModel @Inject constructor(
-    private val uiActions: UiActions,
+    uiActions: UiActions,
     private val repositoryNote: NoteRepository,
-    private val categorysRepository: CategorysRepository
+    private val categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
     val listNotes = repositoryNote.getLiveDate()
-    val categoriesLiveData = categorysRepository.getAllData()
+    val categoriesLiveData = categoriesRepository.getAllData()
 
 
     init {
         if (uiActions.isPopulateInitialData()) {
             viewModelScope.launch {
                 delay(1000)
-                categorysRepository.populateInitialData()
+                categoriesRepository.populateInitialData()
             }
             uiActions.notPopulateInitialData()
         }
     }
 
-    fun listCategorys(category: String) =
-        repositoryNote.getItemsByCategory(category)
+    suspend fun listCategories(category: String) =
+        viewModelScope.async {
+            return@async repositoryNote.getItemsByCategory(category)
+        }.await()
 
 
-    suspend fun addItemNote(item: ItemNote) {
+    private suspend fun addItemNote(item: ItemNote) {
         repositoryNote.add(item)
     }
 
@@ -82,24 +79,24 @@ class NotesListViewModel @Inject constructor(
 
     @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun saveFile(context: Context, fileName: String, text: String) {
-            val outputStream: OutputStream? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val values = ContentValues()
-                values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                values.put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
-                values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
-                val extVolumeUri: Uri = MediaStore.Files.getContentUri("external")
-                val fileUri: Uri? = context.contentResolver.insert(extVolumeUri, values)
-                context.contentResolver.openOutputStream(fileUri!!)
-            } else {
-                val path =
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                        .toString()
-                val file = File(path, "$fileName.txt")
-                FileOutputStream(file)
-            }
-            val bytes = text.toByteArray()
-            outputStream?.write(bytes)
-            outputStream?.close()
+        val outputStream: OutputStream? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val values = ContentValues()
+            values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            values.put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+            val extVolumeUri: Uri = MediaStore.Files.getContentUri("external")
+            val fileUri: Uri? = context.contentResolver.insert(extVolumeUri, values)
+            context.contentResolver.openOutputStream(fileUri!!)
+        } else {
+            val path =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    .toString()
+            val file = File(path, "$fileName.txt")
+            FileOutputStream(file)
+        }
+        val bytes = text.toByteArray()
+        outputStream?.write(bytes)
+        outputStream?.close()
     }
 
     fun restoreNote(line: String, name: String): String {

@@ -46,7 +46,7 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
 
 
         binding = FragmentReadBinding.bind(view)
-        binding.textRead.setText("$title\n$text")
+        binding.textRead.text = "$title\n$text"
 
         counter = pixelsToSp(binding.textRead.textSize)
 

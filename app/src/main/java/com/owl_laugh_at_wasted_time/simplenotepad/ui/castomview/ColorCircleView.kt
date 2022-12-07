@@ -11,7 +11,7 @@ import androidx.annotation.Dimension.DP
 import androidx.annotation.Dimension.PX
 import androidx.core.content.ContextCompat
 
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.dip
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.dip
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 
 

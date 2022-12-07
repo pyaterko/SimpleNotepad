@@ -15,12 +15,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.entity.ItemToDo
 import com.owl_laugh_at_wasted_time.domain.entity.SubTaskItem
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorDrawable
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.shakeAndVibrate
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateTodoBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorDrawable
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.shakeAndVibrate
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.viewmodel.todo.TodoListViewModel
 import java.util.*
@@ -97,11 +97,9 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         }
         binding.colorPicturesToDo.onColorClickListener = {
             itemToDo.color = it
-            binding.indicatorColor.setBackgroundTintList(
-                ColorStateList.valueOf(
-                    it.getColorDrawable(
-                        requireContext()
-                    )
+            binding.indicatorColor.backgroundTintList = ColorStateList.valueOf(
+                it.getColorDrawable(
+                    requireContext()
                 )
             )
             closePalette()
@@ -115,21 +113,21 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         setToolBarMenu({
             val menuItemAlarm = it.findItem(R.id.menu_alarm)
             val menuItemSave = it.findItem(R.id.menu_save)
-            menuItemAlarm.setVisible(true)
-            menuItemSave.setVisible(true)
-        }, {
-            when (it.itemId) {
+            menuItemAlarm.isVisible = true
+            menuItemSave.isVisible = true
+        }, { item ->
+            when (item.itemId) {
                 R.id.menu_alarm -> {
-                    checkBeforeIvent { title ->
+                    checkBeforeEvent { title ->
                         itemToDo.title = title
-                        setDateOfComplection(itemToDo) {
+                        setDateOfCompletion(itemToDo) {
                             viewModel.addToDo(it)
                             addNotification(saveSubTaskList(), it)
                         }
                     }
                 }
                 R.id.menu_save -> {
-                    checkBeforeIvent { title ->
+                    checkBeforeEvent { title ->
                         itemToDo.title = title
                         viewModel.addToDo(itemToDo)
                         hideKeyboard(requireActivity())
@@ -146,9 +144,9 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         val array = arrayListOf<String>()
         var counter = 1
         for (i in allEds.indices) {
-            val text = (allEds.get(i)
+            val text = (allEds[i]
                 .findViewById<View>(R.id.editText) as EditText).text.toString()
-            val chb = allEds.get(i).findViewById(R.id.chb_current) as CheckBox
+            val chb = allEds[i].findViewById(R.id.chb_current) as CheckBox
             if (text != "") {
                 array.add("${counter++} - $text")
                 viewModel.addSubTask(
@@ -216,10 +214,10 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         return (title.isNotEmpty())
     }
 
-    private fun checkBeforeIvent(ivent: (String) -> Unit) {
+    private fun checkBeforeEvent(event: (String) -> Unit) {
         val title = binding.todoTitle.text.toString()
         if (verifyTitleFromUser(title)) {
-            ivent.invoke(title)
+            event.invoke(title)
         } else {
             showAnErrorInTheSelection = true
             isShowAnErrorInTheSelection(
@@ -246,6 +244,6 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
     }
 
     private fun setColorInIndicator(color: Int) {
-        binding.indicatorColor.setBackgroundTintList(ColorStateList.valueOf(color))
+        binding.indicatorColor.backgroundTintList = ColorStateList.valueOf(color)
     }
 }

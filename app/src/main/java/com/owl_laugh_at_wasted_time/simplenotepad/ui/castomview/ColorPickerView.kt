@@ -9,20 +9,10 @@ import android.widget.LinearLayout
 import androidx.annotation.Dimension
 import androidx.annotation.Dimension.DP
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.dip
-import com.owl_laugh_at_wasted_time.notesprojectandroiddevelopercourse.domain.getColorRes
-
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.dip
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorRes
 
 class ColorPickerView : LinearLayout {
-
-    companion object {
-        private const val PALETTE_ANIMATION_DURATION = 150L
-        private const val HEIGHT = "height"
-        private const val SCALE = "scale"
-
-        @Dimension(unit = DP)
-        private const val COLOR_VIEW_PADDING = 8
-    }
 
     var onColorClickListener: (ItemColor) -> Unit = { }
 
@@ -107,6 +97,15 @@ class ColorPickerView : LinearLayout {
             PropertyValuesHolder.ofFloat(SCALE, getChildAt(0).scaleX, 0f)
         )
         animator.start()
+    }
+
+    companion object {
+        private const val PALETTE_ANIMATION_DURATION = 150L
+        private const val HEIGHT = "height"
+        private const val SCALE = "scale"
+
+        @Dimension(unit = DP)
+        private const val COLOR_VIEW_PADDING = 8
     }
 
 }

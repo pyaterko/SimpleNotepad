@@ -15,14 +15,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
-        initPerference()
+        initPreference()
     }
 
-    private fun initPerference() {
+    private fun initPreference() {
         val data = findPreference<Preference>(getString(R.string.settings_data))
-        val interfase = findPreference<Preference>(getString(R.string.settings_interface))
+        val interfaces = findPreference<Preference>(getString(R.string.settings_interface))
         val tourShow = findPreference<Preference>(getString(R.string.settings_tour_show))
-        val behavuors = findPreference<Preference>(getString(R.string.settings_behaviors))
+        val behaviors = findPreference<Preference>(getString(R.string.settings_behaviors))
         val version = findPreference<Preference>(getString(R.string.settings_changel))
 
         version?.setOnPreferenceClickListener {
@@ -34,11 +34,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
          findNavController().navigate(R.id.action_settingsFragment_to_settingsData)
             return@setOnPreferenceClickListener true
         }
-        interfase?.setOnPreferenceClickListener {
+        interfaces?.setOnPreferenceClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_settingsInterfase)
             return@setOnPreferenceClickListener true
         }
-        behavuors?.setOnPreferenceClickListener {
+        behaviors?.setOnPreferenceClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_settingsBehavuors)
             return@setOnPreferenceClickListener true
         }

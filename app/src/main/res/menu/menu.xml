@@ -10,7 +10,8 @@
         android:title="@string/settings"
         android:visible="false"
         app:showAsAction="always"
-        tools:visible="true" />
+        tools:visible="true"
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/menu_view_stream"
         android:icon="@drawable/ic_baseline_view_stream_24"

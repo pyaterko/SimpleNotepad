@@ -1,4 +1,4 @@
-package com.owl_laugh_at_wasted_time.instruction.intro
+package com.owl_laugh_at_wasted_time.instruction
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.owl_laugh_at_wasted_time.instruction.R
 import com.owl_laugh_at_wasted_time.instruction.databinding.PartButtonsBinding
 
 enum class BottomButtonAction {
@@ -26,7 +25,7 @@ class BottomButtonsView @JvmOverloads constructor(
     defStyleRes: Int = R.style.MyBottomButtonsStyle
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    var isProgressMode: Boolean = false
+    private var isProgressMode: Boolean = false
         set(value) {
             field = value
             if (value) {
@@ -118,12 +117,6 @@ class BottomButtonsView @JvmOverloads constructor(
         binding.negativeButton.text = text ?: "Cancel"
     }
 
-    fun getPositiveButtonText() =
-        binding.positiveButton.text.toString()
-
-    fun getNegativeButtonText() =
-        binding.negativeButton.text.toString()
-
     override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()!!
         val savedState = SavedState(superState)
@@ -158,7 +151,6 @@ class BottomButtonsView @JvmOverloads constructor(
                 override fun createFromParcel(source: Parcel): SavedState {
                     return SavedState(source)
                 }
-
                 override fun newArray(size: Int): Array<SavedState?> {
                     return Array(size) { null }
                 }

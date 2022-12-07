@@ -5,18 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.domain.repository.CategorysRepository
+import com.owl_laugh_at_wasted_time.domain.repository.CategoriesRepository
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
-import com.owl_laugh_at_wasted_time.domain.repository.UiActions
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CreateNoteViewModel @Inject constructor(
     private val repositoryNote: NoteRepository,
-    private val categorysRepository: CategorysRepository
+    private val categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
-    val categoriesLiveData = categorysRepository.getAllData()
+    val categoriesLiveData = categoriesRepository.getAllData()
 
     suspend fun getNoteById(noteId: Int) =
         repositoryNote.getById(noteId)
@@ -28,12 +27,12 @@ class CreateNoteViewModel @Inject constructor(
 
     fun addCategory(name:String) {
        viewModelScope.launch {
-           categorysRepository.add(ItemCategory(UNDEFINED_ID,name))
+           categoriesRepository.add(ItemCategory(UNDEFINED_ID,name))
        }
     }
     fun deleteCategory(id:Int) {
         viewModelScope.launch {
-            categorysRepository.delete(id)
+            categoriesRepository.delete(id)
         }
     }
 }
