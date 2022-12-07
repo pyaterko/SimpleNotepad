@@ -36,7 +36,7 @@ class InCategories @Inject constructor(
             ItemCategoriesDbModel(1, "Все"),
             ItemCategoriesDbModel(2, "Мысли"),
             ItemCategoriesDbModel(3, "Личное"),
-            ItemCategoriesDbModel(4, "Поздравпения"),
+            ItemCategoriesDbModel(4, "Поздравления"),
         )
         for (cat in list) {
             categoriesDao.add(cat)

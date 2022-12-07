@@ -96,17 +96,11 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         binding.recyclerViewListNotes.isNestedScrollingEnabled = false
         val dividerItemDecoration = ItemDecoration(16)
         binding.recyclerViewListNotes.addItemDecoration(dividerItemDecoration)
-        viewModel.categoriesLiveData.observe(viewLifecycleOwner) { categories ->
-            categoriesList= mutableListOf()
-            for ((index, element) in categories.withIndex()) {
-                    categoriesList?.add(element.copy(id = index))
-            }
-            adapterCategory.submitList( updateCategory(0))
-        }
+
         viewModel.listNotes.collectWhileStarted {
-            binding.noDataImageView.isVisible = it.size == 0
             adapter.submitList(it)
             listNotes = it.toList()
+            binding.noDataImageView.isVisible = it.size == 0
         }
         ItemTouchHelper(object : SwipeHelper(
             requireContext(),
@@ -151,6 +145,18 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                     }
                 }
             })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner) { categories ->
+            categoriesList= mutableListOf()
+            for ((index, element) in categories.withIndex()) {
+                categoriesList?.add(element.copy(id = index))
+            }
+            adapterCategory.submitList( updateCategory(0))
+        }
+
     }
 
     private fun setRVLaoutManager() {
@@ -487,11 +493,12 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
        adapterCategory.notifyDataSetChanged()
         viewModel.listCategorys(item.name).collectWhileStarted {
             if (item.name!="Все"){
-                adapter.submitList(it.filter {
-                    it.category == item.name
-                })
+                val list=it.filter { it.category == item.name }
+                adapter.submitList(list)
+                binding.noDataImageView.isVisible = list.size == 0
             }else{
                 adapter.submitList(it)
+                binding.noDataImageView.isVisible = it.size == 0
             }
 
         }

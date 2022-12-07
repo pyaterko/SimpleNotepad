@@ -16,6 +16,7 @@
         android:layout_marginBottom="80dp"
         android:gravity="center"
         android:textSize="18sp"
+        android:textColor="@color/color_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +30,6 @@
         android:layout_marginTop="8dp"
         app:layout_constraintDimensionRatio="h,1.3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
         tools:ignore="ContentDescription" />
@@ -41,6 +41,7 @@
         android:layout_marginTop="24dp"
         android:gravity="center"
         android:textSize="28sp"
+        android:textColor="@color/purple_700"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

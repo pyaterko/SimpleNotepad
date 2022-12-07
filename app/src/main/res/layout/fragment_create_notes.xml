@@ -83,6 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/size_xx_small"
+            android:textColor="@color/black"
             android:text="@string/add_category"
             app:drawableEndCompat="@drawable/ic_baseline_playlist_add_24" />
 

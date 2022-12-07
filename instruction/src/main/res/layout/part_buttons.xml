@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:paddingVertical="6dp"
         app:cornerRadius="16dp"
+        android:textColor="@color/navigation_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/space"
         app:layout_constraintTop_toTopOf="parent"

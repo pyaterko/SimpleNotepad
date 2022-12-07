@@ -40,25 +40,25 @@ class InstructionActivity : AppCompatActivity() {
             ),
             Slide(
                 getString(R.string.app_name),
-                "#71F44336",
+                "#EF9CF2",
                 R.drawable.slide2,
                 getString(R.string.tour_listactivity_home_detail)
             ),
             Slide(
                 getString(R.string.app_name),
-                "#8bc34a",
+                "#33CAAC",
                 R.drawable.slide3,
                 getString(R.string.tour_listactivity_tag_detail)
             ),
             Slide(
                 getString(R.string.tour_detailactivity_attachment_title),
-                "#60FDD835",
+                "#FDD835",
                 R.drawable.slide4,
                 getString(R.string.tour_detailactivity_attachment_detail)
             ),
             Slide(
                 getString(R.string.shopping_list_lable),
-                "#41BB86FC",
+                "#EA9666",
                 R.drawable.slide5,
                 getString(R.string.tour_detailactivity_links_detail)
             ),

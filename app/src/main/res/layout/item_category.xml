@@ -12,6 +12,7 @@
         android:layout_marginEnd="@dimen/size_max_small"
         android:layout_marginBottom="@dimen/size_max_small"
         android:ellipsize="end"
+        android:textColor="@color/black"
         android:lines="1"
         android:layout_weight="1"
         android:textSize="18sp"

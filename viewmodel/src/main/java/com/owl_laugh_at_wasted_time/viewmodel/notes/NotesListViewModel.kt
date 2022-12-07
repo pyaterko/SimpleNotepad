@@ -5,6 +5,8 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -15,9 +17,13 @@ import com.owl_laugh_at_wasted_time.domain.repository.CategorysRepository
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
 import com.owl_laugh_at_wasted_time.domain.repository.UiActions
 import com.owl_laugh_at_wasted_time.viewmodel.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.*
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -46,10 +52,6 @@ class NotesListViewModel @Inject constructor(
         repositoryNote.getItemsByCategory(category)
 
 
-    suspend fun getNoteById(noteId: Int) =
-        repositoryNote.getById(noteId)
-
-
     suspend fun addItemNote(item: ItemNote) {
         repositoryNote.add(item)
     }
@@ -61,13 +63,25 @@ class NotesListViewModel @Inject constructor(
 
     fun save(context: Context, fileName: String, text: String) {
         viewModelScope.launch {
-            saveFile(context, fileName, text)
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    saveFile(context, fileName, text)
+                }
+            }.onSuccess {
+                Toast.makeText(
+                    context,
+                    "${context.getString(R.string.success_save)} $fileName",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }.onFailure {
+                Toast.makeText(context, "некорректное имя файла", Toast.LENGTH_LONG).show()
+            }
+
         }
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    private fun saveFile(context: Context, fileName: String, text: String) {
-        try {
+    private suspend fun saveFile(context: Context, fileName: String, text: String) {
             val outputStream: OutputStream? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val values = ContentValues()
                 values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
@@ -81,40 +95,14 @@ class NotesListViewModel @Inject constructor(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                         .toString()
                 val file = File(path, "$fileName.txt")
-
                 FileOutputStream(file)
-
             }
             val bytes = text.toByteArray()
             outputStream?.write(bytes)
             outputStream?.close()
-            Toast.makeText(
-                context,
-                "${context.getString(R.string.success_save)} $fileName",
-                Toast.LENGTH_SHORT
-            ).show()
-        } catch (e: Exception) {
-            Toast.makeText(context, "некорректное имя файла", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    fun openFile(name: String, context: Context) {
-        val root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val dir = File("${root.absolutePath}/")
-        dir.mkdirs()
-        val f2 = File(dir, "$name.txt")
-        try {
-            val line = FileInputStream(f2).bufferedReader().use { it.readText() }
-            val nameFile = restoreNote(line, name)
-            Toast.makeText(context, "ВОССТАНОВЛЕНО $nameFile", Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(context, context.getString(R.string.not_file), Toast.LENGTH_LONG).show()
-        }
-
     }
 
     fun restoreNote(line: String, name: String): String {
-
         val dateOfCreationPattern = Pattern.compile("<<dateOfCreation:(.*?)>>")
         val colorPattern = Pattern.compile("<<color:(.*?)>>")
         val titlePattern = Pattern.compile("<<title:(.*?)>>")

@@ -16,9 +16,7 @@ class CreateNoteViewModel @Inject constructor(
     private val categorysRepository: CategorysRepository
 ) : ViewModel() {
 
-    val listNotes = repositoryNote.getLiveDate()
     val categoriesLiveData = categorysRepository.getAllData()
-
 
     suspend fun getNoteById(noteId: Int) =
         repositoryNote.getById(noteId)
