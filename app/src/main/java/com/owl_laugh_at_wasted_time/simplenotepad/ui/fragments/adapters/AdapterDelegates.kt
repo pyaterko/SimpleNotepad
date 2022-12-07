@@ -89,7 +89,12 @@ fun createEditNotesCategoryAdapter(listener: OnClickCategory) =
             if (item.id < 2) {
                 vDelete.isVisible = false
             }
-            tvCategory.text = item.name
+            if (item.name=="Все"){
+                tvCategory.text = "без категории"
+            }else{
+                tvCategory.text = item.name
+            }
+
         }
         listeners {
             root.onClick {

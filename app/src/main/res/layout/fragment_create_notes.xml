@@ -7,18 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.notes.CreateNotesFragment">
 
-
     <ScrollView
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/size_xxx_large"
+        android:layout_marginVertical="@dimen/size_max_large"
         app:layout_anchorGravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/size_xx_large"
             android:orientation="vertical"
             android:padding="@dimen/size_x_medium"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -50,7 +48,6 @@
         android:layout_gravity="top"
         android:layout_marginTop="@dimen/size_xx_small" />
 
-
     <TextView
         android:id="@+id/tv_note_create_category"
         android:layout_width="wrap_content"
@@ -64,32 +61,32 @@
     <LinearLayout
         android:id="@+id/ll_category"
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/size_x_medium"
         android:layout_marginTop="@dimen/size_xx_medium"
+        android:layout_marginBottom="200dp"
+        android:background="@color/white_pressed"
         android:orientation="vertical"
-       android:visibility="gone"
+        android:visibility="gone"
         tools:visibility="visible">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_note_create_category"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_category" />
 
         <TextView
             android:id="@+id/tv_add_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_category"
-            android:background="@color/white_pressed"
             android:padding="@dimen/size_xx_small"
-            app:drawableEndCompat="@drawable/ic_baseline_playlist_add_24"/>
+            android:text="@string/add_category"
+            app:drawableEndCompat="@drawable/ic_baseline_playlist_add_24" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_note_create_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white_pressed"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_category" />
     </LinearLayout>
-
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/indicator_color"

@@ -16,6 +16,7 @@
     <dimen name="size_x_large">36dp</dimen>
     <dimen name="size_xx_large">40dp</dimen>
     <dimen name="size_xxx_large">48dp</dimen>
+    <dimen name="size_max_large">56dp</dimen>
     //Text size
     <dimen name="text_size_tip">10sp</dimen>
     <dimen name="text_size_standard">16sp</dimen>

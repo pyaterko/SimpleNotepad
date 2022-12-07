@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="200dp"
+    android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="@dimen/size_small">
@@ -9,8 +9,10 @@
         android:id="@+id/tv_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/size_xx_small"
-        android:layout_marginBottom="@dimen/size_xxx_small"
+        android:layout_marginEnd="@dimen/size_max_small"
+        android:layout_marginBottom="@dimen/size_max_small"
+        android:ellipsize="end"
+        android:lines="1"
         android:layout_weight="1"
         android:textSize="18sp"
         tools:text="Salmon Salad" />

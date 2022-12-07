@@ -42,7 +42,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
         super.onViewCreated(view, savedInstanceState)
         val categoryAdapter = createEditNotesCategoryAdapter(this)
         viewModel.categoriesLiveData.observe(viewLifecycleOwner){
-            categoryAdapter.submitList(it.drop(1))
+            categoryAdapter.submitList(it)
         }
         binding.noteTitle.requestFocus()
         showKeyboard(binding.noteTitle)
@@ -162,7 +162,11 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
     }
 
     override fun onClickCategoryItem(item: ItemCategory) {
-        binding.tvNoteCreateCategory.text = item.name
+        if (item.name=="Все"){
+            binding.tvNoteCreateCategory.text = "без категории"
+        }else{
+            binding.tvNoteCreateCategory.text = item.name
+        }
         binding.llCategory.isVisible = false
         note.category = item.name
     }
