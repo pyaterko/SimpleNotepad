@@ -13,12 +13,12 @@ import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.domain.UNDEFINED_ID
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorDrawable
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentCreateNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorDrawable
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnClickCategory
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createEditNotesCategoryAdapter
@@ -39,7 +39,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val categoryAdapter = createEditNotesCategoryAdapter(this)
-        viewModel.categoriesLiveData.observe(viewLifecycleOwner){
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner) {
             categoryAdapter.submitList(it)
         }
         binding.noteTitle.requestFocus()
@@ -58,9 +58,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
         binding.colorPicturesNote.onColorClickListener = {
             note.color = it
             binding.indicatorColor.backgroundTintList = ColorStateList.valueOf(
-                it.getColorDrawable(
-                    requireContext()
-                )
+                it getColorDrawable requireContext()
             )
             closePalette()
             binding.tvNoteCreateCategory.isVisible = true
@@ -150,7 +148,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
     private fun setData(title: EditText, text: EditText) {
         title.setText(note.title)
         text.setText(note.text)
-        setColorInIndicator(note.color.getColorDrawable(requireContext()))
+        setColorInIndicator(note.color getColorDrawable requireContext())
     }
 
     private fun setColorInIndicator(color: Int) {
@@ -158,9 +156,9 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
     }
 
     override fun onClickCategoryItem(item: ItemCategory) {
-        if (item.name=="Все"){
+        if (item.name == "Все") {
             binding.tvNoteCreateCategory.text = "без категории"
-        }else{
+        } else {
             binding.tvNoteCreateCategory.text = item.name
         }
         binding.llCategory.isVisible = false
@@ -168,7 +166,7 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
     }
 
     override fun deleteCategory(item: ItemCategory) {
-       viewModel.deleteCategory(item.id)
+        viewModel.deleteCategory(item.id)
     }
 
 }

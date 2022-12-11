@@ -38,11 +38,11 @@ fun Fragment.launchAndRepeatOnStart(block: suspend () -> Unit) {
     }
 }
 
-fun Context.dip(value: Int) = resources.displayMetrics.density * value
+infix fun Context.dip(value: Int) = resources.displayMetrics.density * value
 
-fun View.dip(value: Int) = context.dip(value)
+infix fun View.dip(value: Int) = context.dip(value)
 
-fun View.shakeAndVibrate() {
+ fun View.shakeAndVibrate() {
     val vibe = ContextCompat.getSystemService(context, Vibrator::class.java)
     val shake = TranslateAnimation(0F, 10F, 0F, 0F)
     shake.duration = 550
@@ -71,7 +71,7 @@ fun toDateString(value: String): String =
         ""
     }
 
-fun ItemColor.getColorDrawable(context: Context) =
+infix fun ItemColor.getColorDrawable(context: Context) =
     ContextCompat.getColor(context, getColorRes())
 
 fun ItemColor.getColorRes() = when (this) {

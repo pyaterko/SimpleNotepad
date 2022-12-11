@@ -10,7 +10,7 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.CustomPopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -25,18 +25,12 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.displayAConfirmationDialog
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.getColorString
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.preferences
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.showActionAlertDialog
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.ReadTask
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.*
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.callback.SwipeHelper
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.decorator.ItemDecoration
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.viewBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnClickCategory
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.OnNoteListener
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters.createListNotesCategoryAdapter
@@ -284,10 +278,8 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     }
 
     private fun showNoteMenu(view: View, id: Int) {
-        val popupMenu = PopupMenu(view.context, view)
+        val popupMenu = CustomPopupMenu(view.context, view)
         val note = view.tag as ItemNote
-        popupMenu.menu.add(0, DELETE, Menu.NONE, view.context.getString(R.string.delete_note))
-        popupMenu.menu.add(0, EDITOR, Menu.NONE, view.context.getString(R.string.edit_note))
         if (preferences(requireContext()).getBoolean(
                 getString(R.string.settings_import_data_key),
                 true
@@ -298,8 +290,18 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                 SAVE_FILE,
                 Menu.NONE,
                 view.context.getString(R.string.save_in_documents)
-            )
+            ).apply {
+                setIcon(R.drawable.ic_baseline_check_24)
+            }
         }
+        popupMenu.menu.add(0, EDITOR, Menu.NONE, view.context.getString(R.string.edit_note)).apply {
+            setIcon(R.drawable.ic_baseline_create_24)
+        }
+        popupMenu.menu.add(0, DELETE, Menu.NONE, view.context.getString(R.string.delete_note))
+            .apply {
+                setIcon(R.drawable.ic_baseline_delete_outline_24)
+            }
+
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 DELETE -> {

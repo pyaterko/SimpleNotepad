@@ -10,9 +10,8 @@ import androidx.annotation.Dimension
 import androidx.annotation.Dimension.DP
 import androidx.annotation.Dimension.PX
 import androidx.core.content.ContextCompat
-
-import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.dip
 import com.owl_laugh_at_wasted_time.simplenotepad.R
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.dip
 
 
 class ColorCircleView @JvmOverloads constructor(
@@ -41,7 +40,7 @@ class ColorCircleView @JvmOverloads constructor(
     private var center: Pair<Float, Float> = 0f to 0f
 
     @Dimension(unit = PX)
-    var radius: Float = dip(defRadiusDp)
+    var radius: Float = this dip defRadiusDp
 
     @ColorRes
     var fillColorRes: Int = R.color.white
@@ -58,7 +57,7 @@ class ColorCircleView @JvmOverloads constructor(
         }
 
     @Dimension(unit = PX)
-    var strokeWidth: Float = dip(defStrokeWidthDp)
+    var strokeWidth: Float = this dip defStrokeWidthDp
         set(value) {
             field = value
             strokePaint.strokeWidth = value
@@ -67,7 +66,7 @@ class ColorCircleView @JvmOverloads constructor(
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.ColorCircleView)
 
-        val defRadiusPx = dip(defRadiusDp)
+        val defRadiusPx = this dip defRadiusDp
         radius = a.getDimension(R.styleable.ColorCircleView_circleRadius, defRadiusPx)
         fillColorRes = a.getResourceId(
             R.styleable.ColorCircleView_fillColor, R.color.white

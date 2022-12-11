@@ -59,7 +59,7 @@ class ColorPickerView : LinearLayout {
                 ColorCircleView(context).apply {
                     fillColorRes = color.getColorRes()
                     tag = color
-                    dip(COLOR_VIEW_PADDING).let {
+                    (this dip COLOR_VIEW_PADDING).let {
                         setPadding(it.toInt(), it.toInt(), it.toInt(), it.toInt())
                     }
                     setOnClickListener {

@@ -48,7 +48,6 @@ class NotesListViewModel @Inject constructor(
             return@async repositoryNote.getItemsByCategory(category)
         }.await()
 
-
     private suspend fun addItemNote(item: ItemNote) {
         repositoryNote.add(item)
     }
@@ -56,7 +55,6 @@ class NotesListViewModel @Inject constructor(
     suspend fun deleteNote(itemId: Int) {
         repositoryNote.delete(itemId)
     }
-
 
     fun save(context: Context, fileName: String, text: String) {
         viewModelScope.launch {
@@ -152,7 +150,6 @@ class NotesListViewModel @Inject constructor(
         }
         return title
     }
-
 
 }
 

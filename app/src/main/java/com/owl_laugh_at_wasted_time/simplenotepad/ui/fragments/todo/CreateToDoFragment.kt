@@ -98,9 +98,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
         binding.colorPicturesToDo.onColorClickListener = {
             itemToDo.color = it
             binding.indicatorColor.backgroundTintList = ColorStateList.valueOf(
-                it.getColorDrawable(
-                    requireContext()
-                )
+                it getColorDrawable requireContext()
             )
             closePalette()
         }
@@ -228,7 +226,7 @@ class CreateToDoFragment : BaseFragment(R.layout.fragment_create_todo) {
 
     private fun setData(title: EditText) {
         title.setText(itemToDo.title)
-        setColorInIndicator(itemToDo.color.getColorDrawable(requireContext()))
+        setColorInIndicator(itemToDo.color getColorDrawable requireContext())
     }
 
     private fun closePalette() {

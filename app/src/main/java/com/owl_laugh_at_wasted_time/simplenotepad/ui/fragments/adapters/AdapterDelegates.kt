@@ -53,7 +53,7 @@ fun createToDoAdapter(
                 context.getString(R.string.settings_prettified_dates_key),
                 false
             )
-            itemFon.setBackgroundColor(item.color.getColorDrawable(context))
+            itemFon.setBackgroundColor(item.color getColorDrawable context)
             textTitle.text = item.title
             checkBox.isChecked = item.done
             if (!format) {
@@ -139,7 +139,7 @@ fun createNotesAdapter(context: Context, listener: OnNoteListener) =
                 preferences(context).getBoolean(NotesListFragment.CURRENT_BOOLEAN, true)
             textViewDescription.isVisible =
                 preferences(context).getBoolean(NotesListFragment.CURRENT_BOOLEAN, true)
-            itemFon.setBackgroundColor(item.color.getColorDrawable(context))
+            itemFon.setBackgroundColor(item.color getColorDrawable context)
             textViewTitle.text = item.title
             textViewDescription.text = item.text
             if (!format) {
