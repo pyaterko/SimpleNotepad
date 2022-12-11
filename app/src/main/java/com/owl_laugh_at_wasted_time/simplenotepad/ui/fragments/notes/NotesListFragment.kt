@@ -189,7 +189,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             "Файл",
             AppCompatResources.getDrawable(
                 requireContext(),
-                R.drawable.ic_file_document_black_48dp
+                R.drawable.ic_baseline_file_copy_24
             ),
             0xFF33CAAC.toInt(), 0xFFFFFFFF.toInt()
         ) {
@@ -291,7 +291,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                 Menu.NONE,
                 view.context.getString(R.string.save_in_documents)
             ).apply {
-                setIcon(R.drawable.ic_baseline_check_24)
+                setIcon( R.drawable.ic_baseline_file_copy_24)
             }
         }
         popupMenu.menu.add(0, EDITOR, Menu.NONE, view.context.getString(R.string.edit_note)).apply {
