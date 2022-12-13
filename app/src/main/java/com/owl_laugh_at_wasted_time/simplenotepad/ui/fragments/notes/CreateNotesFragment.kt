@@ -71,29 +71,11 @@ class CreateNotesFragment : BaseFragment(R.layout.fragment_create_notes), OnClic
         }
         setToolBarMenu(
             blockCreateMenu = {
-                val menuItemShare = it.findItem(R.id.menu_share)
-                menuItemShare.isVisible = true
                 val menuItemSave = it.findItem(R.id.menu_save)
                 menuItemSave.isVisible = true
             },
             blockMenuItemSelected = {
                 when (it.itemId) {
-                    R.id.menu_share -> {
-                        Intent(Intent.ACTION_SEND).apply {
-                            type = "text/plain"
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                "${binding.noteTitle.text}\n${binding.noteText.text}"
-                            )
-                        }.also { intent ->
-                            val chooserIntent =
-                                Intent.createChooser(
-                                    intent,
-                                    getString(R.string.share_note)
-                                )
-                            startActivity(chooserIntent)
-                        }
-                    }
                     R.id.menu_save -> {
                         note.title = binding.noteTitle.text.toString()
                         note.text = binding.noteText.text.toString()

@@ -2,16 +2,19 @@ package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.read
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentReadBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
+import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.BaseFragment
 
 
-class ReadFragment : Fragment(R.layout.fragment_read) {
+class ReadFragment : BaseFragment(R.layout.fragment_read) {
 
     private lateinit var binding: FragmentReadBinding
     private lateinit var text: String
@@ -43,10 +46,8 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         binding = FragmentReadBinding.bind(view)
-        binding.textRead.text = "$title\n$text"
+        binding.textRead.text = text
 
         counter = pixelsToSp(binding.textRead.textSize)
 
@@ -59,6 +60,31 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
             override fun onSwipeLeft() = changeText(false)
             override fun onSwipeRight() = changeText(true)
         })
+        setToolBarMenu(
+            blockCreateMenu = {
+                val menuItemShare = it.findItem(R.id.menu_share)
+                menuItemShare.isVisible = true
+            },
+            blockMenuItemSelected = {
+                when (it.itemId) {
+                    R.id.menu_share -> {
+                        Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                text
+                            )
+                        }.also { intent ->
+                            val chooserIntent =
+                                Intent.createChooser(
+                                    intent,
+                                    getString(R.string.share_note)
+                                )
+                            startActivity(chooserIntent)
+                        }
+                    }
+                }
+            })
     }
 
     private fun changeText(increment: Boolean) {
