@@ -1,7 +1,6 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
