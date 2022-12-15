@@ -3,6 +3,7 @@ package com.owl_laugh_at_wasted_time.data.model
 import com.owl_laugh_at_wasted_time.data.dao.ItemNoteDao
 import com.owl_laugh_at_wasted_time.data.mappers.ItemNoteListMapper
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
+import com.owl_laugh_at_wasted_time.domain.repository.MultiChoiceState
 import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -17,6 +18,15 @@ class InNoteRepository @Inject constructor(
     override fun getLiveDate() = runBlocking {
         val list = itemNoteListDao.getAllData()
         list.map { mapper.mapListDbModelToListEntity(it) }
+    }
+
+    override suspend fun deleteSelected(multiChoiceState: MultiChoiceState<ItemNote>) {
+       getLiveDate().collect{
+          val listItems=it.filter { item-> multiChoiceState.isChecked(item) }
+           for (i in listItems){
+               delete(i.id)
+           }
+       }
     }
 
 

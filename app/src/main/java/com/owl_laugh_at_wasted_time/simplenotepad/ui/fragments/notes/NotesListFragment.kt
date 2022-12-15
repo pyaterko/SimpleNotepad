@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.CustomPopupMenu
@@ -24,7 +26,7 @@ import com.getbase.floatingactionbutton.AddFloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.google.android.material.tabs.TabLayout
 import com.owl_laugh_at_wasted_time.domain.entity.ItemCategory
-import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
+import com.owl_laugh_at_wasted_time.domain.entity.NotesListItem
 import com.owl_laugh_at_wasted_time.simplenotepad.R
 import com.owl_laugh_at_wasted_time.simplenotepad.databinding.FragmentListNotesBinding
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.activity.MainNoteBookActivity
@@ -42,11 +44,11 @@ import java.io.File
 class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteListener,
     OnClickCategory {
 
-    private lateinit var listNotes: List<ItemNote>
+    private lateinit var listNotes: List<NotesListItem>
     private var categoriesList: MutableList<ItemCategory>? = null
     private val binding by viewBinding(FragmentListNotesBinding::bind)
     private val viewModel by viewModels<NotesListViewModel> { viewModelFactory }
-    private lateinit var adapter: SimpleBindingAdapter<ItemNote>
+    private lateinit var adapter: SimpleBindingAdapter<NotesListItem>
     private lateinit var adapterCategory: SimpleBindingAdapter<ItemCategory>
     private lateinit var mActionsMenu: FloatingActionsMenu
 
@@ -89,7 +91,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         binding.recyclerViewListNotes.addItemDecoration(dividerItemDecoration)
         instantiateUnderlayButtons()
         setSearch()
-        initToolBarMenu()
+        initToolBarMenu(0)
+        binding.selectOrClearAllTextView.setOnClickListener {
+            viewModel.selectOrClearAll()
+        }
     }
 
     override fun onResume() {
@@ -104,13 +109,15 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         getAllListNotes()
     }
 
-    private fun initToolBarMenu() {
+    private fun initToolBarMenu(totalCheckedCount: Int) {
         setToolBarMenu(
             {
+                val menuItemDelete = it.findItem(R.id.menu_delete)
                 val menuItemStream = it.findItem(R.id.menu_view_stream)
                 val menuItemGrid = it.findItem(R.id.menu_grid_view)
                 menuItemStream?.isVisible = true
                 menuItemGrid?.isVisible = true
+                menuItemDelete?.isVisible = totalCheckedCount > 0
             }, {
                 when (it.itemId) {
                     R.id.menu_view_stream -> {
@@ -122,6 +129,9 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                         preferences(requireContext()).edit()
                             .putBoolean(CURRENT_BOOLEAN, true).apply()
                         setRVLayoutManager()
+                    }
+                    R.id.menu_delete -> {
+                        viewModel.deleteSelectedItems()
                     }
                 }
             })
@@ -152,7 +162,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         })
     }
 
-    private fun deleteButton(note: ItemNote): SwipeHelper.UnderlayButton {
+    private fun deleteButton(note: NotesListItem): SwipeHelper.UnderlayButton {
         return SwipeHelper.UnderlayButton(
             true,
             "Удалить",
@@ -167,7 +177,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     }
 
 
-    private fun editorButton(note: ItemNote): SwipeHelper.UnderlayButton {
+    private fun editorButton(note: NotesListItem): SwipeHelper.UnderlayButton {
         return SwipeHelper.UnderlayButton(
             true,
             "Редактор",
@@ -183,7 +193,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         }
     }
 
-    private fun saveFileButton(note: ItemNote): SwipeHelper.UnderlayButton {
+    private fun saveFileButton(note: NotesListItem): SwipeHelper.UnderlayButton {
         return SwipeHelper.UnderlayButton(
             true,
             "Файл",
@@ -219,10 +229,18 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     }
 
     private fun getAllListNotes() {
-        viewModel.listNotes.collectWhileStarted {
-            adapter.submitList(it)
-            listNotes = it.toList()
-            binding.noDataImageView.isVisible = it.isEmpty()
+        viewModel.stateLiveData.observe(viewLifecycleOwner) {
+            adapter.submitList(it.list)
+            listNotes = it.list.toList()
+            binding.noDataImageView.isVisible = it.list.isEmpty()
+            binding.selectOrClearAllTextView.setText(it.selectAllOperation.titleRes)
+            binding.selectionStateTextView.text = getString(
+                R.string.selection_state,
+                it.totalCheckedCount, it.totalCount
+            )
+            val state = viewModel.stateLiveData.value
+            val totalCheckedCount = state?.totalCheckedCount ?: 0
+            initToolBarMenu(totalCheckedCount)
         }
     }
 
@@ -259,11 +277,11 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         itemId: Int = 0,
         view: View? = null
     ) {
-        val note: ItemNote?
+        val note: NotesListItem?
         val id = if (view == null) {
             itemId
         } else {
-            note = view.tag as ItemNote
+            note = view.tag as NotesListItem
             note.id
         }
         displayAConfirmationDialog(requireContext(),
@@ -279,7 +297,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
 
     private fun showNoteMenu(view: View, id: Int) {
         val popupMenu = CustomPopupMenu(view.context, view)
-        val note = view.tag as ItemNote
+        val note = view.tag as NotesListItem
         if (preferences(requireContext()).getBoolean(
                 getString(R.string.settings_import_data_key),
                 true
@@ -291,7 +309,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                 Menu.NONE,
                 view.context.getString(R.string.save_in_documents)
             ).apply {
-                setIcon( R.drawable.ic_baseline_file_copy_24)
+                setIcon(R.drawable.ic_baseline_file_copy_24)
             }
         }
         popupMenu.menu.add(0, EDITOR, Menu.NONE, view.context.getString(R.string.edit_note)).apply {
@@ -442,7 +460,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (resultCode == AppCompatActivity.RESULT_CANCELED) return
         when (requestCode) {
             OPEN_DOCUMENT -> {
@@ -457,7 +474,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         }
     }
 
-    override fun launchToReadFragment(itemNote: ItemNote) {
+    override fun launchToReadFragment(itemNote: NotesListItem) {
         collapseFab()
         binding.searchNote.onActionViewCollapsed()
         val directions =
@@ -467,15 +484,13 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         launchFragment(directions)
     }
 
-    override fun launchToCreateNotesFragment(itemNote: ItemNote) {
+    override fun toggleSelection(itemNote: NotesListItem) {
         collapseFab()
         binding.searchNote.onActionViewCollapsed()
-        val directions =
-            NotesListFragmentDirections.actionNotesListFragmentToCreateNotesFragment(itemNote.id)
-        launchFragment(directions)
+        viewModel.toggleSelection(itemNote)
     }
 
-    override fun showMenu(view: View, itemNote: ItemNote) {
+    override fun showMenu(view: View, itemNote: NotesListItem) {
         collapseFab()
         showNoteMenu(view, itemNote.id)
     }
@@ -488,7 +503,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
         } else {
             launchScope {
                 val list = viewModel.listCategories(item.name)
-                adapter.submitList(list)
+                adapter.submitList(list.map { NotesListItem(it, false) })
                 binding.noDataImageView.isVisible = list.isEmpty()
             }
         }

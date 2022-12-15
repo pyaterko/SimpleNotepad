@@ -2,5 +2,7 @@
 <resources>
     <string name="not_file">файл не найден</string>
     <string name="success_save">Успещно сохранен</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="clear_all">Снять выделения</string>
 
 </resources>

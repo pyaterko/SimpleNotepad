@@ -1,8 +1,11 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.di
 
 import com.owl_laugh_at_wasted_time.data.model.*
+import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
 import com.owl_laugh_at_wasted_time.domain.repository.*
 import com.owl_laugh_at_wasted_time.simplenotepad.ui.base.actions.AndroidUiActions
+import com.owl_laugh_at_wasted_time.domain.repository.MultiChoiceHandler
+import com.owl_laugh_at_wasted_time.viewmodel.notes.multichoice.SimpleMultiChoiceHandler
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -35,4 +38,8 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindUiActions(impl: AndroidUiActions): UiActions
+
+    @Singleton
+    @Binds
+    fun bindMultiChoiceHandler(impl: SimpleMultiChoiceHandler<ItemNote>): MultiChoiceHandler<ItemNote>
 }

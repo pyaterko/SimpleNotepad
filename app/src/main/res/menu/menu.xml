@@ -50,5 +50,14 @@
         android:visible="false"
         app:showAsAction="always"
         tools:visible="true" />
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/ic_delete"
+        android:orderInCategory="200"
+        android:title="@string/settings"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:visible="true"
+        tools:ignore="AlwaysShowAction" />
 
 </menu>

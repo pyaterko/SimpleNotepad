@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     fun getLiveDate(): Flow<List<ItemNote>>
+    suspend fun deleteSelected(multiChoiceState: MultiChoiceState<ItemNote>)
     suspend fun add(item: ItemNote)
     suspend fun delete(itemId: Int)
     suspend fun getById(itemId: Int): ItemNote

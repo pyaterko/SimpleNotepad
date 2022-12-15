@@ -2,6 +2,7 @@ package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.adapters
 
 import android.content.Context
 import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.elveum.elementadapter.SimpleBindingAdapter
+import com.elveum.elementadapter.getColor
 import com.elveum.elementadapter.simpleAdapter
 import com.owl_laugh_at_wasted_time.domain.entity.*
 import com.owl_laugh_at_wasted_time.simplenotepad.R
@@ -127,7 +129,7 @@ fun createListNotesCategoryAdapter(listener: OnClickCategory) =
     }
 
 fun createNotesAdapter(context: Context, listener: OnNoteListener) =
-    simpleAdapter<ItemNote, ItemNoteBinding> {
+    simpleAdapter<NotesListItem, ItemNoteBinding> {
         areItemsSame = { oldItem, newItem -> oldItem.id == newItem.id }
         areContentsSame = { oldItem, newItem -> oldItem == newItem }
         bind { item ->
@@ -147,6 +149,10 @@ fun createNotesAdapter(context: Context, listener: OnNoteListener) =
             } else {
                 textViewNameDayOfWeek.text = item.dateOfCreation
             }
+            selectionIndicatorView.background = if (item.isChecked)
+                ColorDrawable(getColor(R.color.half_black))
+            else
+                null
 
         }
         listeners {
@@ -154,7 +160,7 @@ fun createNotesAdapter(context: Context, listener: OnNoteListener) =
                 listener.launchToReadFragment(it)
             }
             root.onLongClick {
-                listener.launchToCreateNotesFragment(it)
+                listener.toggleSelection(it)
                 return@onLongClick true
             }
             imageViewMoreVert.onClick {
@@ -211,9 +217,9 @@ interface OnShoppingListener {
 }
 
 interface OnNoteListener {
-    fun launchToReadFragment(itemNote: ItemNote)
-    fun launchToCreateNotesFragment(itemNote: ItemNote)
-    fun showMenu(view: View, itemNote: ItemNote)
+    fun launchToReadFragment(itemNote: NotesListItem)
+    fun toggleSelection(itemNote: NotesListItem)
+    fun showMenu(view: View, itemNote: NotesListItem)
 }
 
 interface OnClickCategory {

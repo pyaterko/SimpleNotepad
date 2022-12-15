@@ -52,7 +52,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_list_notes_category"
+
+        app:layout_constraintTop_toBottomOf="@+id/selectionStateTextView"
         tools:listitem="@layout/item_note" />
 
     <include
@@ -64,5 +65,32 @@
         android:layout_marginBottom="@dimen/size_x_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/selectOrClearAllTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/size_xxx_small"
+        android:textColor="@color/sapphire"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginHorizontal="@dimen/size_xx_medium"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintEnd_toStartOf="@+id/selectionStateTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_list_notes_category"
+        tools:text="@string/select_all" />
+
+    <TextView
+        android:id="@+id/selectionStateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selection_state"
+        android:gravity="end"
+        android:padding="@dimen/size_xxx_small"
+        android:layout_marginHorizontal="@dimen/size_xx_medium"
+        app:layout_constraintStart_toEndOf="@+id/selectOrClearAllTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_list_notes_category" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,6 +60,7 @@
     <string name="subtask">Подзадача</string>
     <string name="error_star">*</string>
     <string name="add_plus">+</string>
+    <string name="selection_state">Выбрано: %1d из %2d</string>
 
 
 </resources>

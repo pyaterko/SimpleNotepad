@@ -7,15 +7,21 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.owl_laugh_at_wasted_time.domain.entity.ItemColor
 import com.owl_laugh_at_wasted_time.domain.entity.ItemNote
-import com.owl_laugh_at_wasted_time.domain.repository.CategoriesRepository
-import com.owl_laugh_at_wasted_time.domain.repository.NoteRepository
-import com.owl_laugh_at_wasted_time.domain.repository.UiActions
+import com.owl_laugh_at_wasted_time.domain.entity.NotesListItem
+import com.owl_laugh_at_wasted_time.domain.repository.*
 import com.owl_laugh_at_wasted_time.viewmodel.R
+import com.owl_laugh_at_wasted_time.viewmodel.notes.multichoice.SelectAllOperation
+import com.owl_laugh_at_wasted_time.viewmodel.notes.multichoice.State
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -26,11 +32,15 @@ import javax.inject.Inject
 class NotesListViewModel @Inject constructor(
     uiActions: UiActions,
     private val repositoryNote: NoteRepository,
+    private val multiChoiceHandler: MultiChoiceHandler<ItemNote>,
     private val categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
     val listNotes = repositoryNote.getLiveDate()
     val categoriesLiveData = categoriesRepository.getAllData()
+
+    private val _stateLiveData = MutableLiveData<State<NotesListItem>>()
+    val stateLiveData: LiveData<State<NotesListItem>> = _stateLiveData
 
 
     init {
@@ -40,6 +50,34 @@ class NotesListViewModel @Inject constructor(
                 categoriesRepository.populateInitialData()
             }
             uiActions.notPopulateInitialData()
+        }
+
+        viewModelScope.launch {
+            multiChoiceHandler.setItemsFlow(viewModelScope, repositoryNote.getLiveDate())
+            val combinedFlow = combine(
+                repositoryNote.getLiveDate(),
+                multiChoiceHandler.listen(),
+                ::merge
+            )
+            combinedFlow.collectLatest {
+                _stateLiveData.value = it
+            }
+        }
+    }
+
+    fun selectOrClearAll() {
+        stateLiveData.value?.selectAllOperation?.operation?.invoke()
+    }
+
+    fun toggleSelection(item: NotesListItem) {
+        multiChoiceHandler.toggle(item.originItem)
+
+    }
+
+    fun deleteSelectedItems() {
+        viewModelScope.launch {
+            val currentMultiChoiceState = multiChoiceHandler.listen().first()
+            repositoryNote.deleteSelected(currentMultiChoiceState)
         }
     }
 
@@ -149,6 +187,24 @@ class NotesListViewModel @Inject constructor(
             }
         }
         return title
+    }
+
+    private fun merge(
+        listItemNote: List<ItemNote>,
+        multiChoiceState: MultiChoiceState<ItemNote>
+    ): State<NotesListItem> {
+        return State(
+            list = listItemNote.map { item ->
+                NotesListItem(item, multiChoiceState.isChecked(item))
+            },
+            totalCount = listItemNote.size,
+            totalCheckedCount = multiChoiceState.totalCheckedCount,
+            selectAllOperation = if (multiChoiceState.totalCheckedCount < listItemNote.size) {
+                SelectAllOperation(R.string.select_all, multiChoiceHandler::selectAll)
+            } else {
+                SelectAllOperation(R.string.clear_all, multiChoiceHandler::clearAll)
+            }
+        )
     }
 
 }

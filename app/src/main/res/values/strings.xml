@@ -66,5 +66,6 @@
     <string name="subtask">Subtask</string>
     <string name="error_star">*</string>
     <string name="add_plus">+</string>
+    <string name="selection_state">Selected: %1$d out of %2$d</string>
 
 </resources>

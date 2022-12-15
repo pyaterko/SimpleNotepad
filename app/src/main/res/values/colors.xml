@@ -10,6 +10,7 @@
     <color name="light_slate_grey">#818B9A</color>
     <color name="sapphire">#00245D</color>
     <color name="transparent_sapphire">#CC00245D</color>
+    <color name="selected_color">#223700B3</color>
 
 
     <color name="colorNotPriority">#9BA0A9</color>
@@ -29,7 +30,7 @@
     <color name="statusbar_overlay">#20000000</color>
 
     <!--Floating action button-->
-    <color name="half_black">#808080</color>
+    <color name="half_black">#BAC2F1</color>
     <color name="white_pressed">#f1f1f1</color>
     <color name="action_color">#B78B00</color>
     <color name="action_color_pressed">#916E02</color>
