@@ -1,16 +1,17 @@
 package com.owl_laugh_at_wasted_time.simplenotepad.ui.fragments.notes
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.CustomPopupMenu
 import androidx.appcompat.widget.SearchView
@@ -51,6 +52,7 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     private lateinit var adapter: SimpleBindingAdapter<NotesListItem>
     private lateinit var adapterCategory: SimpleBindingAdapter<ItemCategory>
     private lateinit var mActionsMenu: FloatingActionsMenu
+    private lateinit var launcher: ActivityResultLauncher<Intent>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,6 +70,27 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                     tab?.select()
                 }
             })
+        val contract = object : ActivityResultContract<Intent, Uri?>() {
+            override fun createIntent(context: Context, input: Intent): Intent {
+                return input
+            }
+
+            override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+                if (resultCode == RESULT_OK) {
+                    return intent?.data
+                }
+                return null
+            }
+        }
+        launcher = registerForActivityResult(contract) {
+            it?.let { uri ->
+                val read = ReadTask(activity as MainNoteBookActivity) {
+                    viewModel.restoreNote(it, "")
+                }
+                read.execute(uri)
+            }
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -438,12 +461,10 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
     ) != PackageManager.PERMISSION_GRANTED
 
     private fun openFile() {
-        val dirList: MutableList<String> = ArrayList()
-        dirList.add(File.separator)
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = TEXT_WILD
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        startActivityForResult(intent, OPEN_DOCUMENT)
+        launcher.launch(intent)
     }
 
     private fun updateCategory(index: Int): List<ItemCategory> {
@@ -455,23 +476,6 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
             list[index].state = true
         }
         return list.toList()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == AppCompatActivity.RESULT_CANCELED) return
-        when (requestCode) {
-            OPEN_DOCUMENT -> {
-                val content = data?.data
-                content?.let { uri ->
-                    val read = ReadTask(activity as MainNoteBookActivity) {
-                        viewModel.restoreNote(it, "")
-                    }
-                    read.execute(uri)
-                }
-            }
-        }
     }
 
     override fun launchToReadFragment(itemNote: NotesListItem) {
@@ -507,14 +511,12 @@ class NotesListFragment : BaseFragment(R.layout.fragment_list_notes), OnNoteList
                 binding.noDataImageView.isVisible = list.isEmpty()
             }
         }
-
     }
 
     override fun deleteCategory(item: ItemCategory) {}
 
     companion object {
         private const val TEXT_WILD = "text/*"
-        private const val OPEN_DOCUMENT = 1
         private const val DELETE = 0
         private const val EDITOR = 1
         private const val SAVE_FILE = 2
