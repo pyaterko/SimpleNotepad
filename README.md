@@ -10,4 +10,5 @@ Peculiarities:
 • Shopping list
 • Intuitive controls
 • Translations: Russian, English
-![photo11](https://user-images.githubusercontent.com/110412294/219941759-86bd62db-1fac-4e27-8f04-ff73f6ac28bd.jpg)
+
+![photo11](https://user-images.githubusercontent.com/110412294/219941841-6c3fa10d-d69c-4b23-95d7-2dbcd5c4f9ef.jpg)
