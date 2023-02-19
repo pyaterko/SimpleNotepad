@@ -10,3 +10,9 @@ Peculiarities:
 • Shopping list
 • Intuitive controls
 • Translations: Russian, English
+
+![](C:/Users/PC/Pictures/trener/photo11.jpg)
+![](C:/Users/PC/Pictures/trener/photo8.jpg)
+![](C:/Users/PC/Pictures/trener/photo9.jpg)
+![](C:/Users/PC/Pictures/trener/photo01.jpg)
+![](C:/Users/PC/Pictures/trener/photo00jpg.jpg)
