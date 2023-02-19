@@ -10,3 +10,4 @@ Peculiarities:
 • Shopping list
 • Intuitive controls
 • Translations: Russian, English
+![photo11](https://user-images.githubusercontent.com/110412294/219941759-86bd62db-1fac-4e27-8f04-ff73f6ac28bd.jpg)
