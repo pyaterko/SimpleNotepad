@@ -10,9 +10,7 @@ The program consists of three sections - affairs, notes and a purchases, each se
 
 ![screen5](https://user-images.githubusercontent.com/110412294/219945681-37f23e64-2675-4559-9657-f24b941be4cd.jpg)
 ![screen7](https://user-images.githubusercontent.com/110412294/219945527-17c7c3f7-8699-43c1-99e2-b7e97957e0bd.jpg)
-![screen11](https://user-images.githubusercontent.com/110412294/219945754-25e0bbaa-c2e0-4491-9775-cd738669a66f.jpg)
 ![screen12](https://user-images.githubusercontent.com/110412294/219945762-38243609-385e-49ed-8860-fb8ca75a0bc9.jpg)
-![screen13](https://user-images.githubusercontent.com/110412294/219945766-f7a8cb9a-8cfc-4afe-8ea0-07d9dda48844.jpg)
 
 
 You can set a reminder for an event in the device's default calendar.
@@ -33,7 +31,8 @@ A deleted note can be restored from a saved file.
 
 The third section allows you to schedule a shopping list.
 
-
+![screen11](https://user-images.githubusercontent.com/110412294/219945754-25e0bbaa-c2e0-4491-9775-cd738669a66f.jpg)
+![screen13](https://user-images.githubusercontent.com/110412294/219945766-f7a8cb9a-8cfc-4afe-8ea0-07d9dda48844.jpg)
 ![screen3](https://user-images.githubusercontent.com/110412294/219945659-550706b2-65a3-4345-b0ad-cdbca6603333.jpg)
 ![screen4](https://user-images.githubusercontent.com/110412294/219945667-49775759-58f7-444f-8c4d-3c65174e4709.jpg)
 
